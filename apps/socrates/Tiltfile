@@ -4,8 +4,8 @@ k8s_resource('example-python', port_forwards=8079)
 docker_build('example-python-image', '.',     
     live_update=[
         sync('.', '/code'),
-        run('cd /app && poetry install --no-interaction --no-root --without dev',
-            trigger='./poetry.lock'),
+        run('cd /code && poetry install --no-interaction --no-root --without dev',
+            trigger=['./poetry.lock', './pyproject.toml']),
     ]
 )
 
