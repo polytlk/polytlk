@@ -1,10 +1,24 @@
 import openai
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 
 app = FastAPI()
 openai.api_key = os.environ.get("IMPORT_YOUR_OPENAI_API_KEY_HERE")
+
+origins = [
+    "http://localhost:4200",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class UserQuery(BaseModel):
@@ -25,5 +39,6 @@ def generate_response(user_input):
 
 @app.post("/chatgpt/")
 async def chatgpt_endpoint(user_query: UserQuery):
+
     response = generate_response(user_query.user_input)
     return {"response": response}
