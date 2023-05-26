@@ -1,0 +1,31 @@
+[tool.coverage.run]
+branch = true
+source = [ "socrates" ]
+
+[tool.coverage.report]
+exclude_lines = ['if TYPE_CHECKING:']
+show_missing = true
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-fail-under=100 --cov-report html:'../../coverage/apps/socrates/html' --cov-report xml:'../../coverage/apps/socrates/coverage.xml' --junitxml='../../reports/apps/socrates/unittests/junit.xml' --html='../../reports/apps/socrates/unittests/html/index.html'"
+
+[tool.poetry]
+name = "socrates"
+version = "1.0.0"
+description = "Socrates: chatgpt microservice"
+authors = [ ]
+license = 'Proprietary'
+readme = 'README.md'
+
+  [[tool.poetry.packages]]
+  include = "socrates"
+
+  [tool.poetry.dependencies]
+  python = ">=3.11"
+  flake8 = "^6.0.0"
+
+  
+
+[build-system]
+requires = ["poetry-core==1.1.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,1 @@
+"""Socrates: chatgpt microservice"""
