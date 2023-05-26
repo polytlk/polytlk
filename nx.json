@@ -47,5 +47,8 @@
         "linter": "eslint"
       }
     }
-  }
+  },
+  "plugins": [
+    "@nxlv/python"
+  ]
 }
