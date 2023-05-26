@@ -43,3 +43,5 @@ Thumbs.db
 
 # Python
 reports/
+__pycache__
+.cache

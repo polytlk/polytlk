@@ -1,6 +1,6 @@
 [tool.coverage.run]
 branch = true
-source = [ "socrates" ]
+source = ["socrates"]
 
 [tool.coverage.report]
 exclude_lines = ['if TYPE_CHECKING:']
@@ -13,18 +13,21 @@ addopts = "--cov --cov-fail-under=100 --cov-report html:'../../coverage/apps/soc
 name = "socrates"
 version = "1.0.0"
 description = "Socrates: chatgpt microservice"
-authors = [ ]
+authors = []
 license = 'Proprietary'
 readme = 'README.md'
 
-  [[tool.poetry.packages]]
-  include = "socrates"
+[[tool.poetry.packages]]
+include = "socrates"
 
-  [tool.poetry.dependencies]
-  python = ">=3.11"
-  flake8 = "^6.0.0"
+[tool.poetry.dependencies]
+python = ">=3.11"
+flake8 = "^6.0.0"
+fastapi = "^0.95.2"
+uvicorn = {extras = ["standard"], version = "^0.22.0"}
 
-  
+[tool.poetry.scripts]
+start = "socrates.asgi:start"
 
 [build-system]
 requires = ["poetry-core==1.1.0"]
