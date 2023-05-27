@@ -1,6 +1,6 @@
 {
   "name": "socrates",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/microservices/socrates/socrates",
   "targets": {
