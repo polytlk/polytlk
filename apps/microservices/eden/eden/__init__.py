@@ -1,1 +1,1 @@
-"""Eden: microservice for chinese nlp"""
+"""Eden: microservice for chinese nlp."""

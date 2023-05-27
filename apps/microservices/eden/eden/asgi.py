@@ -1,6 +1,9 @@
+"""Enables hot reloading for the eden microservice."""
 import uvicorn
+
+PORT = 7079
 
 
 def start():
-    """Launched with `poetry run start` at root level"""
-    uvicorn.run("eden.app:app", host="0.0.0.0", port=7079, reload=True)
+    """Launch Eden microservice with `npx nx run eden:serve` from root level."""
+    uvicorn.run('eden.app:app', host='localhost', port=PORT, reload=True)

@@ -14,5 +14,10 @@
 		"python.terminal.activateEnvironment": false,
 		"python.linting.enabled": false,
 		"python.linting.flake8Enabled": false,
+		"flake8.importStrategy": "fromEnvironment",
+		"flake8.args": [
+			"--exclude",
+			"${workspaceFolder}/.venv/**/*.py"
+		]
 	}
 }
