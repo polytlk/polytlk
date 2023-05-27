@@ -1,28 +1,28 @@
 {
-  "name": "socrates",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "eden",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/socrates/socrates",
+  "sourceRoot": "apps/microservices/eden/eden",
   "targets": {
     "docs": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pydoc-markdown -p socrates --render-toc > docs/source/api.md",
-        "cwd": "apps/socrates"
+        "command": "pydoc-markdown -p eden --render-toc > docs/source/api.md",
+        "cwd": "apps/microservices/eden"
       }
     },
     "lock": {
       "executor": "nx:run-commands",
       "options": {
         "command": "poetry lock --no-update",
-        "cwd": "apps/socrates"
+        "cwd": "apps/microservices/eden"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
         "command": "poetry run start",
-        "cwd": "apps/socrates"
+        "cwd": "apps/microservices/eden"
       }
     },
     "add": {
@@ -41,7 +41,7 @@
       "executor": "@nxlv/python:build",
       "outputs": ["{projectRoot}/dist"],
       "options": {
-        "outputPath": "apps/socrates/dist",
+        "outputPath": "apps/microservices/eden/dist",
         "publish": true,
         "lockedVersions": true,
         "bundleLocalDependencies": true
@@ -59,27 +59,27 @@
     },
     "lint": {
       "executor": "@nxlv/python:flake8",
-      "outputs": ["{workspaceRoot}/reports/apps/socrates/pylint.txt"],
+      "outputs": ["{workspaceRoot}/reports/apps/microservices/eden/pylint.txt"],
       "options": {
-        "outputFile": "reports/apps/socrates/pylint.txt"
+        "outputFile": "reports/apps/microservices/eden/pylint.txt"
       }
     },
     "test": {
       "executor": "nx:run-commands",
       "outputs": [
-        "{workspaceRoot}/reports/apps/socrates/unittests",
-        "{workspaceRoot}/coverage/apps/socrates"
+        "{workspaceRoot}/reports/apps/microservices/eden/unittests",
+        "{workspaceRoot}/coverage/apps/microservices/eden"
       ],
       "options": {
         "command": "poetry run pytest tests/",
-        "cwd": "apps/socrates"
+        "cwd": "apps/microservices/eden"
       }
     },
     "tox": {
       "executor": "@nxlv/python:tox",
       "outputs": [
-        "{workspaceRoot}/reports/apps/socrates/unittests",
-        "{workspaceRoot}/coverage/apps/socrates"
+        "{workspaceRoot}/reports/apps/microservices/eden/unittests",
+        "{workspaceRoot}/coverage/apps/microservices/eden"
       ],
       "options": {
         "silent": false,
