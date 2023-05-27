@@ -27,7 +27,7 @@ app.add_middleware(
 class KoreanQuery(BaseModel):
     """DTO for korean endpoint."""
 
-    user_input: str  # should be valid chinese text
+    user_input: str  # should be valid korean text
 
 
 def generate_tokens(user_input):
@@ -52,7 +52,6 @@ def generate_tokens(user_input):
         -> key = 'con'
         -> https://repository.upenn.edu/cgi/viewcontent.cgi?article=1040&context=ircs_reports
     """
-    # log.info('User Input -> {0}'.format(user_input))
     log.info('User Input -> {0}'.format(user_input))
 
     return 'this is not implemented'
