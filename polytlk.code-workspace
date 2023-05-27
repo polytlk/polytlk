@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "apps/microservices/eden"
+		},
+		{
+			"path": "apps/microservices/socrates"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.terminal.activateEnvironment": false,
+		"python.analysis.typeCheckingMode": "basic"
+	}
+}
