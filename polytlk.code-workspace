@@ -7,8 +7,11 @@
 			"path": "apps/microservices/socrates"
 		},
 		{
+			"path": "apps/microservices/olivia"
+		},
+		{
 			"path": "."
-		}
+		},
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,
