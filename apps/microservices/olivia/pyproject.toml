@@ -24,6 +24,8 @@ include = "olivia"
 python = ">=3.11,<4.0"
 fastapi = "^0.95.2"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
+konlpy = "^0.6.0"
+mecab = "^0.996.3"
   
 [tool.poetry.group.dev.dependencies]
 wemake-python-styleguide = "^0.17.0"

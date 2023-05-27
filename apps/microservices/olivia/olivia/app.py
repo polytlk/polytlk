@@ -3,12 +3,14 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from konlpy.tag import Mecab
 from pydantic import BaseModel
 
 logging.basicConfig(format='%(levelname)s:\t  %(message)s', level=logging.INFO)
 log = logging.getLogger('olivia')
 
 app = FastAPI()
+mecab = Mecab()
 
 origins = [
     'http://localhost:4200',
@@ -34,27 +36,60 @@ def generate_tokens(user_input):
     """
     Process korean text into tokens and pos tags.
 
-    Segementation (Tokenization)
-        -> Divides the text into words or tokens
-        -> key = 'tok/fine'
+    The Sejong part-of-speech tagging system is used for POS
+    Sejong POS comes from the Sejong Corpus.
+    The Sejong Corpus is a large tagged corpus of Korean.
+    It's one of the most important resources for Korean NLP.
 
-    Dependency parsing
-        -> shows word-to-word grammatical relations
-        -> key = 'dep'
-        -> see more @ https://hanlp.hankcs.com/docs/annotations/dep/sd_zh.html
-
-    Part-of-Speech (POS) Tagging
-        -> key = 'pos/ctb'
-        -> Assign part-of-speech tags to each word
-
-    Constituency Parsing
-        -> reveals phrase-level and sentence-level grammatical structure
-        -> key = 'con'
-        -> https://repository.upenn.edu/cgi/viewcontent.cgi?article=1040&context=ircs_reports
+    NNG: General Nouns
+    NNP: Proper Nouns
+    NNB: Bound Nouns
+    NR: Numeral
+    NP: Pronoun
+    VV: Verbs
+    VA: Adjectives
+    VX: Auxiliary Verbs
+    VCP: Copula (i.e., "be" verb)
+    MM: Determiner
+    MAG: Adverbs
+    MAJ: Conjunction Adverb
+    IC: Interjections
+    JKS: Subject Marking Particles
+    JKC: Complement Marking Particles
+    JKG: Possession Marking Particles
+    JKO: Object Marking Particles
+    JKB: Adverbial Marking Particles
+    JKV: Vocative Marking Particles
+    JKQ: Quotation Marking Particles
+    JX: Auxiliary Particles
+    JC: Connecting Particles
+    EP: Pre-final Endings
+    EF: Final Endings
+    EC: Connective Endings
+    ETN: Nominalizing Endings
+    ETM: Modifier Endings
+    XPN: Prefix
+    XPV: Suffix
+    XSN: Noun Suffix
+    XSV: Verb Suffix
+    XSA: Adjective Suffix
+    XR: Root
+    SF: Sentence-final Ending Punctuation
+    SP: Short Pause
+    SS: Dashes, Ellipsis
+    SE: Sentence-initial Punctuation
+    SO: Other Symbols
+    SL: Foreign Language
+    SH: Chinese Characters
+    SW: Korean Alphabet
     """
-    log.info('User Input -> {0}'.format(user_input))
+    log.info('User Input \t-> {0}'.format(user_input))
 
-    return 'this is not implemented'
+    tokens = mecab.morphs(user_input)
+    log.info('Result \t-> {0}'.format(tokens))
+    log.info('Result \t-> {0}'.format(mecab.pos(user_input)))
+
+    return tokens
 
 
 @app.post('/korean/')
