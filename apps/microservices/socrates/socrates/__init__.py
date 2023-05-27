@@ -1,1 +1,1 @@
-"""Socrates: chatgpt microservice"""
+"""Socrates: chatgpt microservice."""

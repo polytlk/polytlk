@@ -1,6 +1,9 @@
+"""Enables hot reloading for the socrates microservice."""
 import uvicorn
+
+PORT = 8079
 
 
 def start():
-    """Launched with `poetry run start` at root level"""
-    uvicorn.run("socrates.app:app", host="0.0.0.0", port=8079, reload=True)
+    """Launch Socrates microservice with `npx nx run socrates:serve` at root level."""
+    uvicorn.run('socrates.app:app', host='localhost', port=PORT, reload=True)

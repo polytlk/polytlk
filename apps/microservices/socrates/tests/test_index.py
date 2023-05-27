@@ -1,2 +1,8 @@
+"""Auto generated test from python executor."""
+
+
 def test_index():
-    assert True
+    """Pass no matter what."""
+    some_variable = True
+
+    assert some_variable

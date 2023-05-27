@@ -24,10 +24,10 @@ app.add_middleware(
 )
 
 
-class UserQuery(BaseModel):
+class ChineseQuery(BaseModel):
     """DTO for chinese endpoint."""
 
-    user_input: str
+    user_input: str  # should be valid chinese text
 
 
 model = hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ERNIE_GRAM_ZH   # type: ignore
@@ -64,7 +64,7 @@ def generate_tokens(user_input):
 
 
 @app.post('/chinese/')
-async def chinese_endpoint(user_query: UserQuery):
+async def chinese_endpoint(user_query: ChineseQuery):
     """Do NLP preprocessing and other logic before calling socrates."""
     tokens = generate_tokens(user_query.user_input)
 
