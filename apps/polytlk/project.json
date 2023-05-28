@@ -71,6 +71,13 @@
         "cwd": "apps/polytlk",
         "forwardAllArgs": false
       }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "NEXT_FILES=$(echo {args.files} | tr ',' '\n' | grep 'apps/polytlk') && echo $NEXT_FILES && prettier -w $NEXT_FILES",
+        "forwardAllArgs": true
+      }
     }
   },
   "tags": []

@@ -6,7 +6,6 @@ module.exports = {
     // },
     '{apps,libs,tools}/**/*.{js,ts,jsx,tsx,json,py}': [
         files => `nx affected:lint --files=${files.join(',')}`,
-        // TODO: make sure this works with python apps
-        // files => `nx format:write --files=${files.join(',')}`,
-    ],
+        files => `nx affected --target=format --files=${files.join(',')} -- --files="${files}"`
+    ]
 };

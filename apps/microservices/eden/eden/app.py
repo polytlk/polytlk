@@ -14,6 +14,7 @@ origins = [
     'http://localhost:4200',
 ]
 
+hi = 'as'
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,7 +31,8 @@ class ChineseQuery(BaseModel):
     user_input: str  # should be valid chinese text
 
 
-model = hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ERNIE_GRAM_ZH   # type: ignore
+# type: ignore
+model = hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ERNIE_GRAM_ZH
 HanLP = hanlp.load(model)
 
 

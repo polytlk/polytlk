@@ -25,6 +25,14 @@
         "cwd": "apps/microservices/eden"
       }
     },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/microservices/eden/##') && poetry run autopep8 --in-place $EDEN_FILES --verbose --exit-code",
+        "cwd": "apps/microservices/eden",
+        "forwardAllArgs": true
+      }
+    },
     "add": {
       "executor": "@nxlv/python:add",
       "options": {}

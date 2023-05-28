@@ -25,6 +25,8 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+hi = 'as'
+
 
 class KoreanQuery(BaseModel):
     """DTO for korean endpoint."""

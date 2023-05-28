@@ -25,6 +25,14 @@
         "cwd": "apps/microservices/olivia"
       }
     },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "OLIVIA_FILES=$(echo {args.files} | tr ',' '\n' | grep 'olivia' | grep -v '.json' | sed 's#apps/microservices/olivia/##') && poetry run autopep8 --in-place $OLIVIA_FILES --verbose --exit-code",
+        "cwd": "apps/microservices/olivia",
+        "forwardAllArgs": true
+      }
+    },
     "add": {
       "executor": "@nxlv/python:add",
       "options": {}

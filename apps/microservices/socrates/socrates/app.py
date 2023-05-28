@@ -26,6 +26,8 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+hi = 'as'
+
 
 class ProcessedQuery(BaseModel):
     """DTO for ChatGPT endpoint."""
