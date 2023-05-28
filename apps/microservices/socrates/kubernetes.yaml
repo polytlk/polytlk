@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-python
+  name: socrates-svc
   labels:
-    app: example-python
+    app: socrates-svc
 spec:
   selector:
     matchLabels:
-      app: example-python
+      app: socrates-svc
   template:
     metadata:
       labels:
-        app: example-python
+        app: socrates-svc
     spec:
       containers:
-        - name: example-python
-          image: example-python-image
+        - name: socrates-svc
+          image: socrates-svc-img
           ports:
             - containerPort: 8079

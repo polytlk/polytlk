@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eden-svc
+  labels:
+    app: eden-svc
+spec:
+  selector:
+    matchLabels:
+      app: eden-svc
+  template:
+    metadata:
+      labels:
+        app: eden-svc
+    spec:
+      containers:
+        - name: eden-svc
+          image: eden-svc-img
+          ports:
+            - containerPort: 7079
