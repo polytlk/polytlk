@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-bullseye as build
 
 WORKDIR /code
 
@@ -19,9 +19,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
 
-RUN poetry install --no-interaction --no-root --without dev
+# RUN poetry install --no-interaction --no-root --without dev
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
+RUN python -m venv /code/venv
+RUN . /code/venv/bin/activate && \
+    python -m ensurepip --upgrade && \
+    python -m pip install -r /code/requirements.txt
+
+FROM python:3.11-slim-bullseye as final
+
+WORKDIR /code
+
+# Make sure we use the virtualenv:
+ENV PATH="/code/venv/bin:$PATH"
+
+COPY --from=build /code/venv /code/venv
 COPY ./eden /code/eden/
 
 # building cryptography is cancer https://cryptography.io/en/latest/installation/#building-cryptography-on-linux
-CMD ["poetry", "run", "start"]
+CMD ["uvicorn", "eden.app:app", "--host", "0.0.0.0", "--port", "7079", "--reload"]
