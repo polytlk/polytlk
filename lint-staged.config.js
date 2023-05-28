@@ -4,8 +4,7 @@ module.exports = {
     // '{apps,libs,tools}/**/*.{ts,tsx}': files => {
     //     return `nx affected --target=typecheck --files=${files.join(',')}`;
     // },
-    // Make this work with python
-    '{apps,libs,tools}/**/*.{js,ts,jsx,tsx,json}': [
+    '{apps,libs,tools}/**/*.{js,ts,jsx,tsx,json,py}': [
         files => `nx affected:lint --files=${files.join(',')}`,
         // TODO: make sure this works with python apps
         // files => `nx format:write --files=${files.join(',')}`,

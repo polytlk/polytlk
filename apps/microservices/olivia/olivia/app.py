@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from konlpy.tag import Mecab
 from pydantic import BaseModel
 
-logging.basicConfig(format='%(levelname)s:\t  %(message)s', level=logging.INFO)
+logging.config.fileConfig('logging.ini')
 log = logging.getLogger('olivia')
 
 app = FastAPI()
