@@ -28,7 +28,8 @@ openai = "^0.27.7"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.0"
-wemake-python-styleguide = "^0.17.0"
+autopep8 = "2.0.0"
+wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
 
 [tool.poetry.scripts]
 start = "socrates.asgi:start"

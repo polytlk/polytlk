@@ -27,7 +27,8 @@ uvicorn = {extras = ["standard"], version = "^0.22.0"}
 hanlp = "^2.1.0b50"
 
 [tool.poetry.group.dev.dependencies]
-wemake-python-styleguide = "^0.17.0"
+autopep8 = "2.0.0"
+wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
 
 [tool.poetry.scripts]
 start = "eden.asgi:start"

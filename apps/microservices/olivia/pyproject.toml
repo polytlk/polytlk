@@ -28,7 +28,8 @@ konlpy = "^0.6.0"
 mecab = "^0.996.3"
   
 [tool.poetry.group.dev.dependencies]
-wemake-python-styleguide = "^0.17.0"
+autopep8 = "2.0.0"
+wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
 
 [tool.poetry.scripts]
 start = "olivia.asgi:start"
