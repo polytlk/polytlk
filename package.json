@@ -2,7 +2,9 @@
   "name": "polytlk",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky install"
+  },
   "private": true,
   "dependencies": {
     "@nrwl/next": "15.7.0",
@@ -38,8 +40,10 @@
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.6.0",
+    "husky": "^8.0.3",
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
+    "lint-staged": "^13.2.2",
     "nx": "15.7.0",
     "prettier": "^2.6.2",
     "react-test-renderer": "18.2.0",

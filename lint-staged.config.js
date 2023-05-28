@@ -1,0 +1,13 @@
+// inspired by https://www.thisdot.co/blog/linting-formatting-and-type-checking-commits-in-an-nx-monorepo-with-husky/
+module.exports = {
+    // TODO: dont implement typechecking until python apps also have typecheck command
+    // '{apps,libs,tools}/**/*.{ts,tsx}': files => {
+    //     return `nx affected --target=typecheck --files=${files.join(',')}`;
+    // },
+    // Make this work with python
+    '{apps,libs,tools}/**/*.{js,ts,jsx,tsx,json}': [
+        files => `nx affected:lint --files=${files.join(',')}`,
+        // TODO: make sure this works with python apps
+        // files => `nx format:write --files=${files.join(',')}`,
+    ],
+};

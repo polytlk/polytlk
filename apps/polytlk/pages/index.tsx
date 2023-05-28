@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './index.module.css';
 
 export function Index() {
@@ -8,8 +9,8 @@ export function Index() {
    */
 
   async function submitQuery() {
-    let userInput = document.getElementById("user_input") as HTMLInputElement;
-    let messages = document.getElementById("messages");
+    const userInput = document.getElementById("user_input") as HTMLInputElement;
+    const messages = document.getElementById("messages");
 
     const response = await fetch("http://localhost:8079/chatgpt", {
         method: "POST",

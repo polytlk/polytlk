@@ -63,6 +63,14 @@
       "options": {
         "lintFilePatterns": ["apps/polytlk/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["tsc -p tsconfig.app.json --noEmit"],
+        "cwd": "apps/polytlk",
+        "forwardAllArgs": false
+      }
     }
   },
   "tags": []
