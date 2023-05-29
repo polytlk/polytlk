@@ -1,7 +1,9 @@
+load('ext://nerdctl', 'nerdctl_build')
+
 k8s_yaml('kubernetes.yaml')
 k8s_resource('socrates-svc', port_forwards=8079)
 
-docker_build('socrates-svc-img', '.',     
+nerdctl_build('socrates-svc-img', '.',     
     live_update=[
         sync('.', '/code'),
         run('cd /code && poetry install --no-interaction --no-root --without dev',

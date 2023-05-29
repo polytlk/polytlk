@@ -32,7 +32,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 # Download the NLP model
 COPY ./eden/load_model.py /code/eden/load_model.py
-RUN source /code/venv/bin/activate && python /code/eden/load_model.py
+RUN source /code/venv/bin/activate && python ./eden/load_model.py
 
 FROM python:3.11-slim-bullseye as final
 
