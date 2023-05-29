@@ -1,7 +1,7 @@
 """Perform Chinese NLP tasks for polytlk."""
 import logging
 
-import hanlp
+from eden.load_model import model
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -13,8 +13,6 @@ app = FastAPI()
 origins = [
     'http://localhost:4200',
 ]
-
-hi = 'as'
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,11 +27,6 @@ class ChineseQuery(BaseModel):
     """DTO for chinese endpoint."""
 
     user_input: str  # should be valid chinese text
-
-
-# type: ignore
-model = hanlp.pretrained.mtl.CLOSE_TOK_POS_NER_SRL_DEP_SDP_CON_ERNIE_GRAM_ZH
-HanLP = hanlp.load(model)
 
 
 def generate_tokens(user_input):
@@ -59,7 +52,7 @@ def generate_tokens(user_input):
         -> https://repository.upenn.edu/cgi/viewcontent.cgi?article=1040&context=ircs_reports
     """
     log.info('User Input -> {0}'.format(user_input))
-    doc = HanLP([user_input])
+    doc = model([user_input])
 
     doc.pretty_print()
     return doc['tok/fine']
