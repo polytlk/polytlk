@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olivia-svc
+  labels:
+    app: olivia-svc
+spec:
+  selector:
+    matchLabels:
+      app: olivia-svc
+  template:
+    metadata:
+      labels:
+        app: olivia-svc
+    spec:
+      containers:
+        - name: olivia-svc
+          image: olivia-svc-img
+          ports:
+            - containerPort: 6079
