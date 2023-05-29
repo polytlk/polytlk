@@ -7,20 +7,20 @@
 			"path": "apps/microservices/socrates"
 		},
 		{
-			"path": "apps/microservices/olivia"
+			"path": "apps/microservices/olivia",
 		},
 		{
-			"path": "."
+			"path": "apps/polytlk",
+			"name": "polytlk-web"
+		},
+		{
+			"path": ".",
+			"name": "root"
 		},
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,
 		"python.linting.enabled": false,
-		"python.linting.flake8Enabled": false,
-		"flake8.importStrategy": "fromEnvironment",
-		"flake8.args": [
-			"--exclude",
-			"${workspaceFolder}/.venv/**/*.py"
-		]
+		"python.linting.flake8Enabled": false
 	}
 }
