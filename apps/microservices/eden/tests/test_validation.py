@@ -1,7 +1,8 @@
 """Testing module for validation functionality."""
-from eden.utils.validation import is_zh
-from hypothesis import given
+from hypothesis import example, given
 from hypothesis import strategies as st
+
+from eden.utils.validation import is_zh
 
 # List of common Chinese phrases
 chinese_phrases = [
@@ -29,12 +30,13 @@ chinese_text_strategy = st.sampled_from(chinese_phrases)
 
 
 @given(st.text())
-def test_non_chinese_text(text):
+@example('00㐀')
+def test_non_chinese_text(text: str) -> None:
     """Test all non chinese text."""
     assert is_zh(text) is False
 
 
 @given(chinese_text_strategy)
-def test_chinese_text(chinese_text):
+def test_chinese_text(chinese_text: str) -> None:
     """Test sampled chinese text."""
     assert is_zh(chinese_text) is True

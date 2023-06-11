@@ -84,6 +84,13 @@
         "cwd": "apps/microservices/eden"
       }
     },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run mypy eden",
+        "cwd": "apps/microservices/eden"
+      }
+    },
     "tox": {
       "executor": "@nxlv/python:tox",
       "outputs": [
