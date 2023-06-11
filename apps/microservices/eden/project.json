@@ -66,10 +66,11 @@
       }
     },
     "lint": {
-      "executor": "@nxlv/python:flake8",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/microservices/eden/pylint.txt"],
       "options": {
-        "outputFile": "reports/apps/microservices/eden/pylint.txt"
+        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/microservices/eden/##') && poetry run flake8 $EDEN_FILES",
+        "cwd": "apps/microservices/eden"
       }
     },
     "test": {

@@ -47,3 +47,4 @@ reports/
 __pycache__
 .cache
 *.whl
+.hypothesis

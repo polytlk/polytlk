@@ -6,9 +6,6 @@ source = [ "eden" ]
 exclude_lines = ['if TYPE_CHECKING:']
 show_missing = true
 
-[tool.pytest.ini_options]
-addopts = "--cov --cov-fail-under=100 --cov-report html:'../../../coverage/apps/microservices/eden/html' --cov-report xml:'../../../coverage/apps/microservices/eden/coverage.xml' --junitxml='../../../reports/apps/microservices/eden/unittests/junit.xml' --html='../../../reports/apps/microservices/eden/unittests/html/index.html'"
-
 [tool.poetry]
 name = "polytlk-eden"
 version = "1.0.0"
@@ -25,10 +22,13 @@ python = ">=3.11,<4.0"
 fastapi = "^0.95.2"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 hanlp = "^2.1.0b50"
+lingua-language-detector = "^1.3.2"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.0"
 wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
+pytest = "^7.3.2"
+hypothesis = "^6.77.0"
 
 [tool.poetry.scripts]
 start = "eden.asgi:start"
