@@ -1,8 +1,30 @@
+load('ext://nerdctl', 'nerdctl_build')
+
+# start Tilt with no enabled resources
+config.clear_enabled_resources()
+
+# Run a defined set of services
+config.define_string_list("to-run", args=True)
+cfg = config.parse()
+
+groups = {
+  'chinese': ['eden-svc', 'socrates-svc'],
+}
+
+resources = []
+for arg in cfg.get('to-run', []):
+  if arg in groups:
+    resources += groups[arg]
+  else:
+    # also support specifying individual services instead of groups, e.g. `tilt up a b d`
+    resources.append(arg)
+
+config.set_enabled_resources(resources)
+
+
 include('./apps/microservices/socrates/Tiltfile')
 include('./apps/microservices/eden/Tiltfile')
 include('./apps/microservices/olivia/Tiltfile')
-
-load('ext://nerdctl', 'nerdctl_build')
 
 k8s_yaml('./apps/polytlk/kubernetes.yaml')
 k8s_resource('polytlk-web', port_forwards=4200)
