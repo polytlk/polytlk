@@ -35,6 +35,7 @@ opentelemetry-sdk = "^1.18.0"
 opentelemetry-api = "^1.18.0"
 opentelemetry-instrumentation-fastapi = "^0.39b0"
 zhon = "^1.1.5"
+opentelemetry-exporter-otlp-proto-http = "^1.18.0"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.0"
