@@ -47,4 +47,4 @@ COPY --from=build /root/.hanlp /root/.hanlp
 COPY --from=build /code/venv /code/venv
 COPY ./eden /code/eden/
 
-CMD ["uvicorn", "eden.app:app", "--host", "0.0.0.0", "--port", "7079", "--reload"]
+CMD ["uvicorn", "eden.main:app", "--host", "0.0.0.0", "--port", "7079", "--reload"]

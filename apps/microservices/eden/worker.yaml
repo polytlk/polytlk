@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eden-worker
+  labels:
+    app: eden-worker
+spec:
+  selector:
+    matchLabels:
+      app: eden-worker
+  template:
+    metadata:
+      labels:
+        app: eden-worker
+    spec:
+      containers:
+        - name: eden-worker
+          image: eden-worker-img
+          command: ["celery"]
+          args: ["-A", "eden.main.celery", "worker"]

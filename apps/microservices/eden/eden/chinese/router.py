@@ -1,12 +1,12 @@
 """Handles validation and task generation for chinese."""
 from typing import Any
+from eden.tracing import tracer  # noqa: I001
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 from opentelemetry import trace
 
-from eden.tracing import tracer
-from eden.schemas import ChineseQuery, ChineseTokens, Message  # noqa: I001
+from eden.chinese.schemas import ChineseQuery, ChineseTokens, Message
 from eden.utils.tokenization import generate_tokens
 from eden.utils.validation import is_zh
 
