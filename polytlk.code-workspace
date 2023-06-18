@@ -1,7 +1,12 @@
 {
 	"folders": [
 		{
-			"path": "apps/microservices/eden"
+			"path": "apps/microservices/eden",
+			"name": "eden-svc"
+		},
+		{
+			"path": "apps/workers/eden",
+			"name": "eden-worker"
 		},
 		{
 			"path": "apps/microservices/socrates"

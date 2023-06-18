@@ -26,6 +26,7 @@ config.set_enabled_resources(resources)
 
 include('./apps/microservices/socrates/Tiltfile')
 include('./apps/microservices/eden/Tiltfile')
+include('./apps/workers/eden/Tiltfile')
 include('./apps/microservices/olivia/Tiltfile')
 
 helm_remote('opentelemetry-collector',
