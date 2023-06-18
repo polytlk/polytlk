@@ -8,10 +8,10 @@ class ChineseQuery(BaseModel):
     user_input: str = ''
 
 
-class ChineseTokens(BaseModel):
+class ChineseTask(BaseModel):
     """Response for chinese endpoint."""
 
-    tokens: list[str] = []
+    task_id: str = ''
 
 
 class Message(BaseModel):
