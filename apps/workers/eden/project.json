@@ -1,0 +1,107 @@
+{
+  "name": "eden-worker",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/workers/eden/eden",
+  "targets": {
+    "docs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pydoc-markdown -p eden --render-toc > docs/source/api.md",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "lock": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry lock --no-update",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run watchfiles --filter python 'celery -A eden.main.celery worker --concurrency 1 --loglevel=info'",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/workers/eden/##') && poetry run autopep8 --in-place $EDEN_FILES --verbose --exit-code",
+        "cwd": "apps/workers/eden",
+        "forwardAllArgs": true
+      }
+    },
+    "add": {
+      "executor": "@nxlv/python:add",
+      "options": {}
+    },
+    "update": {
+      "executor": "@nxlv/python:update",
+      "options": {}
+    },
+    "remove": {
+      "executor": "@nxlv/python:remove",
+      "options": {}
+    },
+    "build": {
+      "executor": "@nxlv/python:build",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "outputPath": "apps/workers/eden/dist",
+        "publish": true,
+        "lockedVersions": true,
+        "bundleLocalDependencies": true
+      }
+    },
+    "install": {
+      "executor": "@nxlv/python:install",
+      "options": {
+        "silent": false,
+        "args": "",
+        "cacheDir": ".cache/pypoetry",
+        "verbose": false,
+        "debug": false
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/reports/apps/workers/eden/pylint.txt"],
+      "options": {
+        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/workers/eden/##') && poetry run flake8 $EDEN_FILES",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/apps/workers/eden/unittests",
+        "{workspaceRoot}/coverage/apps/workers/eden"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run mypy eden",
+        "cwd": "apps/workers/eden"
+      }
+    },
+    "tox": {
+      "executor": "@nxlv/python:tox",
+      "outputs": [
+        "{workspaceRoot}/reports/apps/workers/eden/unittests",
+        "{workspaceRoot}/coverage/apps/workers/eden"
+      ],
+      "options": {
+        "silent": false,
+        "args": ""
+      }
+    }
+  },
+  "tags": []
+}
