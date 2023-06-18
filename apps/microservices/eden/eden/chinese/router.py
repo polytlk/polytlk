@@ -22,6 +22,7 @@ async def chinese_endpoint(user_query: ChineseQuery) -> Any:
 
         if is_zh(user_query.user_input):
             task = sample_task.delay(user_query.user_input)
+            span.set_attribute('com.polytlk.eden.task_id', task.task_id)
             return {'task_id': task.task_id}
 
         return JSONResponse(

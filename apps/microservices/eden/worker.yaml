@@ -16,5 +16,5 @@ spec:
       containers:
         - name: eden-worker
           image: eden-worker-img
-          command: ["celery"]
-          args: ["-A", "eden.main.celery", "worker"]
+          command: ["watchfiles"]
+          args: ["--filter", "python", "celery -A eden.main.celery worker --concurrency 1 --loglevel=info"]
