@@ -2,6 +2,7 @@
 from celery import Celery
 from celery import current_app as current_celery_app
 
+from eden.chinese.tasks import sample_task  # noqa: F401
 from eden.config import settings
 
 
