@@ -8,8 +8,10 @@ config.clear_enabled_resources()
 config.define_string_list("to-run", args=True)
 cfg = config.parse()
 
+# run a group like
+# tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'socrates-svc', 'opentelemetry-collector'],
+  'chinese': ['eden-svc', 'eden-worker', 'socrates-svc', 'opentelemetry-collector', 'redis-master'],
 }
 
 resources = []
@@ -22,7 +24,6 @@ for arg in cfg.get('to-run', []):
 
 config.set_enabled_resources(resources)
 
-
 include('./apps/microservices/socrates/Tiltfile')
 include('./apps/microservices/eden/Tiltfile')
 include('./apps/microservices/olivia/Tiltfile')
@@ -32,6 +33,13 @@ helm_remote('opentelemetry-collector',
             repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
             values=['otel-collector-config.yaml']
 )
+
+helm_remote('redis',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            values=['redis.yaml']
+)
+
 
 k8s_yaml('./apps/polytlk/kubernetes.yaml')
 k8s_resource('polytlk-web', port_forwards=4200)
