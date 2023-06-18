@@ -1,5 +1,5 @@
 """Module that contains all the processing work for before openai."""
-from typing import cast
+from typing import Any, cast
 
 from celery import shared_task
 from celery.app.log import TaskFormatter
@@ -7,14 +7,24 @@ from celery.signals import after_setup_task_logger, worker_process_init
 from celery.utils.log import get_task_logger
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
-from eden.utils.model.singleton import ModelLoader
-from eden.utils.tokenization import check_list_str
+from eden.model.singleton import ModelLoader
 
 task_logger = get_task_logger(__name__)
 
 model_loader = None
 
 TASK_FMT = '%(asctime)s - %(task_id)s - %(task_name)s - %(levelname)s - %(message)s'  # noqa: WPS323
+
+
+def check_list_str(doc: Any) -> list[str]:
+    """Ensure input is list of str."""
+    if not isinstance(doc, list):
+        raise TypeError('Expected input to be a list')
+
+    if not all(isinstance(str_maybe, str) for str_maybe in doc):
+        raise TypeError('Expected all elements to be str')
+
+    return doc
 
 
 @after_setup_task_logger.connect  # type: ignore

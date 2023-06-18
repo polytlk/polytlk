@@ -24,7 +24,7 @@ from typing import Any, Protocol, Type
 
 import hanlp
 
-from eden.utils.model.constants import HANLP_MODEL_NAME
+from eden.model.constants import HANLP_MODEL_NAME
 
 
 class LoggerProtocol(Protocol):

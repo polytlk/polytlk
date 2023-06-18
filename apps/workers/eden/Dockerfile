@@ -32,8 +32,8 @@ RUN poetry export -o requirements.txt --without-hashes \
  && pip install -r /code/requirements.txt
 
 # Download the NLP model
-COPY ./eden/utils/model /code/eden/utils/model
-RUN source /code/venv/bin/activate && python -m eden.utils.model.load
+COPY ./eden/model /code/eden/model
+RUN source /code/venv/bin/activate && python -m eden.model.load
 
 FROM python:3.11-slim-bullseye as final
 

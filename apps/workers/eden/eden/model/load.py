@@ -7,6 +7,6 @@ prevents downloads on first request in the task system
 """
 import hanlp
 
-from eden.utils.model.constants import HANLP_MODEL_NAME
+from eden.model.constants import HANLP_MODEL_NAME
 
 model = hanlp.load(HANLP_MODEL_NAME)
