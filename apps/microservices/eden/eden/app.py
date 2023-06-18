@@ -2,6 +2,7 @@
 from celery import Celery
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 from eden.celery_utils import create_celery
@@ -34,6 +35,7 @@ def create_app() -> CustomFastAPI:
         allow_headers=['*'],
     )
 
+    CeleryInstrumentor().instrument()
     FastAPIInstrumentor.instrument_app(app)
 
     return app

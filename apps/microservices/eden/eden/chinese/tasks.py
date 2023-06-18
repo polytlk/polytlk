@@ -5,6 +5,7 @@ from celery import shared_task
 from celery.app.log import TaskFormatter
 from celery.signals import after_setup_task_logger, worker_process_init
 from celery.utils.log import get_task_logger
+from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
 from eden.utils.model.singleton import ModelLoader
 from eden.utils.tokenization import check_list_str
@@ -32,7 +33,7 @@ def setup_task_logger(logger, *args, **kwargs):
         log.setFormatter(TaskFormatter(TASK_FMT))
 
 
-@worker_process_init.connect  # type: ignore
+@worker_process_init.connect(weak=True)  # type: ignore
 def setup_model(sender=None, conf=None, **kwargs):
     r"""Initialize the model loader class when the Celery worker process is initialized.
 
@@ -48,6 +49,7 @@ def setup_model(sender=None, conf=None, **kwargs):
     global model_loader  # noqa: WPS420
     model_loader = ModelLoader(logger=task_logger)  # noqa: WPS442
     task_logger.debug('model loader LOADED')
+    CeleryInstrumentor().instrument()
 
 
 @shared_task(bind=True)  # type: ignore
