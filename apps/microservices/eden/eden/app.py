@@ -1,28 +1,17 @@
 """Perform Chinese NLP tasks for polytlk."""
-from celery import Celery
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-
-from eden.celery_utils import create_celery
 
 origins = [
     'http://localhost:4200',
 ]
 
 
-class CustomFastAPI(FastAPI):
-    """Include custom attrs for fastapi."""
-
-    celery_app: Celery
-
-
-def create_app() -> CustomFastAPI:
+def create_app() -> FastAPI:
     """Make fastAPI app for testing purposes."""
-    app = CustomFastAPI()
-
-    app.celery_app = create_celery()
+    app = FastAPI()
 
     from eden.chinese.router import router  # noqa: WPS433
     app.include_router(router)

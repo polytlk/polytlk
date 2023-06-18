@@ -30,20 +30,13 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
  && python -m ensurepip --upgrade \
  && pip install -r /code/requirements.txt
 
-# Download the NLP model
-COPY ./eden/utils/model /code/eden/utils/model
-RUN source /code/venv/bin/activate && python -m eden.utils.model.load
-
 FROM python:3.11-slim-bullseye as final
 
 WORKDIR /code
 
 # Make sure we use the virtualenv:
 ENV PATH="/code/venv/bin:$PATH"
-# Force Hugging Face 🤗 Transformers to use cached models
-ENV TRANSFORMERS_OFFLINE=0
 
-COPY --from=build /root/.hanlp /root/.hanlp
 COPY --from=build /code/venv /code/venv
 COPY ./eden /code/eden/
 
