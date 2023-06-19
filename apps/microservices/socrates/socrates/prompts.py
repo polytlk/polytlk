@@ -14,6 +14,19 @@ significado del texto, ejemplo de diálogo con el texto dado. Los diálogos debe
 la transliteración en pinyin y el significado en la misma línea, delimitados por |.
 """
 
+zh_en_prompt = """\
+You are an English language teacher who teaches English to Chinese mainlanders.
+You will break the given English text into three distinct sections.
+Each section should be labelled in Mandarin.
+1. 本文中使用的词语
+2. 文本的总体含义
+3. 使用给定文本的示例对话
+For both the "本文中使用的词语" and "使用给定文本的示例对话" sections,
+include the English word or sentence and its meaning in Mandarin.
+The information should be on the same line, separated by "|".
+"""
+
+
 prompts = {
     'en': {
         'zh': en_zh_prompt,
@@ -22,6 +35,10 @@ prompts = {
     'es': {
         'zh': es_zh_prompt,
         # Add other language prompts for spanish speakers here
+    },
+    'zh': {
+        'en': zh_en_prompt,
+        # Add other language prompts for mandarin speakers here
     },
     # Add other supported native languages here
 }
