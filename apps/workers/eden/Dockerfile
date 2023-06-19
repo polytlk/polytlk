@@ -59,6 +59,14 @@ ENV HANLP_HOME=/code/.hanlp
 
 COPY --from=build /code/.hanlp /code/.hanlp
 COPY --from=build /code/venv /code/venv
+
+# Switch back to root to change file ownership
+USER root
+
 COPY ./eden /code/eden/
+RUN chown -R celeryuser:celeryuser /code/eden
+
+# Switch to celeryuser
+USER celeryuser
 
 CMD ["watchfiles", "--filter", "python", "celery -A eden.main.celery worker --concurrency 1 --loglevel=info"]
