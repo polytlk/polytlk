@@ -25,6 +25,7 @@ from typing import Any, Protocol, Type
 import hanlp
 
 from eden.model.constants import HANLP_MODEL_NAME
+from eden.tracing import tracer
 
 
 class LoggerProtocol(Protocol):
@@ -82,11 +83,12 @@ class ModelLoader(object, metaclass=Singleton):
         Returns:
             Loaded HanLP model.
         """
-        if not self.model:
-            self.logger.warn('NO MODEL')
-            # Code to load the model goes here
-            self.model = hanlp.load(HANLP_MODEL_NAME)
-            self.logger.info('Model assigned')
+        with tracer.start_as_current_span('Load NLP Model'):
+            if not self.model:
+                self.logger.warn('NO MODEL')
+                # Code to load the model goes here
+                self.model = hanlp.load(HANLP_MODEL_NAME)
+                self.logger.info('Model assigned')
 
-        self.logger.debug('RETURN MODEL')
-        return self.model
+            self.logger.debug('RETURN MODEL')
+            return self.model

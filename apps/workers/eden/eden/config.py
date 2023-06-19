@@ -7,7 +7,7 @@ from typing import Union
 class BaseConfig(object):
     """Store common configuration for eden application."""
 
-    service_name: str = env.get('SERVICE_NAME', 'eden')
+    service_name: str = env.get('SERVICE_NAME', 'eden-worker')
     oltp_traces_endpoint: str = env.get(
         'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
         'http://opentelemetry-collector.default.svc.cluster.local/v1/traces',

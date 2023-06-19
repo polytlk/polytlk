@@ -8,6 +8,7 @@ from celery.utils.log import get_task_logger
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
 from eden.model.singleton import ModelLoader
+from eden.tracing import tracer
 
 task_logger = get_task_logger(__name__)
 
@@ -59,12 +60,13 @@ def setup_celery(sender=None, conf=None, **kwargs):
 @shared_task(bind=True)  # type: ignore
 def sample_task(self, user_input: str) -> list[str]:
     """Call socrates in a non gating way."""
-    task_logger.debug('User Input {0}'.format(user_input))
+    with tracer.start_as_current_span('Prepare Chinese prompt'):
+        task_logger.debug('User Input {0}'.format(user_input))
 
-    model = ModelLoader(logger=task_logger).load_model()
-    task_logger.debug('Model {0}'.format(model))
+        model = ModelLoader(logger=task_logger).load_model()
+        task_logger.debug('Model {0}'.format(model))
 
-    tokens = check_list_str(model(user_input))
-    task_logger.debug('Tokens {0}'.format(tokens))
+        tokens = check_list_str(model(user_input))
+        task_logger.debug('Tokens {0}'.format(tokens))
 
-    return tokens
+        return tokens
