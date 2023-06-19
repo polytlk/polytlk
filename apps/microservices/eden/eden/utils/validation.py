@@ -26,6 +26,7 @@ def is_zh(input_string: str) -> bool:
         return False
 
     zh_detected = detector.detect_language_of(input_string) == Language.CHINESE
+    span.set_attribute('com.polytlk.eden.zh_detected', value=zh_detected)
 
     if zh_detected:
         token_amount = check_valid_token_amount(input_string)
