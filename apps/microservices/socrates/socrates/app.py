@@ -33,16 +33,16 @@ class ProcessedQuery(BaseModel):
     """DTO for ChatGPT endpoint."""
 
     user_input: str  # Original unprocessed text from polytlk client
-    tokens: list[str]
-    tags: list[str]
+    # tokens: list[str]
+    # tags: list[str]
 
 
-chinese_prompt = ''.join([
-    'You are a mandarin teacher. You will be given authentic mandarin text',
-    ' and you will break the text up into 4 lists:',
-    'characters used, words used ,sentence patterns used, and overall meaning of the text.',
-    'Each list should have the original chinese, pinyin, and correct meaning',
-])
+chinese_prompt = """\
+    You are a mandarin teacher. You will be given authentic mandarin text
+    and you will break the text up into 4 lists
+    characters used, words used ,sentence patterns used, and overall meaning of the text.
+    Each list should have the original chinese, pinyin, and correct meaning
+"""
 
 
 def generate_response(user_input):

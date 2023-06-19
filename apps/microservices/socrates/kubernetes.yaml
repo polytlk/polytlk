@@ -18,3 +18,9 @@ spec:
           image: socrates-svc-img
           ports:
             - containerPort: 8079
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-key-secret
+                  key: OPENAI_API_KEY
