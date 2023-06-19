@@ -1,5 +1,5 @@
 """Module that contains all the processing work for before openai."""
-from typing import Any, cast
+from typing import Any
 
 from celery import shared_task
 from celery.app.log import TaskFormatter
@@ -10,8 +10,6 @@ from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from eden.model.singleton import ModelLoader
 
 task_logger = get_task_logger(__name__)
-
-model_loader = None
 
 TASK_FMT = '%(asctime)s - %(task_id)s - %(task_name)s - %(levelname)s - %(message)s'  # noqa: WPS323
 
@@ -44,7 +42,7 @@ def setup_task_logger(logger, *args, **kwargs):
 
 
 @worker_process_init.connect(weak=True)  # type: ignore
-def setup_model(sender=None, conf=None, **kwargs):
+def setup_celery(sender=None, conf=None, **kwargs):
     r"""Initialize the model loader class when the Celery worker process is initialized.
 
     This function is connected to the `worker_process_init` signal and
@@ -55,10 +53,6 @@ def setup_model(sender=None, conf=None, **kwargs):
         conf (Optional[Any]): The configuration (or `None` if not provided).
         \**kwargs (Any): Arbitrary keyword arguments.
     """
-    task_logger.debug('INIT CONNECT')
-    global model_loader  # noqa: WPS420
-    model_loader = ModelLoader(logger=task_logger)  # noqa: WPS442
-    task_logger.debug('model loader LOADED')
     CeleryInstrumentor().instrument()
 
 
@@ -67,8 +61,7 @@ def sample_task(self, user_input: str) -> list[str]:
     """Call socrates in a non gating way."""
     task_logger.debug('User Input {0}'.format(user_input))
 
-    global model_loader  # noqa: WPS420
-    model = cast(ModelLoader, model_loader).load_model()
+    model = ModelLoader(logger=task_logger).load_model()
     task_logger.debug('Model {0}'.format(model))
 
     tokens = check_list_str(model(user_input))
