@@ -2,14 +2,12 @@
 import os
 
 import openai
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 TEMP = 0.2  # controls randomness from chatgpt
 
-load_dotenv()  # take environment variables from .env.
 app = FastAPI()
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 
@@ -26,22 +24,20 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-hi = 'as'
-
 
 class ProcessedQuery(BaseModel):
     """DTO for ChatGPT endpoint."""
 
     user_input: str  # Original unprocessed text from polytlk client
-    # tokens: list[str]
-    # tags: list[str]
+    # tokens: list[str]  # noqa: E800
+    # tags: list[str]  # noqa: E800
 
 
 chinese_prompt = """\
-    You are a mandarin teacher. You will be given authentic mandarin text
-    and you will break the text up into 4 lists
-    characters used, words used ,sentence patterns used, and overall meaning of the text.
-    Each list should have the original chinese, pinyin, and correct meaning
+You are a mandarin teacher. You will be given authentic mandarin text
+and you will break the given text up into 3 distinct sections
+words used in the text, overall meaning of said text, example dialougue with the given text
+For the dialogues must include pinyin transliteration and meaning on the same line delimited by | .
 """
 
 
