@@ -1,26 +1,27 @@
 """Module for configuration logic."""
 from functools import lru_cache
-from os import environ
+from os import environ as env
 from typing import Union
 
 
 class BaseConfig(object):
     """Store common configuration for eden application."""
 
-    service_name: str = environ.get('SERVICE_NAME', 'eden')
-    oltp_traces_endpoint: str = environ.get(
+    service_name: str = env.get('SERVICE_NAME', 'eden')
+    oltp_traces_endpoint: str = env.get(
         'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
         'http://opentelemetry-collector.default.svc.cluster.local/v1/traces',
     )
 
-    celery_broker_url: str = environ.get(
+    celery_broker_url: str = env.get(
         'CELERY_BROKER_URL',
         'redis://redis-master.default.svc.cluster.local:6379/0',
     )
-    celery_result_backend: str = environ.get(
+    celery_result_backend: str = env.get(
         'CELERY_RESULT_BACKEND',
         'redis://redis-master.default.svc.cluster.local:6379/0',
     )
+    celery_broker_connection_retry_on_startup = bool(env.get('CELERY_BROKER_CONN_RETRY_ON_STARTUP'))
 
 
 class DevelopmentConfig(BaseConfig):
@@ -50,7 +51,7 @@ def get_settings() -> Union[BaseConfig, DevelopmentConfig, ProductionConfig, Tes
         'testing': TestingConfig,
     }
 
-    config_name = environ.get('FASTAPI_CONFIG', 'development')
+    config_name = env.get('FASTAPI_CONFIG', 'development')
     config_cls = config_cls_dict[config_name]
     return config_cls()
 
