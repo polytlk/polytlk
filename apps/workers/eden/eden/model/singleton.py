@@ -20,25 +20,12 @@ Example:
     model_loader = ModelLoader()
     model = model_loader.load_model()
 """
-from typing import Any, Protocol, Type
+from typing import Any, Type
 
 import hanlp
+from opentelemetry import trace
 
 from eden.model.constants import HANLP_MODEL_NAME
-from eden.tracing import tracer
-
-
-class LoggerProtocol(Protocol):
-    """Type the logger interface."""
-
-    def warn(self, message: Any, *args: Any, **kwargs: Any) -> None:
-        """Ensure warn method."""
-
-    def info(self, message: Any, *args: Any, **kwargs: Any) -> None:  # noqa: WPS110
-        """Ensure log method."""
-
-    def debug(self, message: Any, *args: Any, **kwargs: Any) -> None:
-        """Ensure debug method."""
 
 
 class Singleton(type):
@@ -66,15 +53,9 @@ class Singleton(type):
 class ModelLoader(object, metaclass=Singleton):
     """Model Loader singleton class."""
 
-    def __init__(self, logger: LoggerProtocol) -> None:
-        """
-        Initialize the ModelLoader instance.
-
-        Args:
-            logger (LoggerProtocol): The logger to be used for logging messages.
-        """
+    def __init__(self) -> None:
+        """Initialize the ModelLoader instance."""
         self.model = None
-        self.logger = logger
 
     def load_model(self) -> Any:
         """
@@ -83,12 +64,14 @@ class ModelLoader(object, metaclass=Singleton):
         Returns:
             Loaded HanLP model.
         """
-        with tracer.start_as_current_span('Load NLP Model'):
-            if not self.model:
-                self.logger.warn('NO MODEL')
-                # Code to load the model goes here
-                self.model = hanlp.load(HANLP_MODEL_NAME)
-                self.logger.info('Model assigned')
+        span = trace.get_current_span()
+        span.set_attribute('com.polytlk.eden.model_name', HANLP_MODEL_NAME)
 
-            self.logger.debug('RETURN MODEL')
-            return self.model
+        if self.model:
+            span.set_attribute('com.polytlk.eden.model_preloaded', value=True)
+        else:
+            span.set_attribute('com.polytlk.eden.model_preloaded', value=False)
+            self.model = hanlp.load(HANLP_MODEL_NAME)
+            span.set_attribute('com.polytlk.eden.model_did_load', value=True)
+
+        return self.model
