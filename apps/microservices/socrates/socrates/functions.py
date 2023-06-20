@@ -1,5 +1,6 @@
 """Contains functions to be form parameters."""
 
+
 functions = [
     {
         'name': 'get_interpretation',
@@ -10,18 +11,28 @@ functions = [
                 'words': {
                     'type': 'array',
                     'items': {
-                        'type': 'string',
+                        'type': 'array',
+                        'minItems': 3,
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                        }
                     },
-                    'description': 'Words found in user input',
+                    'description': 'Words used in the text: Character (Pinyin) - Meaning',
                 },
                 'meaning': {
                     'type': 'string',
-                    'description': 'meaning of user input',
+                    'description': 'Overall meaning of the text:',
                 },
                 'dialogue': {
                     'type': 'array',
                     'items': {
-                        'type': 'string',
+                        'type': 'array',
+                        'minItems': 3,
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                        },
                     },
                     'description': 'example dialogue using user input',
                 },
