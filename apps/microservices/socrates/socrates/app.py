@@ -5,6 +5,7 @@ import openai
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from socrates.functions import functions
 from socrates.prompts import prompts
 
 TEMP = 0.2  # controls randomness from chatgpt
@@ -41,7 +42,7 @@ def generate_response(user_query: ProcessedQuery):
     prompt = prompts[user_query.native_language_code][user_query.target_language_code]
 
     response = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
+        model='gpt-3.5-turbo-0613',
         messages=[
             {'role': 'system', 'content': prompt},
             {'role': 'user', 'content': user_query.user_input},
@@ -49,7 +50,21 @@ def generate_response(user_query: ProcessedQuery):
         temperature=TEMP,
     )
 
-    return response.choices[0].message.content
+    print(response.choices[0].message.content)
+
+    final_response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo-0613',
+        messages=[
+            {'role': 'user', 'content': response.choices[0].message.content},
+        ],
+        functions=functions,
+        function_call={'name': 'get_interpretation'},
+        temperature=TEMP,
+    )
+
+    print(final_response.choices[0].message.function_call.arguments)
+
+    return final_response.choices[0].message.function_call.arguments
 
 
 @app.post('/chatgpt/')
