@@ -8,10 +8,18 @@ config.clear_enabled_resources()
 config.define_string_list("to-run", args=True)
 cfg = config.parse()
 
+base = [
+  'socrates-svc',
+  'opentelemetry-collector',
+  'redis-master',
+  'gateway-tyk-headless'
+]
+
+
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'socrates-svc', 'opentelemetry-collector', 'redis-master', 'gateway-tyk-headless'],
+  'chinese': ['eden-svc', 'eden-worker'] + base,
 }
 
 resources = []
