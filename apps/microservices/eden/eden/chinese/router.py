@@ -14,7 +14,7 @@ router = APIRouter()
 app = create_celery()
 
 
-@router.post('/chinese/', response_model=ChineseTask, responses={422: {'model': Message}})
+@router.post('/chinese', response_model=ChineseTask, responses={422: {'model': Message}})
 async def chinese_endpoint(user_query: ChineseQuery) -> Any:
     """Do NLP preprocessing and other logic before calling socrates."""
     is_chinese = False
