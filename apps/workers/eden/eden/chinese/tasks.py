@@ -5,6 +5,7 @@ from celery import shared_task
 from celery.signals import worker_process_init
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
+from eden.chinese.api_request import get_en_interpretation
 from eden.model.singleton import ModelLoader
 from eden.tracing import tracer
 
@@ -36,9 +37,10 @@ def setup_celery(sender=None, conf=None, **kwargs):
 
 
 @shared_task(bind=True)  # type: ignore
-def sample_task(self, user_input: str) -> list[str]:
+def sample_task(self, user_input: str) -> None:
     """Call socrates in a non gating way."""
     model = None
+    tokens = None
 
     with tracer.start_as_current_span('ZH_INTERPRET: Load NLP Model'):
         model = ModelLoader().load_model()
@@ -49,4 +51,4 @@ def sample_task(self, user_input: str) -> list[str]:
         span.set_attribute('com.polytlk.eden.tokens', tokens)
         span.set_attribute('com.polytlk.eden.token_amount', len(tokens))
 
-        return tokens
+    get_en_interpretation(user_input)

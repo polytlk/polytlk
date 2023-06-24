@@ -11,4 +11,4 @@ RUN poetry install --no-interaction --no-root --without dev
 
 COPY ./socrates /code/socrates/
 
-CMD ["poetry", "run", "start"]
+CMD ["poetry", "run", "uvicorn", "socrates.app:app", "--host", "0.0.0.0", "--port", "8079", "--reload"]

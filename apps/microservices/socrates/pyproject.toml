@@ -6,8 +6,13 @@ source = ["socrates"]
 exclude_lines = ['if TYPE_CHECKING:']
 show_missing = true
 
-[tool.pytest.ini_options]
-addopts = "--cov --cov-fail-under=100 --cov-report html:'../../coverage/apps/socrates/html' --cov-report xml:'../../coverage/apps/socrates/coverage.xml' --junitxml='../../reports/apps/socrates/unittests/junit.xml' --html='../../reports/apps/socrates/unittests/html/index.html'"
+[tool.isort]
+known_third_party = ["eden."]
+
+[tool.mypy]
+strict = true
+namespace_packages = true
+ignore_missing_imports = true
 
 [tool.poetry]
 name = "socrates"
