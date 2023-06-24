@@ -47,9 +47,6 @@ hypothesis = "^6.77.0"
 mypy = "^1.3.0"
 httpx = "^0.24.1"
 
-[tool.poetry.scripts]
-start = "eden.asgi:start"
-
 [build-system]
 requires = ["poetry-core==1.1.0"]
 build-backend = "poetry.core.masonry.api"

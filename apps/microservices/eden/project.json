@@ -18,17 +18,10 @@
         "cwd": "apps/microservices/eden"
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "poetry run start",
-        "cwd": "apps/microservices/eden"
-      }
-    },
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/microservices/eden/##') && poetry run autopep8 --in-place $EDEN_FILES --verbose --exit-code",
+        "command": "./scripts/format.sh {args.files}",
         "cwd": "apps/microservices/eden",
         "forwardAllArgs": true
       }
