@@ -55,6 +55,7 @@ opentelemetry-sdk = "^1.18.0"
 pydantic = "^1.10.9"
 python = ">=3.11,<4.0"
 redis = "^4.5.5"
+zhon = "^1.1.5"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.0"

@@ -2634,6 +2634,17 @@ files = [
 ]
 
 [[package]]
+name = "zhon"
+version = "1.1.5"
+description = "Zhon provides constants used in Chinese text processing."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "zhon-1.1.5.tar.gz", hash = "sha256:793723575c46f10ace8846c579ce740b04c73e2aa583e04e000aedbd4a47f87f"},
+]
+
+[[package]]
 name = "zipp"
 version = "3.15.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -2652,4 +2663,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<4.0"
-content-hash = "eb92872a1fb9e61739abd7f0becac02f30f2555ce2e552f266deb8d5b8690f81"
+content-hash = "8e657b924d3a89886d5ca66dc8990ba91dd6b58e55be376dadce207f7dcf6994"
