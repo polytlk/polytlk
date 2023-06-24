@@ -26,9 +26,14 @@ FILES=$(echo $files | tr ',' '\n' | grep $FOLDER | grep -v '.json' | sed "s#apps
 echo "Folder $FOLDER"
 echo "FILES $FILES"
 
+TOML_FILES=$(echo $FILES | grep '.toml')
+
 if [ -n "$FILES" ]; then
   if [ "$command" == "format" ]; then
     poetry run autopep8 --in-place $FILES --verbose --exit-code
+    if [ -n "$TOML_FILES" ]; then
+      poetry run toml-sort $TOML_FILES
+    fi
   fi
     if [ "$command" == "lint" ]; then
     poetry run flake8 $FILES
