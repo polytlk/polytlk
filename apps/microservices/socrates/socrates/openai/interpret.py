@@ -4,6 +4,7 @@ from typing import Any
 from openai import ChatCompletion
 
 from socrates.openai.functions import functions
+from socrates.tracing import tracer  # noqa: I001
 
 TEMP = 0.2  # controls randomness from chatgpt
 MODEL = 'gpt-3.5-turbo-0613'
@@ -22,21 +23,22 @@ def gen_raw_ari(prompt: str, user_input: str) -> str:
     Raises:
         TypeError: If the response content is not a string.
     """
-    response = ChatCompletion.create(
-        model=MODEL,
-        messages=[
-            {'role': 'system', 'content': prompt},
-            {'role': 'user', 'content': user_input},
-        ],
-        temperature=TEMP,
-    )
+    with tracer.start_as_current_span('INTERPRET: Raw Interpret'):
+        response = ChatCompletion.create(
+            model=MODEL,
+            messages=[
+                {'role': 'system', 'content': prompt},
+                {'role': 'user', 'content': user_input},
+            ],
+            temperature=TEMP,
+        )
 
-    ari = response.choices[0].message.content
+        ari = response.choices[0].message.content
 
-    if isinstance(ari, str):
-        return ari
+        if isinstance(ari, str):
+            return ari
 
-    raise TypeError('Expected response content to be a string.')
+        raise TypeError('Expected response content to be a string.')
 
 
 def gen_ari_data(interpretation: str) -> Any:
@@ -52,14 +54,15 @@ def gen_ari_data(interpretation: str) -> Any:
         The specific type of the returned data may vary depending on the implementation.
 
     """
-    response = ChatCompletion.create(
-        model=MODEL,
-        messages=[
-            {'role': 'user', 'content': interpretation},
-        ],
-        functions=functions,
-        function_call={'name': 'get_interpretation'},
-        temperature=TEMP,
-    )
+    with tracer.start_as_current_span('INTERPRET: ARI Data'):
+        response = ChatCompletion.create(
+            model=MODEL,
+            messages=[
+                {'role': 'user', 'content': interpretation},
+            ],
+            functions=functions,
+            function_call={'name': 'get_interpretation'},
+            temperature=TEMP,
+        )
 
-    return response.choices[0].message.function_call.arguments  # noqa: WPS219
+        return response.choices[0].message.function_call.arguments  # noqa: WPS219
