@@ -10,7 +10,7 @@ from typing import Optional
 import httpx
 from pydantic import ValidationError
 
-from eden.chinese.schema import ChineseInterpretation, ResponseModel
+from eden.chinese.schema import ResponseModel
 
 TIMEOUT = 25.0
 BASE_URL = 'http://socrates-svc:8079'
@@ -18,7 +18,7 @@ ENDPOINT = '/chatgpt'
 TARGET = 'zh'
 
 
-def get_en_interpretation(user_input: str) -> Optional[ChineseInterpretation]:
+def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
     """
     Send a POST request to the interpretation API.
 
@@ -47,4 +47,4 @@ def get_en_interpretation(user_input: str) -> Optional[ChineseInterpretation]:
         except ValidationError:
             return None
 
-        return final.response
+        return final

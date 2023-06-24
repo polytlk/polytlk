@@ -16,7 +16,7 @@ functions = [
                         'maxItems': 3,
                         'items': {
                             'type': 'string',
-                        }
+                        },
                     },
                     'description': 'Words used in the text: Character (Pinyin) - Meaning',
                 },

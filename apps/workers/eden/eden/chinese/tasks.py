@@ -37,7 +37,7 @@ def setup_celery(sender=None, conf=None, **kwargs):
 
 
 @shared_task(bind=True)  # type: ignore
-def sample_task(self, user_input: str) -> None:
+def sample_task(self, user_input: str) -> str:
     """Call socrates in a non gating way."""
     model = None
     tokens = None
@@ -51,4 +51,9 @@ def sample_task(self, user_input: str) -> None:
         span.set_attribute('com.polytlk.eden.tokens', tokens)
         span.set_attribute('com.polytlk.eden.token_amount', len(tokens))
 
-    get_en_interpretation(user_input)
+    ari = get_en_interpretation(user_input)
+
+    if ari:
+        return ari.response
+
+    return 'ARI not generated for input -> {0}'.format(user_input)

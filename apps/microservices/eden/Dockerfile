@@ -5,16 +5,12 @@ WORKDIR /code
 ENV \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1 \
-    PATH="/root/.cargo/bin:${PATH}"
+    PYTHONFAULTHANDLER=1
 
 SHELL ["/bin/bash", "-c"]
 
 # Install system packages needed for final image
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
- && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
- && pip install poetry
+RUN pip install poetry
 
 # Copy dependency information
 COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
