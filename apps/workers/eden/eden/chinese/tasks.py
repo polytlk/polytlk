@@ -42,10 +42,10 @@ def sample_task(self, user_input: str) -> str:
     model = None
     tokens = None
 
-    with tracer.start_as_current_span('ZH_INTERPRET: Load NLP Model'):
+    with tracer.start_as_current_span('INTERPRET: Load NLP Model'):
         model = ModelLoader().load_model()
 
-    with tracer.start_as_current_span('ZH_INTERPRET: Tokenize Input') as span:
+    with tracer.start_as_current_span('INTERPRET: Tokenize Input') as span:
         tokens = check_list_str(model(user_input))
         span.set_attribute('com.polytlk.eden.user_input', user_input)
         span.set_attribute('com.polytlk.eden.tokens', tokens)

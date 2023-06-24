@@ -8,6 +8,7 @@ Functions:
 from typing import Optional
 
 import httpx
+from opentelemetry.instrumentation.httpx import SyncOpenTelemetryTransport
 from pydantic import ValidationError
 
 from eden.chinese.schema import ResponseModel
@@ -16,6 +17,9 @@ TIMEOUT = 25.0
 BASE_URL = 'http://socrates-svc:8079'
 ENDPOINT = '/chatgpt'
 TARGET = 'zh'
+
+timeout = httpx.Timeout(TIMEOUT)
+transport = SyncOpenTelemetryTransport(httpx.HTTPTransport())
 
 
 def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
@@ -28,7 +32,7 @@ def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
     Returns:
         ResponseModel: The interpretation response if successful, None otherwise.
     """
-    with httpx.Client(timeout=httpx.Timeout(TIMEOUT)) as client:
+    with httpx.Client(timeout=timeout, transport=transport) as client:
         final: Optional[ResponseModel] = None
 
         response = client.post(
