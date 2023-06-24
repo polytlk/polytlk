@@ -4,9 +4,9 @@
     "python.linting.flake8Enabled": true,
     "python.linting.mypyEnabled": true,
     "files.exclude": {
-        "**/__pycache__": true,
-        "**/*.hypothesis": true,
-        "**/*.mypy_cache": true,
-        "**/*.pytest_cache": true
+        "**/__pycache__": false,
+        "**/*.hypothesis": false,
+        "**/*.mypy_cache": false,
+        "**/*.pytest_cache": false
     }
 }

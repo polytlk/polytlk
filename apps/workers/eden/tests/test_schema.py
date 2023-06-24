@@ -63,14 +63,16 @@ def test_dialogue_len(instance: ChineseARI):
 
 
 @pytest.mark.words
-@pytest.mark.xfail(raises=ValidationError, strict=True)
-@given(builds(ChineseARI, words=lists(bad_word_st, min_size=1), dialogue=good_dialogue_st))
-def test_words_pinyin(instance):
+@given(words=lists(bad_word_st, min_size=1), dialogue=good_dialogue_st, meaning=text())
+def test_words_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
+    with pytest.raises(ValidationError):
+        ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
 
 
 @pytest.mark.dialogue
-@pytest.mark.xfail(raises=ValidationError, strict=True)
-@given(builds(ChineseARI, words=good_words_st, dialogue=lists(bad_dialogue_st, min_size=2)))
-def test_dialogue_pinyin(instance):
+@given(words=good_words_st, dialogue=lists(bad_dialogue_st, min_size=2), meaning=text())
+def test_dialogue_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
+    with pytest.raises(ValidationError):
+        ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
