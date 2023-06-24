@@ -68,6 +68,14 @@ wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-pyt
 [tool.poetry.group.local.dependencies]
 watchfiles = "^0.19.0"
 
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+markers = [
+    "dialogue",
+    "meaning",
+    "words",
+]
+
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core==1.1.0"]
