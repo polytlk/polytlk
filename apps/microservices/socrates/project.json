@@ -21,9 +21,9 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./scripts/format.sh {args.files}",
+        "command": "./scripts/check.sh -f {args.files} -c format",
         "cwd": "apps/microservices/socrates",
-        "forwardAllArgs": false
+        "forwardAllArgs": true
       }
     },
     "add": {
@@ -59,10 +59,11 @@
       }
     },
     "lint": {
-      "executor": "@nxlv/python:flake8",
-      "outputs": ["{workspaceRoot}/reports/apps/socrates/pylint.txt"],
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"],
       "options": {
-        "outputFile": "reports/apps/socrates/pylint.txt"
+        "command": "./scripts/check.sh -f {args.files} -c lint",
+        "cwd": "apps/microservices/socrates"
       }
     },
     "test": {

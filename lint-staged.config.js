@@ -5,7 +5,7 @@ module.exports = {
     //     return `nx affected --target=typecheck --files=${files.join(',')}`;
     // },
     '{apps,libs,tools}/**/*.{js,ts,jsx,tsx,json,py}': [
-        files => `nx affected:lint --files=${files.join(',')}`,
-        files => `nx affected --target=format --files=${files.join(',')} -- --files="${files}"`
+        files => `nx affected --target=lint --files=${files.join(',')} -- --files=${files.join(',')}`,
+        files => `nx affected --target=format --files=${files.join(',')} -- --files=${files.join(',')}`
     ]
 };
