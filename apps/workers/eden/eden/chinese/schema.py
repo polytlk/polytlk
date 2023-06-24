@@ -6,11 +6,11 @@ Classes:
     ChineseInterpretation: Data model to represent the Chinese interpretation
     ResponseModel: Data model to represent the overall response
 """
-
 import json
 from typing import Any, List, Tuple
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, constr, validator
+from zhon.pinyin import word
 
 
 class ChineseInterpretation(BaseModel):
@@ -31,8 +31,8 @@ class ChineseInterpretation(BaseModel):
 
     """
 
-    words: List[Tuple[str, str, str]]
-    meaning: str
+    words: List[Tuple[str, constr(regex=word), str]]
+    meaning: constr(min_length=1)
     dialogue: List[Tuple[str, str, str]]
 
 
