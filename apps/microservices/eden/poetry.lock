@@ -1065,6 +1065,20 @@ files = [
 ]
 
 [[package]]
+name = "sse-starlette"
+version = "1.6.1"
+description = "\"SSE plugin for Starlette\""
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "sse-starlette-1.6.1.tar.gz", hash = "sha256:6208af2bd7d0887c92f1379da14bd1f4db56bd1274cc5d36670c683d2aa1de6a"},
+    {file = "sse_starlette-1.6.1-py3-none-any.whl", hash = "sha256:d8f18f1c633e355afe61cc5e9c92eea85badcb8b2d56ec8cfb0a006994aa55da"},
+]
+
+[package.dependencies]
+starlette = "*"
+
+[[package]]
 name = "starlette"
 version = "0.27.0"
 description = "The little ASGI library that shines."
@@ -1436,4 +1450,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<4.0"
-content-hash = "457a6a64dc2f0d5f4deea730e3dd6ee4bf8ec4b12121c91800fa164d1a9a8bbe"
+content-hash = "509cebacd19e26d4c41371873fd27aeea67c2bbae5d9de12cbd3801b6534975d"

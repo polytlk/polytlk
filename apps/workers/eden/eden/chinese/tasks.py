@@ -4,11 +4,14 @@ from typing import Any
 from celery import shared_task
 from celery.signals import worker_process_init
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
+from redis import Redis
 
 from eden.chinese.api_request import get_en_interpretation
 from eden.model.singleton import ModelLoader
 from eden.tracing import tracer
 
+
+redis_db = Redis(host='redis-master.default.svc.cluster.local', port=6379, db=0)
 
 def check_list_str(doc: Any) -> list[str]:
     """Ensure input is list of str."""
@@ -54,6 +57,8 @@ def sample_task(self, user_input: str) -> str:
     ari = get_en_interpretation(user_input)
 
     if ari:
+        redis_db.set(str(self.request.id), ari.response)
         return ari.response
 
+    redis_db.set(str(self.request.id), 'nothing')
     return 'ARI not generated for input -> {0}'.format(user_input)

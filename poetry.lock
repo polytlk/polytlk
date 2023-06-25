@@ -2017,6 +2017,7 @@ opentelemetry-instrumentation-celery = "^0.39b0"
 opentelemetry-instrumentation-fastapi = "^0.39b0"
 opentelemetry-sdk = "^1.18.0"
 redis = "^4.5.5"
+sse-starlette = "^1.6.1"
 uvicorn = {version = "^0.22.0", extras = ["standard"]}
 zhon = "^1.1.5"
 
@@ -2691,6 +2692,20 @@ files = [
     {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
     {file = "sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88"},
 ]
+
+[[package]]
+name = "sse-starlette"
+version = "1.6.1"
+description = "\"SSE plugin for Starlette\""
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "sse-starlette-1.6.1.tar.gz", hash = "sha256:6208af2bd7d0887c92f1379da14bd1f4db56bd1274cc5d36670c683d2aa1de6a"},
+    {file = "sse_starlette-1.6.1-py3-none-any.whl", hash = "sha256:d8f18f1c633e355afe61cc5e9c92eea85badcb8b2d56ec8cfb0a006994aa55da"},
+]
+
+[package.dependencies]
+starlette = "*"
 
 [[package]]
 name = "stanza"
