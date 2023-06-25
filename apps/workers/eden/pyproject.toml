@@ -1,49 +1,81 @@
 [tool.coverage.run]
 branch = true
-source = [ "eden" ]
+source = ["eden"]
 
 [tool.coverage.report]
 exclude_lines = ['if TYPE_CHECKING:']
 show_missing = true
 
+[tool.tomlsort]
+all = true
+ignore_case = true
+in_place = true
+no_block_comments = true
+no_comments = true
+no_footer_comments = true
+no_header_comments = true
+no_inline_comments = true
+no_sort_tables = true
+sort_first = ["key1", "key2"]
+sort_inline_arrays = true
+sort_inline_tables = true
+sort_table_keys = true
+spaces_before_inline_comment = 2
+spaces_indent_inline_array = 4
+trailing_comma_inline_array = true
+
 [tool.isort]
 known_third_party = ["eden."]
 
 [tool.mypy]
-strict = true
-namespace_packages = true
 ignore_missing_imports = true
+namespace_packages = true
+strict = true
 
 [tool.poetry]
-name = "polytlk-eden-worker"
-version = "1.0.0"
+authors = []
 description = "Eden: worker for chinese NLP"
-authors = [ ]
 license = 'Proprietary'
+name = "polytlk-eden-worker"
 readme = 'README.md'
+version = "1.0.0"
 
 [[tool.poetry.packages]]
 include = "eden"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<4.0"
+celery = "^5.3.0"
 hanlp = "^2.1.0b50"
-opentelemetry-sdk = "^1.18.0"
+httpx = "^0.24.1"
 opentelemetry-api = "^1.18.0"
 opentelemetry-exporter-otlp-proto-http = "^1.18.0"
-celery = "^5.3.0"
-redis = "^4.5.5"
 opentelemetry-instrumentation-celery = "^0.39b0"
+opentelemetry-instrumentation-httpx = "^0.39b0"
+opentelemetry-sdk = "^1.18.0"
+pydantic = "^1.10.9"
+python = ">=3.11,<4.0"
+redis = "^4.5.5"
+zhon = "^1.1.5"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.0"
-wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
-pytest = "^7.3.2"
 hypothesis = "^6.77.0"
 mypy = "^1.3.0"
-httpx = "^0.24.1"
+pytest = "^7.3.2"
+toml-sort = "^0.23.1"
+wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
+
+[tool.poetry.group.local.dependencies]
 watchfiles = "^0.19.0"
 
+[tool.pytest.ini_options]
+addopts = "-v --strict-markers"
+markers = [
+    "dialogue",
+    "meaning",
+    "words",
+]
+
 [build-system]
-requires = ["poetry-core==1.1.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core==1.1.0"]

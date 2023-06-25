@@ -24,3 +24,15 @@ spec:
                 secretKeyRef:
                   name: api-key-secret
                   key: OPENAI_API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socrates-svc
+spec:
+  selector:
+    app: socrates-svc
+  ports:
+    - protocol: TCP
+      port: 8079
+      targetPort: 8079

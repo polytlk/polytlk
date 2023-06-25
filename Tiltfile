@@ -8,10 +8,18 @@ config.clear_enabled_resources()
 config.define_string_list("to-run", args=True)
 cfg = config.parse()
 
+base = [
+  'socrates-svc',
+  'opentelemetry-collector',
+  'redis-master',
+  'gateway-tyk-headless'
+]
+
+
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'socrates-svc', 'opentelemetry-collector', 'redis-master'],
+  'chinese': ['eden-svc', 'eden-worker'] + base,
 }
 
 resources = []
@@ -39,6 +47,12 @@ helm_remote('redis',
             repo_name='bitnami',
             repo_url='https://charts.bitnami.com/bitnami',
             values=['redis.yaml']
+)
+
+helm_remote('tyk-headless',
+            repo_name='tyk-helm',
+            repo_url='https://helm.tyk.io/public/helm/charts/',
+            values=['tyk.yaml']
 )
 
 

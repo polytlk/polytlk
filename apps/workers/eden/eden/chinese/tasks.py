@@ -5,6 +5,7 @@ from celery import shared_task
 from celery.signals import worker_process_init
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 
+from eden.chinese.api_request import get_en_interpretation
 from eden.model.singleton import ModelLoader
 from eden.tracing import tracer
 
@@ -36,17 +37,23 @@ def setup_celery(sender=None, conf=None, **kwargs):
 
 
 @shared_task(bind=True)  # type: ignore
-def sample_task(self, user_input: str) -> list[str]:
+def sample_task(self, user_input: str) -> str:
     """Call socrates in a non gating way."""
     model = None
+    tokens = None
 
-    with tracer.start_as_current_span('ZH_INTERPRET: Load NLP Model'):
+    with tracer.start_as_current_span('INTERPRET: Load NLP Model'):
         model = ModelLoader().load_model()
 
-    with tracer.start_as_current_span('ZH_INTERPRET: Tokenize Input') as span:
+    with tracer.start_as_current_span('INTERPRET: Tokenize Input') as span:
         tokens = check_list_str(model(user_input))
         span.set_attribute('com.polytlk.eden.user_input', user_input)
         span.set_attribute('com.polytlk.eden.tokens', tokens)
         span.set_attribute('com.polytlk.eden.token_amount', len(tokens))
 
-        return tokens
+    ari = get_en_interpretation(user_input)
+
+    if ari:
+        return ari.response
+
+    return 'ARI not generated for input -> {0}'.format(user_input)

@@ -24,8 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
 
 # Install application dependencies
-RUN poetry export -o requirements.txt --without-hashes \
- && echo 'watchfiles==0.19.0 ; python_version >= "3.11" and python_version < "4.0"' >> requirements.txt  \
+RUN poetry export --with local -o requirements.txt --without-hashes \
  && python -m venv /code/venv \
  && source /code/venv/bin/activate \
  && python -m ensurepip --upgrade \

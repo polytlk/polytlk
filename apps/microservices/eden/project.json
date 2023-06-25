@@ -18,17 +18,10 @@
         "cwd": "apps/microservices/eden"
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "poetry run start",
-        "cwd": "apps/microservices/eden"
-      }
-    },
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/microservices/eden/##') && poetry run autopep8 --in-place $EDEN_FILES --verbose --exit-code",
+        "command": "./scripts/check.sh -f {args.files} -c format",
         "cwd": "apps/microservices/eden",
         "forwardAllArgs": true
       }
@@ -69,7 +62,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/microservices/eden/pylint.txt"],
       "options": {
-        "command": "EDEN_FILES=$(echo {args.files} | tr ',' '\n' | grep 'eden' | grep -v '.json' | sed 's#apps/microservices/eden/##') && poetry run flake8 $EDEN_FILES",
+        "command": "./scripts/check.sh -f {args.files} -c lint",
         "cwd": "apps/microservices/eden"
       }
     },

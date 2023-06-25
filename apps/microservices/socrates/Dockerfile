@@ -1,14 +1,35 @@
-FROM python:3.11-alpine3.18
+FROM python:3.11-slim-bullseye as build
 
 WORKDIR /code
 
-RUN apk add --no-cache gcc libffi-dev musl-dev
+ENV \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1
+
+SHELL ["/bin/bash", "-c"]
+
+# Install system packages needed for final image
 RUN pip install poetry
 
+# Copy dependency information
 COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
 
-RUN poetry install --no-interaction --no-root --without dev
+# Install application dependencies
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes \
+ && python -m venv /code/venv \
+ && source /code/venv/bin/activate \
+ && python -m ensurepip --upgrade \
+ && pip install -r /code/requirements.txt
 
+FROM python:3.11-slim-bullseye as final
+
+WORKDIR /code
+
+# Make sure we use the virtualenv:
+ENV PATH="/code/venv/bin:$PATH"
+
+COPY --from=build /code/venv /code/venv
 COPY ./socrates /code/socrates/
 
-CMD ["poetry", "run", "start"]
+CMD ["uvicorn", "socrates.main:app", "--host", "0.0.0.0", "--port", "8079", "--reload"]

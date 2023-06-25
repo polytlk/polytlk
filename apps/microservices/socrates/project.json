@@ -18,19 +18,12 @@
         "cwd": "apps/microservices/socrates"
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "poetry run start",
-        "cwd": "apps/microservices/socrates"
-      }
-    },
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "SOCRATES_FILES=$(echo {args.files} | tr ',' '\n' | grep 'socrates' | grep -v '.json' | sed 's#apps/microservices/socrates/##') && poetry run autopep8 --in-place $SOCRATES_FILES --verbose --exit-code",
+        "command": "./scripts/check.sh -f {args.files} -c format",
         "cwd": "apps/microservices/socrates",
-        "forwardAllArgs": false
+        "forwardAllArgs": true
       }
     },
     "add": {
@@ -66,10 +59,11 @@
       }
     },
     "lint": {
-      "executor": "@nxlv/python:flake8",
-      "outputs": ["{workspaceRoot}/reports/apps/socrates/pylint.txt"],
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"],
       "options": {
-        "outputFile": "reports/apps/socrates/pylint.txt"
+        "command": "./scripts/check.sh -f {args.files} -c lint",
+        "cwd": "apps/microservices/socrates"
       }
     },
     "test": {

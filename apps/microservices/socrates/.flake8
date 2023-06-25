@@ -27,9 +27,12 @@ exclude =
   .eggs
   *.egg
   dist
-  .hypothesis
-  .pytest_cache
 
 per-file-ignores =
   # There are multiple fixtures, `assert`s, and subprocesses in tests:
-  tests/*.py: S101
+  tests/test_visitors/test_ast/test_naming/conftest.py: WPS202
+  tests/*.py: S101, S105, S404, S603, S607, WPS211, WPS226, WPS323
+  # Allow commented out prompts
+  socrates/openai/prompts.py: E800
+  # Allow string literal overuse when defining schemas
+  socrates/openai/functions.py: WPS226
