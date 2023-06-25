@@ -23,7 +23,7 @@ def gen_raw_ari(prompt: str, user_input: str) -> str:
     Raises:
         TypeError: If the response content is not a string.
     """
-    with tracer.start_as_current_span('INTERPRET: Raw Interpret'):
+    with tracer.start_as_current_span('INTERPRET: Raw Interpret') as span:
         response = ChatCompletion.create(
             model=MODEL,
             messages=[
@@ -32,6 +32,8 @@ def gen_raw_ari(prompt: str, user_input: str) -> str:
             ],
             temperature=TEMP,
         )
+
+        span.set_attribute('com.polytlk.socrates.raw_choice', response.choices[0])
 
         ari = response.choices[0].message.content
 
@@ -54,7 +56,7 @@ def gen_ari_data(interpretation: str) -> Any:
         The specific type of the returned data may vary depending on the implementation.
 
     """
-    with tracer.start_as_current_span('INTERPRET: ARI Data'):
+    with tracer.start_as_current_span('INTERPRET: ARI Data') as span:
         response = ChatCompletion.create(
             model=MODEL,
             messages=[
@@ -64,5 +66,7 @@ def gen_ari_data(interpretation: str) -> Any:
             function_call={'name': 'get_interpretation'},
             temperature=TEMP,
         )
+
+        span.set_attribute('com.polytlk.socrates.data_choice', response.choices[0])
 
         return response.choices[0].message.function_call.arguments  # noqa: WPS219

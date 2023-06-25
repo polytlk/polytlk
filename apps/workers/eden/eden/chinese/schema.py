@@ -7,11 +7,14 @@ Classes:
     ResponseModel: Data model to represent the overall response
 """
 import json
+import unicodedata
 from typing import Any, List, Tuple
 
 from pydantic import BaseModel, constr, validator
-from zhon.hanzi import characters
-from zhon.pinyin import sent, word
+from zhon.hanzi import characters, cjk_ideographs
+from zhon.pinyin import sent
+
+from eden.model.singleton import ModelLoader
 
 
 class ChineseInterpretation(BaseModel):
@@ -32,9 +35,24 @@ class ChineseInterpretation(BaseModel):
 
     """
 
-    words: List[Tuple[constr(regex=characters), constr(regex=word), str]]
+    words: list[tuple[str, str, str]]
     meaning: constr(min_length=1)
-    dialogue: List[Tuple[str, constr(regex=sent), str]]
+    dialogue: list[tuple[str, str, str]]
+
+    @validator('words')
+    def check_first_character(cls, words):
+        model = ModelLoader().load_model()
+
+        for word in words:
+            if len(word[0]) > 1: 
+                for tok in model(word[0]):
+                    if 'CJK UNIFIED IDEOGRAPH' not in unicodedata.name(tok[0], ''):
+                        raise ValueError(f"The first character of the word tuple must be a CJK Unified Ideograph, got {tok[0]} instead.")
+            else:
+                if 'CJK UNIFIED IDEOGRAPH' not in unicodedata.name(word[0], ''):
+                    raise ValueError(f"The first character of the word tuple must be a CJK Unified Ideograph, got {word[0]} instead.")
+        return words
+
 
 
 class ResponseModel(BaseModel):

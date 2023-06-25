@@ -13,7 +13,7 @@ from pydantic import ValidationError
 
 from eden.chinese.schema import ResponseModel
 
-TIMEOUT = 25.0
+TIMEOUT = 40.0
 BASE_URL = 'http://socrates-svc:8079'
 ENDPOINT = '/chatgpt'
 TARGET = 'zh'
@@ -48,7 +48,11 @@ def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
         )
         try:
             final = ResponseModel.parse_raw(response.text)
-        except ValidationError:
+        except ValidationError as err:
+            words = response.json()['ari_data']['words']
+            print("err handler -> word - hanji {0}".format(words[0][0]))
+            print("err handler -> word - hanji len {0}".format(len(words[0][0])))
+            print(err)
             return None
 
         return final

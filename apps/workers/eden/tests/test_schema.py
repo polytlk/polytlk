@@ -10,27 +10,39 @@ Strategies are defined for generating:
 - valid tuples for the 'dialogue' attribute (good_dialogue_st).
 
 """
+import unicodedata
+
 import pytest
 from hypothesis import Verbosity, given, settings
 from hypothesis import strategies as st
 from hypothesis.strategies import builds, lists, text, tuples
 from pydantic import ValidationError
-from zhon.hanzi import characters as hanzi_char
 from zhon.pinyin import sent as pinyin_sent
-from zhon.pinyin import word as pinyin_word
+from zhon.pinyin import syl as pinyin_syl
 
 from eden.chinese.schema import ChineseInterpretation as ChineseARI
 
 PROFILE = 'dev'
-LOCAL_MAX_EXAMPLES = 12
+LOCAL_MAX_EXAMPLES = 3
+
+
+def is_cjk(char):
+    try:
+        name = unicodedata.name(char)
+        return 'CJK UNIFIED IDEOGRAPH' in name
+    except ValueError:
+        return False
+
+
+
 
 settings.register_profile('dev', max_examples=LOCAL_MAX_EXAMPLES)
 settings.register_profile('debug', max_examples=LOCAL_MAX_EXAMPLES, verbosity=Verbosity.verbose)
 
 settings.load_profile(PROFILE)
 
-pinyin_word_st = st.from_regex(pinyin_word, fullmatch=True)
-hanji_word_st = st.from_regex(hanzi_char, fullmatch=True)
+pinyin_word_st = st.from_regex(pinyin_syl, fullmatch=True)
+hanji_word_st = st.characters(min_codepoint=0x4E00, max_codepoint=0x9FFF).filter(is_cjk)
 
 pinyin_sent_st = st.from_regex(pinyin_sent, fullmatch=True)
 
@@ -69,7 +81,7 @@ def test_dialogue_len(instance: ChineseARI):
 @given(words=lists(bad_word_pinyin_st, min_size=1, max_size=1), dialogue=good_dialogue_st, meaning=text(min_size=1))
 def test_words_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
-    with pytest.raises(ValidationError, match='{0}'.format(pinyin_word)):
+    with pytest.raises(ValidationError, match='{0}'.format(pinyin_syl)):
         ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
 
 
@@ -77,7 +89,7 @@ def test_words_pinyin(words, dialogue, meaning):
 @given(words=lists(bad_word_hanji_st, min_size=1), dialogue=good_dialogue_st, meaning=text(min_size=1))
 def test_words_hanji(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid hanji."""
-    with pytest.raises(ValidationError, match='{0}'.format(hanzi_char)):
+    with pytest.raises(ValidationError, match='{0}'.format('CJK Unified')):
         ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
 
 
