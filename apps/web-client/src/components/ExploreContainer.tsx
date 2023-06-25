@@ -1,5 +1,7 @@
 import './ExploreContainer.css';
 
+import InterpretBar from './InterpretContainer';
+
 
 const ExploreContainer: React.FC<Record<string, never>> = () => {
   return (
@@ -15,6 +17,7 @@ const ExploreContainer: React.FC<Record<string, never>> = () => {
           UI Components
         </a>
       </p>
+      <InterpretBar />
     </div>
   );
 };
