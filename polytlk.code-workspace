@@ -17,6 +17,10 @@
 			"path": "apps/microservices/olivia"
 		},
 		{
+			"name": "web",
+			"path": "apps/web-client"
+		},
+		{
 			"name": "root",
 			"path": "."
 		},
@@ -31,6 +35,7 @@
 			"**/*.hypothesis": true,
 			"**/*.mypy_cache": true,
 			"**/*.pytest_cache": true
-		}
+		},
+		"eslint.enable": false
 	}
 }
