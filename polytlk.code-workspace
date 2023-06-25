@@ -15,10 +15,6 @@
 			"path": "apps/microservices/olivia",
 		},
 		{
-			"path": "apps/polytlk",
-			"name": "polytlk-web"
-		},
-		{
 			"path": ".",
 			"name": "root"
 		},
