@@ -1,31 +1,17 @@
-[tool.coverage.run]
-branch = true
-source = [ "olivia" ]
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core==1.1.0"]
 
 [tool.coverage.report]
-exclude_lines = [ "if TYPE_CHECKING:" ]
+exclude_lines = ["if TYPE_CHECKING:"]
 show_missing = true
 
-[tool.tomlsort]
-all = true
-ignore_case = true
-in_place = true
-no_block_comments = true
-no_comments = true
-no_footer_comments = true
-no_header_comments = true
-no_inline_comments = true
-no_sort_tables = true
-sort_first = [ "key1", "key2" ]
-sort_inline_arrays = true
-sort_inline_tables = true
-sort_table_keys = true
-spaces_before_inline_comment = 2
-spaces_indent_inline_array = 4
-trailing_comma_inline_array = true
+[tool.coverage.run]
+branch = true
+source = ["olivia"]
 
 [tool.isort]
-known_third_party = [ "olivia." ]
+known_third_party = ["olivia."]
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -33,25 +19,22 @@ namespace_packages = true
 strict = true
 
 [tool.poetry]
-name = "polytlk-olivia"
-version = "1.0.0"
+authors = []
 description = "Olivia: microservice for korean NLP"
-authors = [ ]
 license = "Proprietary"
+name = "polytlk-olivia"
 readme = "README.md"
+version = "1.0.0"
 
-  [[tool.poetry.packages]]
-  include = "olivia"
+[tool.poetry.dependencies]
+esupar = "^1.6.2"
+fastapi = "^0.95.2"
+opentelemetry-api = "^1.18.0"
+python = ">=3.11,<4.0"
 
-  [tool.poetry.dependencies]
-  python = ">=3.11,<4.0"
-  fastapi = "^0.95.2"
-  esupar = "^1.6.2"
+[tool.poetry.dependencies.uvicorn]
+extras = ["standard"]
+version = "^0.22.0"
 
-    [tool.poetry.dependencies.uvicorn]
-    extras = [ "standard" ]
-    version = "^0.22.0"
-
-[build-system]
-requires = [ "poetry-core==1.1.0" ]
-build-backend = "poetry.core.masonry.api"
+[[tool.poetry.packages]]
+include = "olivia"

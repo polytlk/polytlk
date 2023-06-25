@@ -32,7 +32,7 @@ if [ -n "$FILES" ]; then
   if [ "$command" == "format" ]; then
     poetry run autopep8 --in-place $FILES --verbose --exit-code
     if [ -n "$TOML_FILES" ]; then
-      poetry run toml-sort $TOML_FILES
+      poetry run toml-sort $TOML_FILES --ignore-case --all --in-place
     fi
   fi
     if [ "$command" == "lint" ]; then

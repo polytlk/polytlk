@@ -2062,6 +2062,7 @@ develop = true
 [package.dependencies]
 esupar = "^1.6.2"
 fastapi = "^0.95.2"
+opentelemetry-api = "^1.18.0"
 uvicorn = {version = "^0.22.0", extras = ["standard"]}
 
 [package.source]

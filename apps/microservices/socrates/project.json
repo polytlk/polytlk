@@ -61,7 +61,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"],
       "options": {
-        "command": "./apps/microservices/socrates/scripts/check.sh -f {args.files} -c lint",
+        "command": "./apps/microservices/socrates/scripts/check.sh -f {args.files} -c lint"
       }
     },
     "test": {
@@ -71,8 +71,13 @@
         "{workspaceRoot}/coverage/apps/socrates"
       ],
       "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "apps/microservices/socrates"
+        "command": "poetry run pytest apps/microservices/socrates/tests/"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run mypy apps/microservices/socrates/socrates"
       }
     },
     "tox": {

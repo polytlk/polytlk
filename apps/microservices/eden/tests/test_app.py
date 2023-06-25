@@ -2,8 +2,9 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from eden.app import app
+from eden.app import create_app
 
+app = create_app()
 client = TestClient(app)
 
 

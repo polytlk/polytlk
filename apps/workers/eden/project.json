@@ -61,7 +61,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/workers/eden/pylint.txt"],
       "options": {
-        "command": "./apps/workers/eden/scripts/check.sh -f {args.files} -c lint",
+        "command": "./apps/workers/eden/scripts/check.sh -f {args.files} -c lint"
       }
     },
     "test": {
@@ -77,8 +77,7 @@
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "poetry run mypy eden",
-        "cwd": "apps/workers/eden"
+        "command": "poetry run mypy apps/workers/eden/eden"
       }
     },
     "tox": {

@@ -1,13 +1,17 @@
-[tool.coverage.run]
-branch = true
-source = [ "socrates" ]
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core==1.1.0"]
 
 [tool.coverage.report]
-exclude_lines = [ "if TYPE_CHECKING:" ]
+exclude_lines = ["if TYPE_CHECKING:"]
 show_missing = true
 
+[tool.coverage.run]
+branch = true
+source = ["socrates"]
+
 [tool.isort]
-known_third_party = [ "socrates." ]
+known_third_party = ["socrates."]
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -15,48 +19,26 @@ namespace_packages = true
 strict = true
 
 [tool.poetry]
-authors = [ ]
+authors = []
 description = "Socrates: chatgpt microservice"
+group = {}
 license = "Proprietary"
 name = "socrates"
 readme = "README.md"
 version = "1.0.0"
-group = { }
 
-  [[tool.poetry.packages]]
-  include = "socrates"
+[tool.poetry.dependencies]
+fastapi = "^0.95.2"
+openai = "^0.27.8"
+opentelemetry-api = "^1.18.0"
+opentelemetry-exporter-otlp-proto-http = "^1.18.0"
+opentelemetry-instrumentation-fastapi = "^0.39b0"
+opentelemetry-sdk = "^1.18.0"
+python = ">=3.11,<4.0"
 
-  [tool.poetry.dependencies]
-  fastapi = "^0.95.2"
-  openai = "^0.27.8"
-  opentelemetry-api = "^1.18.0"
-  opentelemetry-exporter-otlp-proto-http = "^1.18.0"
-  opentelemetry-instrumentation-fastapi = "^0.39b0"
-  opentelemetry-sdk = "^1.18.0"
-  python = ">=3.11,<4.0"
+[tool.poetry.dependencies.uvicorn]
+extras = ["standard"]
+version = "^0.22.0"
 
-    [tool.poetry.dependencies.uvicorn]
-    extras = [ "standard" ]
-    version = "^0.22.0"
-
-[tool.tomlsort]
-all = true
-ignore_case = true
-in_place = true
-no_block_comments = true
-no_comments = true
-no_footer_comments = true
-no_header_comments = true
-no_inline_comments = true
-no_sort_tables = true
-sort_first = [ "key1", "key2" ]
-sort_inline_arrays = true
-sort_inline_tables = true
-sort_table_keys = true
-spaces_before_inline_comment = 2
-spaces_indent_inline_array = 4
-trailing_comma_inline_array = true
-
-[build-system]
-build-backend = "poetry.core.masonry.api"
-requires = [ "poetry-core==1.1.0" ]
+[[tool.poetry.packages]]
+include = "socrates"

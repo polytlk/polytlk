@@ -61,7 +61,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/microservices/olivia/pylint.txt"],
       "options": {
-        "command": "./apps/microservices/olivia/scripts/check.sh -f {args.files} -c lint",
+        "command": "./apps/microservices/olivia/scripts/check.sh -f {args.files} -c lint"
       }
     },
     "test": {
@@ -71,8 +71,13 @@
         "{workspaceRoot}/coverage/apps/microservices/olivia"
       ],
       "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "apps/microservices/olivia"
+        "command": "poetry run pytest apps/microservices/olivia/tests/"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run mypy apps/microservices/olivia/olivia"
       }
     },
     "tox": {
