@@ -8,11 +8,11 @@ Classes:
 """
 import json
 import unicodedata
-from typing import Any, List, Tuple
+from typing import Any
 
 from pydantic import BaseModel, constr, validator
-from zhon.hanzi import characters, cjk_ideographs
-from zhon.pinyin import sent
+from zhon.pinyin import sent as pinyin_sent
+from zhon.pinyin import syl as pinyin_syl
 
 from eden.model.singleton import ModelLoader
 
@@ -35,9 +35,9 @@ class ChineseInterpretation(BaseModel):
 
     """
 
-    words: list[tuple[str, str, str]]
+    words: list[tuple[str, constr(regex=pinyin_syl), str]]
     meaning: constr(min_length=1)
-    dialogue: list[tuple[str, str, str]]
+    dialogue: list[tuple[str, constr(regex=pinyin_sent), str]]
 
     @validator('words')
     def check_first_character(cls, words):
