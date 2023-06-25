@@ -15,14 +15,14 @@ from hypothesis import Verbosity, given, settings
 from hypothesis import strategies as st
 from hypothesis.strategies import builds, lists, text, tuples
 from pydantic import ValidationError
-from zhon.hanzi import characters
-from zhon.pinyin import sent
+from zhon.hanzi import characters as hanzi_char
+from zhon.pinyin import sent as pinyin_sent
 from zhon.pinyin import word as pinyin_word
 
 from eden.chinese.schema import ChineseInterpretation as ChineseARI
 
 PROFILE = 'dev'
-LOCAL_MAX_EXAMPLES = 10
+LOCAL_MAX_EXAMPLES = 12
 
 settings.register_profile('dev', max_examples=LOCAL_MAX_EXAMPLES)
 settings.register_profile('debug', max_examples=LOCAL_MAX_EXAMPLES, verbosity=Verbosity.verbose)
@@ -30,15 +30,18 @@ settings.register_profile('debug', max_examples=LOCAL_MAX_EXAMPLES, verbosity=Ve
 settings.load_profile(PROFILE)
 
 pinyin_word_st = st.from_regex(pinyin_word, fullmatch=True)
-not_pinyin_word_st = st.from_regex(characters, fullmatch=True)
+hanji_word_st = st.from_regex(hanzi_char, fullmatch=True)
 
-pinyin_sent_st = st.from_regex(sent, fullmatch=True)
-not_pinyin_sent_st = st.from_regex(characters, fullmatch=True)
+pinyin_sent_st = st.from_regex(pinyin_sent, fullmatch=True)
 
-good_words_st = lists(tuples(text(), pinyin_word_st, text()), min_size=1)
-bad_word_st = tuples(text(), not_pinyin_word_st, text())
-good_dialogue_st = lists(tuples(text(), pinyin_sent_st, text()), min_size=2)
-bad_dialogue_st = tuples(text(), not_pinyin_sent_st, text())
+# WORDS
+good_words_st = lists(tuples(hanji_word_st, pinyin_word_st, text(min_size=1)), min_size=1, max_size=1)
+bad_word_pinyin_st = tuples(hanji_word_st, hanji_word_st, text())
+bad_word_hanji_st = tuples(pinyin_word_st, pinyin_word_st, text())
+
+# DIALOGUE
+good_dialogue_st = lists(tuples(hanji_word_st, pinyin_sent_st, text(min_size=1)), min_size=1, max_size=1)
+bad_dialogue_pinyin_st = tuples(hanji_word_st, hanji_word_st, text())
 
 
 @pytest.mark.meaning
@@ -63,16 +66,24 @@ def test_dialogue_len(instance: ChineseARI):
 
 
 @pytest.mark.words
-@given(words=lists(bad_word_st, min_size=1), dialogue=good_dialogue_st, meaning=text())
+@given(words=lists(bad_word_pinyin_st, min_size=1, max_size=1), dialogue=good_dialogue_st, meaning=text(min_size=1))
 def test_words_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError, match='{0}'.format(pinyin_word)):
+        ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
+
+
+@pytest.mark.words
+@given(words=lists(bad_word_hanji_st, min_size=1), dialogue=good_dialogue_st, meaning=text(min_size=1))
+def test_words_hanji(words, dialogue, meaning):
+    """Check validation error is raised when word tuple has invalid hanji."""
+    with pytest.raises(ValidationError, match='{0}'.format(hanzi_char)):
         ChineseARI(words=words, dialogue=dialogue, meaning=meaning)
 
 
 @pytest.mark.dialogue
-@given(words=good_words_st, dialogue=lists(bad_dialogue_st, min_size=2), meaning=text())
+@given(words=good_words_st, dialogue=lists(bad_dialogue_pinyin_st, min_size=1), meaning=text(min_size=1))
 def test_dialogue_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError, match='{0}'.format(pinyin_sent)):
         ChineseARI(words=words, dialogue=dialogue, meaning=meaning)

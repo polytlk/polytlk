@@ -69,7 +69,7 @@ wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-pyt
 watchfiles = "^0.19.0"
 
 [tool.pytest.ini_options]
-addopts = "--strict-markers"
+addopts = "-v --strict-markers"
 markers = [
     "dialogue",
     "meaning",
