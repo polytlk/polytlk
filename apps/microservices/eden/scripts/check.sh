@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Checking ..."
+# echo "Checking ..."
 
 while getopts ":f:c:" opt; do
   case $opt in
@@ -17,14 +17,14 @@ while getopts ":f:c:" opt; do
   esac
 done
 
-echo "args files $files"
-echo "args command $command"
+# echo "args files $files"
+# echo "args command $command"
 
 FOLDER="microservices/eden"
-FILES=$(echo $files | tr ',' '\n' | grep $FOLDER | grep -v '.json' | sed "s#apps/$FOLDER/##")
+FILES=$(echo $files | tr ',' '\n' | grep $FOLDER | grep -v '.json')
 
-echo "Folder $FOLDER"
-echo "FILES $FILES"
+# echo "Folder $FOLDER"
+# echo "FILES $FILES"
 
 TOML_FILES=$(echo $FILES | grep '.toml')
 
@@ -36,6 +36,6 @@ if [ -n "$FILES" ]; then
     fi
   fi
     if [ "$command" == "lint" ]; then
-    poetry run flake8 $FILES
+    poetry run flake8 $FILES --config "./apps/$FOLDER/.flake8"
   fi
 fi

@@ -30,4 +30,4 @@ exclude =
 
 per-file-ignores =
   # There are multiple fixtures, `assert`s, and subprocesses in tests:
-  tests/*.py: S101
+  tests/*.py: S101, S105, S404, S603, S607, WPS211, WPS226, WPS323

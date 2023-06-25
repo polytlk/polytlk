@@ -20,7 +20,7 @@ done
 # echo "args files $files"
 # echo "args command $command"
 
-FOLDER="workers/eden"
+FOLDER="microservices/olivia"
 FILES=$(echo $files | tr ',' '\n' | grep $FOLDER | grep -v '.json')
 
 # echo "Folder $FOLDER"

@@ -20,10 +20,12 @@ from pydantic import ValidationError
 from zhon.pinyin import sent as pinyin_sent
 from zhon.pinyin import syl as pinyin_syl
 
-from eden.chinese.schema import ChineseInterpretation as ChineseARI
+from eden.chinese.schema.ari import ChineseInterpretation as ChineseARI
 
 PROFILE = 'dev'
 LOCAL_MAX_EXAMPLES = 10
+
+DIALOGUE_PINYIN_ERR_PATTERN = r'1 validation error for ChineseInterpretation\ndialogue\n  [\u4e00-\u9fff] does not match sentence pattern from zhon\.pinyin'  # noqa: E501
 
 
 def is_cjk(char):  # noqa: D103
@@ -62,7 +64,7 @@ bad_dialogue_pinyin_st = tuples(hanji_word_st, hanji_word_st, text())
 
 
 @pytest.mark.meaning
-@given(builds(ChineseARI, words=good_words_st))
+@given(builds(ChineseARI, words=good_words_st, dialogue=good_dialogue_st))
 def test_non_empty_meaning(instance: ChineseARI):
     """Check meaning in interpretation model is not empty."""
     assert instance.meaning != ''
@@ -114,5 +116,5 @@ def test_words_hanji(words, dialogue, meaning):
 )
 def test_dialogue_pinyin(words, dialogue, meaning):
     """Check validation error is raised when word tuple has invalid pinyin."""
-    with pytest.raises(ValidationError, match='{0}'.format(pinyin_sent)):
+    with pytest.raises(ValidationError, match=DIALOGUE_PINYIN_ERR_PATTERN):
         ChineseARI(words=words, dialogue=dialogue, meaning=meaning)

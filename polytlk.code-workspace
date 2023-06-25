@@ -1,27 +1,36 @@
 {
 	"folders": [
 		{
-			"path": "apps/microservices/eden",
-			"name": "eden-svc"
+			"name": "eden-svc",
+			"path": "apps/microservices/eden"
 		},
 		{
-			"path": "apps/workers/eden",
-			"name": "eden-worker"
+			"name": "eden-worker",
+			"path": "apps/workers/eden"
 		},
 		{
+			"name": "socrates",
 			"path": "apps/microservices/socrates"
 		},
 		{
-			"path": "apps/microservices/olivia",
+			"name": "olivia",
+			"path": "apps/microservices/olivia"
 		},
 		{
-			"path": ".",
-			"name": "root"
+			"name": "root",
+			"path": "."
 		},
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,
-		"python.linting.enabled": false,
-		"python.linting.flake8Enabled": false
+		"python.linting.enabled": true,
+		"python.linting.flake8Enabled": false,
+		"python.linting.mypyEnabled": true,
+		"files.exclude": {
+			"**/__pycache__": true,
+			"**/*.hypothesis": true,
+			"**/*.mypy_cache": true,
+			"**/*.pytest_cache": true
+		}
 	}
 }

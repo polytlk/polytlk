@@ -1,20 +1,14 @@
-"""This module defines the schema of chinese interpretations.
-
-These schemas make it easy to work with and validation chinese interpretations
-
-Classes:
-    ChineseInterpretation: Data model to represent the Chinese interpretation
-    ResponseModel: Data model to represent the overall response
-"""
-import json
+"""This module defines the schema of a chinese ARI."""
+import re
 import unicodedata
-from typing import Any
 
 from pydantic import BaseModel, constr, validator
 from zhon.pinyin import sent as pinyin_sent
 from zhon.pinyin import syl as pinyin_syl
 
 from eden.model.singleton import ModelLoader
+
+DIA_PINYIN_ERR = '{0} does not match sentence pattern from zhon.pinyin'
 
 
 class ChineseInterpretation(BaseModel):
@@ -37,7 +31,7 @@ class ChineseInterpretation(BaseModel):
 
     words: list[tuple[str, constr(regex=pinyin_syl), str]]
     meaning: constr(min_length=1)
-    dialogue: list[tuple[str, constr(regex=pinyin_sent), str]]
+    dialogue: list[tuple[str, str, str]]
 
     @validator('words')
     def check_first_character(cls, words):
@@ -53,33 +47,10 @@ class ChineseInterpretation(BaseModel):
                     raise ValueError(f"The first character of the word tuple must be a CJK Unified Ideograph, got {word[0]} instead.")
         return words
 
+    @validator('dialogue')
+    def name_must_contain(cls, dialogues):
+        for dialogue in dialogues:
+            if not re.match(pinyin_sent, dialogue[1], re.IGNORECASE):
+                raise ValueError(DIA_PINYIN_ERR.format(dialogue[1]))
 
-
-class ResponseModel(BaseModel):
-    """A Pydantic model that represents the overall response for interpretation api.
-
-    Attributes:
-        response: raw interpretation in multiline string
-        ari_data (ChineseInterpretation): An instance of the ChineseInterpretation model.
-
-    Methods:
-        parse_inner_json: method that parses the nested JSON string into a Python object.
-    """
-
-    response: str
-    ari_data: ChineseInterpretation
-
-    @validator('ari_data', pre=True)
-    def parse_inner_json(cls, str_data: str) -> Any:  # noqa: N805
-        """
-        Parse the nested JSON string in the 'ari_data' field into a Python object.
-
-        This is a class method that serves as a validator for the 'ari_data' field.
-
-        Args:
-            str_data (str): The JSON string in the 'ari_data' field.
-
-        Returns:
-            Any: The Python object resulting from the parsed JSON string.
-        """
-        return json.loads(str_data)
+        return dialogues

@@ -11,7 +11,7 @@ import httpx
 from opentelemetry.instrumentation.httpx import SyncOpenTelemetryTransport
 from pydantic import ValidationError
 
-from eden.chinese.schema import ResponseModel
+from eden.chinese.schema.response import ResponseModel
 
 TIMEOUT = 40.0
 BASE_URL = 'http://socrates-svc:8079'
@@ -48,11 +48,7 @@ def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
         )
         try:
             final = ResponseModel.parse_raw(response.text)
-        except ValidationError as err:
-            words = response.json()['ari_data']['words']
-            print("err handler -> word - hanji {0}".format(words[0][0]))
-            print("err handler -> word - hanji len {0}".format(len(words[0][0])))
-            print(err)
+        except ValidationError:
             return None
 
         return final

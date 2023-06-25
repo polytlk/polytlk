@@ -21,8 +21,7 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./scripts/check.sh -f {args.files} -c format",
-        "cwd": "apps/microservices/socrates",
+        "command": "./apps/microservices/socrates/scripts/check.sh -f {args.files} -c format",
         "forwardAllArgs": true
       }
     },
@@ -62,8 +61,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"],
       "options": {
-        "command": "./scripts/check.sh -f {args.files} -c lint",
-        "cwd": "apps/microservices/socrates"
+        "command": "./apps/microservices/socrates/scripts/check.sh -f {args.files} -c lint",
       }
     },
     "test": {

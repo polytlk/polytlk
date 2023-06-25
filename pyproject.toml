@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "polytlk"
+version = "1.0.0"
+description = ""
+authors = [ ]
+license = "Proprietary"
+readme = "README.md"
+
+  [tool.poetry.dependencies]
+  python = ">=3.11,<4.0"
+
+    [tool.poetry.dependencies.polytlk-eden]
+    path = "apps/microservices/eden"
+    develop = true
+
+    [tool.poetry.dependencies.polytlk-olivia]
+    path = "apps/microservices/olivia"
+    develop = true
+
+    [tool.poetry.dependencies.socrates]
+    path = "apps/microservices/socrates"
+    develop = true
+
+    [tool.poetry.dependencies.polytlk-eden-worker]
+    path = "apps/workers/eden"
+    develop = true
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "2.0.0"
+httpx = "^0.24.1"
+hypothesis = "^6.77.0"
+mypy = "^1.3.0"
+pytest = "^7.3.2"
+toml-sort = "^0.23.1"
+
+  [tool.poetry.group.dev.dependencies.wemake-python-styleguide]
+  git = "https://github.com/wemake-services/wemake-python-styleguide.git"
+
+[build-system]
+requires = [ "poetry-core==1.1.0" ]
+build-backend = "poetry.core.masonry.api"

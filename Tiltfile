@@ -15,11 +15,11 @@ base = [
   'gateway-tyk-headless'
 ]
 
-
 # run a group like
 # tilt up -- chinese
 groups = {
   'chinese': ['eden-svc', 'eden-worker'] + base,
+  'korean': ['olivia-svc'] + base,
 }
 
 resources = []
@@ -34,8 +34,9 @@ config.set_enabled_resources(resources)
 
 include('./apps/microservices/socrates/Tiltfile')
 include('./apps/microservices/eden/Tiltfile')
-include('./apps/workers/eden/Tiltfile')
 include('./apps/microservices/olivia/Tiltfile')
+
+include('./apps/workers/eden/Tiltfile')
 
 helm_remote('opentelemetry-collector',
             repo_name='open-telemetry',
@@ -54,15 +55,6 @@ helm_remote('tyk-headless',
             repo_url='https://helm.tyk.io/public/helm/charts/',
             values=['tyk.yaml']
 )
-
-
-k8s_yaml('./apps/polytlk/kubernetes.yaml')
-k8s_resource('polytlk-web', port_forwards=4200)
-
-nerdctl_build('polytlk-web-img', '.',
-    dockerfile='./base.dockerfile'
-)
-
 
 
 

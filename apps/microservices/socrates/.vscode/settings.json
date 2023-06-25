@@ -1,12 +1,7 @@
 {
     "terminal.integrated.cwd": "../../..",
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true,
-    "files.exclude": {
-        "**/__pycache__": true,
-        "**/*.hypothesis": true,
-        "**/*.mypy_cache": true,
-        "**/*.pytest_cache": true
-    }
+    "python.defaultInterpreterPath": "../../../.venv/bin/python3.11",
+    "flake8.args": [
+        "--config=${workspaceFolder}/.flake8",
+    ]
 }

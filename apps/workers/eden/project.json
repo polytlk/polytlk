@@ -21,8 +21,7 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./scripts/check.sh -f {args.files} -c format",
-        "cwd": "apps/workers/eden",
+        "command": "./apps/workers/eden/scripts/check.sh -f {args.files} -c format",
         "forwardAllArgs": true
       }
     },
@@ -62,8 +61,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/reports/apps/workers/eden/pylint.txt"],
       "options": {
-        "command": "./scripts/check.sh -f {args.files} -c lint",
-        "cwd": "apps/workers/eden"
+        "command": "./apps/workers/eden/scripts/check.sh -f {args.files} -c lint",
       }
     },
     "test": {
@@ -73,8 +71,7 @@
         "{workspaceRoot}/coverage/apps/workers/eden"
       ],
       "options": {
-        "command": "poetry run pytest tests/",
-        "cwd": "apps/workers/eden"
+        "command": "poetry run pytest apps/workers/eden/tests/"
       }
     },
     "typecheck": {
