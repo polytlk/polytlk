@@ -10,6 +10,7 @@ import json
 from typing import Any, List, Tuple
 
 from pydantic import BaseModel, constr, validator
+from zhon.hanzi import characters
 from zhon.pinyin import sent, word
 
 
@@ -31,7 +32,7 @@ class ChineseInterpretation(BaseModel):
 
     """
 
-    words: List[Tuple[str, constr(regex=word), str]]
+    words: List[Tuple[constr(regex=characters), constr(regex=word), str]]
     meaning: constr(min_length=1)
     dialogue: List[Tuple[str, constr(regex=sent), str]]
 
