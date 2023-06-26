@@ -5,7 +5,7 @@ from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 origins = [
-    'http://localhost:4200',
+    '*',
 ]
 
 
