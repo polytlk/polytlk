@@ -1,13 +1,12 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'web-client',
+  appId: 'io.ionic.polytlk',
+  appName: 'polytlk-client',
   webDir: '../../dist/apps/web-client',
-  bundledWebRuntime: false,
-  server: {
-    androidScheme: 'https',
-  },
+  loggingBehavior: 'production',
+  bundledWebRuntime: false
+  
 };
 
-export default config;
+export default config

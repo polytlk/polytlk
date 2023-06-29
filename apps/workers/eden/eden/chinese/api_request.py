@@ -46,9 +46,9 @@ def get_en_interpretation(user_input: str) -> Optional[ResponseModel]:
                 'Content-Type': 'application/json',
             },
         )
-        try:
-            final = ResponseModel.parse_raw(response.text)
-        except ValidationError:
-            return None
-
-        return final
+        #try:
+        #    final = ResponseModel.parse_raw(response.text)
+        #except ValidationError:
+        #    return response.text
+        # TODO: make validation work again
+        return response.json()

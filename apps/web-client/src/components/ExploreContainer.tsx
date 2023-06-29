@@ -1,23 +1,42 @@
 import './ExploreContainer.css';
-
+import { useState, useEffect } from 'react'
 import InterpretBar from './InterpretContainer';
 
+import type { ClientConfig } from '../utils/config'
+import Config from '../utils/config'
 
 const ExploreContainer: React.FC<Record<string, never>> = () => {
+  const [taskResult, setTaskResult] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [config, setConfig] = useState<ClientConfig | null>(null);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      console.log("fetch config on mount")
+      const config = await Config.getInstance();
+      console.log('config')
+      console.log(config.get())
+      setConfig(config.get());
+      setIsLoading(false);
+    }
+
+    fetchConfig();
+  }, []);
+
+
+  const handleTaskResult = (result: string) => {
+    setTaskResult(result);
+  };
+
+  if (isLoading || !config) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className="container">
-      <strong>Ready to create an app?</strong>
-      <p>
-        Start with Ionic{' '}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://ionicframework.com/docs/components"
-        >
-          UI Components
-        </a>
-      </p>
-      <InterpretBar />
+      <strong>Welcome to polytlk. Please input chinese you want to understand.</strong>
+      {taskResult && <p>Task result: {taskResult}</p>}
+      <InterpretBar onTaskResult={handleTaskResult} config={config}/>
     </div>
   );
 };

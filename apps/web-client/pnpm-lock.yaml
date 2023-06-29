@@ -11,6 +11,9 @@ devDependencies:
   '@capacitor/cli':
     specifier: ^5.0.3
     version: 5.0.3
+  '@capacitor/device':
+    specifier: ../../node_modules/@capacitor/device
+    version: link:../../node_modules/@capacitor/device
   '@capacitor/ios':
     specifier: ../../node_modules/@capacitor/ios
     version: link:../../node_modules/@capacitor/ios

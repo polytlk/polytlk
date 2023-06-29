@@ -12,7 +12,9 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'gateway-tyk-headless'
+  'gateway-tyk-pro',
+  'dashboard-tyk-pro',
+  'mongo'
 ]
 
 # run a group like
@@ -50,10 +52,15 @@ helm_remote('redis',
             values=['redis.yaml']
 )
 
-helm_remote('tyk-headless',
+helm_remote('tyk-pro',
             repo_name='tyk-helm',
             repo_url='https://helm.tyk.io/public/helm/charts/',
             values=['tyk.yaml']
+)
+
+helm_remote('simple-mongodb',
+            repo_name='tyk-helm',
+            repo_url='https://helm.tyk.io/public/helm/charts/',
 )
 
 

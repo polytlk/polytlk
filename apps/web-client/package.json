@@ -1,8 +1,9 @@
 {
   "name": "web-client",
   "devDependencies": {
+    "@capacitor/android": "../../node_modules/@capacitor/android",
     "@capacitor/cli": "^5.0.3",
-    "@capacitor/ios": "../../node_modules/@capacitor/ios",
-    "@capacitor/android": "../../node_modules/@capacitor/android"
+    "@capacitor/device": "../../node_modules/@capacitor/device",
+    "@capacitor/ios": "../../node_modules/@capacitor/ios"
   }
 }

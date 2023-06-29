@@ -56,9 +56,10 @@ def sample_task(self, user_input: str) -> str:
 
     ari = get_en_interpretation(user_input)
 
+    # TODO: make validation work again
     if ari:
-        redis_db.set(str(self.request.id), ari.response)
-        return ari.response
+        redis_db.set(str(self.request.id), ari['response'])
+        return ari['response']
 
     redis_db.set(str(self.request.id), 'nothing')
     return 'ARI not generated for input -> {0}'.format(user_input)
