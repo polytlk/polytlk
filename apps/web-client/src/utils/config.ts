@@ -14,20 +14,15 @@ class Config {
   private constructor() {}
 
   public static async getInstance(): Promise<Config> {
-    console.log("getInstance!")
     if (!Config.instance) {
-      console.log("getInstance -> no instance")
       const _config = new Config();
-      console.log("getInstance -> load private instance")
       await _config.load();
-      console.log("getInstance -> assign private instance to class instance")
       Config.instance = _config
     }
     return Config.instance;
   }
 
   private async load() {
-    console.log("calling load!")
     const { platform, isVirtual } = await Device.getInfo();
     let env: Env;
 
@@ -36,8 +31,6 @@ class Config {
     } else {
       env = isVirtual ? 'simulated_ios' : 'real_dev_ios';
     }
-
-    console.log("load env -> ", env)
 
     switch (env) {
       case 'development':

@@ -2,8 +2,10 @@ import './ExploreContainer.css';
 import { useState, useEffect } from 'react'
 import InterpretBar from './InterpretContainer';
 
+
 import type { ClientConfig } from '../utils/config'
 import Config from '../utils/config'
+
 
 const ExploreContainer: React.FC<Record<string, never>> = () => {
   const [taskResult, setTaskResult] = useState<string>('');
@@ -12,10 +14,7 @@ const ExploreContainer: React.FC<Record<string, never>> = () => {
 
   useEffect(() => {
     const fetchConfig = async () => {
-      console.log("fetch config on mount")
       const config = await Config.getInstance();
-      console.log('config')
-      console.log(config.get())
       setConfig(config.get());
       setIsLoading(false);
     }
@@ -31,6 +30,8 @@ const ExploreContainer: React.FC<Record<string, never>> = () => {
   if (isLoading || !config) {
     return <p>Loading...</p>;
   }
+
+  
 
   return (
     <div className="container">

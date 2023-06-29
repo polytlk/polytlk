@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { assign } from "xstate";
 import { useMachine } from "@xstate/react";
 import React, { useEffect } from "react";
 import {
@@ -11,71 +11,19 @@ import {
   IonLoading,
 } from "@ionic/react";
 import type { ClientConfig } from "../utils/config";
+import { interpret } from "xstate";
 
-type MachineEvents =
-  | { type: 'SUBMIT' }
-  | { type: 'UPDATE_LANGUAGE'; language: string }
-  | { type: 'UPDATE_TEXT'; text: string }
-  | { type: 'TASK_RECEIVED'; taskId: string }
-  | { type: 'NEW_TASK' };
 
-const machine = createMachine<{language: string, text: string, taskId: string, inputError: string, inputColor: string, loading: boolean}, MachineEvents>({
-    id: "task",
-    initial: "idle",
-    context: {
-      language: "zh",
-      text: "",
-      taskId: "",
-      inputError: "",
-      inputColor: "light",
-      loading: false,
-    },
-    states: {
-      idle: {
-        on: {
-          SUBMIT: [
-            {
-              target: "loading",
-              cond: "isChinese",
-              actions: ["submitChinese", "setLoading"],
-            },
-            { target: "idle", actions: "setError" },
-          ],
-          UPDATE_LANGUAGE: {
-            actions: assign({ language: (_, event) => event.language }),
-          },
-          UPDATE_TEXT: {
-            actions: assign({ text: (_, event) => event.text }),
-          },
-        },
-      },
-      loading: {
-        on: {
-          TASK_RECEIVED: {
-            target: "completed",
-            actions: ["setTaskId", "clearError"],
-          },
-        },
-      },
-      completed: {
-        on: {
-          NEW_TASK: {
-            target: "idle",
-            actions: ["resetLoading"],
-          },
-        },
-      },
-    },
-  });
+import { machine } from './machine'
 
 const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
-    <IonItem>
-        <IonLabel>Language</IonLabel>
-        <IonSelect value={language} placeholder="Select One" onIonChange={e => onLanguageChange(e.detail.value)}>
-            <IonSelectOption value="zh">Chinese</IonSelectOption>
-            <IonSelectOption value="kr">Korean</IonSelectOption>
-        </IonSelect>
-    </IonItem>
+  <IonItem>
+    <IonLabel>Language</IonLabel>
+    <IonSelect value={language} placeholder="Select One" onIonChange={e => onLanguageChange(e.detail.value)}>
+      <IonSelectOption value="zh">Chinese</IonSelectOption>
+      <IonSelectOption value="kr">Korean</IonSelectOption>
+    </IonSelect>
+  </IonItem>
 );
 
 
@@ -83,13 +31,13 @@ const InterpretBar: React.FC<{
   onTaskResult: (res: string) => void;
   config: ClientConfig;
 }> = ({ onTaskResult, config }) => {
-  const [state, send] = useMachine(machine, {
+  const [state, send, ] = useMachine(machine, {
+    devTools: true,
     guards: {
       isChinese: (context) => context.language === "zh",
     },
     actions: {
       submitChinese: (context) => {
-        console.log("context", context)
         // Fetch logic goes here, this is a mock example
         fetch(`${config.baseUrl}/chinese`, {
           method: "POST",
@@ -108,7 +56,7 @@ const InterpretBar: React.FC<{
         if (event.type !== 'TASK_RECEIVED') return {};
         return {
           taskId: event.taskId,
-        }   
+        }
       }),
       setError: assign({
         inputError: "Please enter valid Chinese",
@@ -119,7 +67,6 @@ const InterpretBar: React.FC<{
   });
 
   useEffect(() => {
-    console.log("eventSource -> state.context", state.context)
     if (state.context.taskId) {
       const eventSource = new EventSource(
         `${config.baseUrl}/task/${state.context.taskId}/stream`
@@ -155,9 +102,9 @@ const InterpretBar: React.FC<{
         <IonInput
           value={state.context.text}
           placeholder="Enter Text"
-          onIonChange={(e) =>  {
-                send({ type: "UPDATE_TEXT", text: e.detail.value + "" } as const)
-            }
+          onIonChange={(e) => {
+            send({ type: "UPDATE_TEXT", text: e.detail.value + "" } as const)
+          }
           }
           clearInput
         />
