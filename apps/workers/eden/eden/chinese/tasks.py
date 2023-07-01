@@ -1,4 +1,5 @@
 """Module that contains all the processing work for before openai."""
+import json
 from typing import Any
 
 from celery import shared_task
@@ -9,7 +10,6 @@ from redis import Redis
 from eden.chinese.api_request import get_en_interpretation
 from eden.model.singleton import ModelLoader
 from eden.tracing import tracer
-
 
 redis_db = Redis(host='redis-master.default.svc.cluster.local', port=6379, db=0)
 
@@ -40,7 +40,7 @@ def setup_celery(sender=None, conf=None, **kwargs):
 
 
 @shared_task(bind=True)  # type: ignore
-def sample_task(self, user_input: str) -> str:
+def sample_task(self, user_input: str) -> Any:
     """Call socrates in a non gating way."""
     model = None
     tokens = None
@@ -58,8 +58,8 @@ def sample_task(self, user_input: str) -> str:
 
     # TODO: make validation work again
     if ari:
-        redis_db.set(str(self.request.id), ari['response'])
-        return ari['response']
+        redis_db.set(str(self.request.id), json.dumps(ari))
+        return ari
 
     redis_db.set(str(self.request.id), 'nothing')
     return 'ARI not generated for input -> {0}'.format(user_input)

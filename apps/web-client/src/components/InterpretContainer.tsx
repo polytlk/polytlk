@@ -74,8 +74,8 @@ const InterpretBar: React.FC<{
       );
 
       eventSource.onmessage = (event) => {
-        const result = event.data ? event.data : "ari could not be generated :(";
-        onTaskResult(result);
+        const result = event.data ? JSON.parse(event.data)['ari_data'] : "ari could not be generated :(";
+        onTaskResult(result)
         send("NEW_TASK");
         eventSource.close();
       };

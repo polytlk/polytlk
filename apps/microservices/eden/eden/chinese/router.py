@@ -1,4 +1,5 @@
 """Handles validation and task generation for chinese."""
+import json
 import time
 from typing import Any, Generator
 
@@ -50,7 +51,8 @@ async def task_stream(task_id: str) -> EventSourceResponse:
         while True:
             task_result = redis_db.get(tid)
             if task_result is not None:
-                yield f"data: {task_result.decode('utf-8')}\n\n"
+                data_dict = json.loads(task_result.decode('utf-8'))
+                yield json.dumps(data_dict)
                 break
             time.sleep(1)
     return EventSourceResponse(event_generator(task_id))
