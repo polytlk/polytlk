@@ -40,7 +40,7 @@ const InterpretBar: React.FC<{
     actions: {
       submitChinese: (context) => {
         // Fetch logic goes here, this is a mock example
-        fetch(`${config.baseUrl}/chinese`, {
+        fetch(`${config.baseUrl}/api/chinese/interpretation`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ const InterpretBar: React.FC<{
   useEffect(() => {
     if (state.context.taskId) {
       const eventSource = new EventSource(
-        `${config.baseUrl}/task/${state.context.taskId}/stream`
+        `${config.baseUrl}/api/chinese/task/${state.context.taskId}/stream`
       );
 
       eventSource.onmessage = (event) => {

@@ -13,9 +13,7 @@ base = [
   'opentelemetry-collector',
   'redis-master',
   'gateway-tyk-headless',
-  'tyk-operator-controller-manager',
-  # 'dashboard-tyk-pro',
-  # 'mongo'
+  'tyk-operator-controller-manager'
 ]
 
 # run a group like

@@ -37,9 +37,9 @@ class Config {
         this.data = {
             env,
             // USE LOCAL K8s CLUSTER INSTEAD OF MSW
-            // baseUrl: 'http://localhost:6688',
+            baseUrl: 'http://localhost:8080',
             // USE MSW INSTEAD OF LOCAL K8s CLUSTER
-            baseUrl: 'http://localhost:4200',
+            // baseUrl: 'http://localhost:4200',
         };
         break;
       case 'simulated_ios':

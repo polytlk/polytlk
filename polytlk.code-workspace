@@ -40,6 +40,9 @@
 			"**/*.mypy_cache": true,
 			"**/*.pytest_cache": true
 		},
-		"eslint.enable": false
+		"eslint.enable": false,
+		"yaml.schemas": {
+			"kubernetes://schema/tyk.tyk.io/v1alpha1@apidefinition": "file:///Users/haiturtle/Public/polytlk/k8s/tyk/apis/eden.yaml"
+		}
 	}
 }

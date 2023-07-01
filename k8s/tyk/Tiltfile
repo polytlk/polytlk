@@ -6,24 +6,15 @@ load('ext://secret', 'secret_from_dict')
 # define tyk namespace
 tyk_namespace = 'tyk'
 
-
 # create the namespace using local command and kubectl
 local('kubectl create namespace {} || true'.format(tyk_namespace))
 
-
-# helm_remote('tyk-pro',
 helm_remote('tyk-headless',
             repo_name='tyk-helm',
             repo_url='https://helm.tyk.io/public/helm/charts/',
             namespace=tyk_namespace,
             values=['tyk.yaml']
 )
-
-# helm_remote('simple-mongodb',
-#            repo_name='tyk-helm',
-#           repo_url='https://helm.tyk.io/public/helm/charts/',
-# )
-
 
 system_namespace = 'tyk-operator-system'
 local('kubectl create namespace {} || true'.format(system_namespace))
@@ -52,5 +43,4 @@ helm_remote('tyk-operator',
             allow_duplicates=False
 )
 
-
-k8s_yaml('./apis/httpbin.yaml')
+k8s_yaml('./apis/eden.yaml')

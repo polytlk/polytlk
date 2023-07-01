@@ -19,7 +19,7 @@ celery_app = create_celery()
 redis_db = Redis(host='redis-master.default.svc.cluster.local', port=6379, db=0)
 
 
-@router.post('/chinese', response_model=ChineseTask, responses={422: {'model': Message}})
+@router.post('/interpretation', response_model=ChineseTask, responses={422: {'model': Message}})
 async def chinese_endpoint(user_query: ChineseQuery) -> Any:
     """Do NLP preprocessing and other logic before calling socrates."""
     is_chinese = False
