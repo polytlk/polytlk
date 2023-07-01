@@ -9,9 +9,10 @@ import {
   IonSelectOption,
   IonButton,
   IonLoading,
+  IonCol,
+  IonRow
 } from "@ionic/react";
 import type { ClientConfig } from "../utils/config";
-import { interpret } from "xstate";
 
 
 import { machine } from './machine'
@@ -20,8 +21,8 @@ const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language
   <IonItem>
     <IonLabel>Language</IonLabel>
     <IonSelect value={language} placeholder="Select One" onIonChange={e => onLanguageChange(e.detail.value)}>
-      <IonSelectOption value="zh">Chinese</IonSelectOption>
-      <IonSelectOption value="kr">Korean</IonSelectOption>
+      <IonSelectOption value="zh"><span role="img">🇨🇳</span></IonSelectOption>
+      <IonSelectOption value="kr"><span role="img">🇰🇷</span></IonSelectOption>
     </IonSelect>
   </IonItem>
 );
@@ -31,7 +32,7 @@ const InterpretBar: React.FC<{
   onTaskResult: (res: string) => void;
   config: ClientConfig;
 }> = ({ onTaskResult, config }) => {
-  const [state, send, ] = useMachine(machine, {
+  const [state, send,] = useMachine(machine, {
     devTools: true,
     guards: {
       isChinese: (context) => context.language === "zh",
@@ -90,31 +91,40 @@ const InterpretBar: React.FC<{
   };
 
   return (
-    <div>
-      {state.context.inputError && <p>{state.context.inputError}</p>}
-      <LanguageSelector
-        language={state.context.language}
-        onLanguageChange={(language) =>
-          send({ type: "UPDATE_LANGUAGE", language })
-        }
-      />
-      <IonItem color={state.context.inputColor}>
-        <IonInput
-          value={state.context.text}
-          placeholder="Enter Text"
-          onIonChange={(e) => {
-            send({ type: "UPDATE_TEXT", text: e.detail.value + "" } as const)
-          }
-          }
-          clearInput
-        />
-      </IonItem>
-      <IonButton onClick={handleSubmit}>Start Task</IonButton>
+    <>
+      {state.context.inputError && <IonRow><p>{state.context.inputError}</p></IonRow>}
+      <IonRow>
+        <IonCol size="2">
+          <LanguageSelector
+            language={state.context.language}
+            onLanguageChange={(language) =>
+              send({ type: "UPDATE_LANGUAGE", language })
+            }
+          />
+        </IonCol>
+        <IonCol>
+          <IonItem color={state.context.inputColor}>
+            <IonInput
+              value={state.context.text}
+              placeholder="Enter Text"
+              onIonChange={(e) => {
+                send({ type: "UPDATE_TEXT", text: e.detail.value + "" } as const)
+              }
+              }
+              clearInput
+            />
+          </IonItem>
+        </IonCol>
+        <IonCol size="1">
+          <IonButton onClick={handleSubmit}>Submit</IonButton>
+        </IonCol>
+      </IonRow>
       <IonLoading
         message={"Loading..."}
         isOpen={state.context.loading}
+        backdropDismiss={true}
       />
-    </div>
+    </>
   );
 };
 

@@ -14,14 +14,14 @@ const Home: React.FC = () => {
     <IonPage id="main">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Interpret</IonTitle>
           <IonMenuButton autoHide={false} slot="end" />
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">Interpret</IonTitle>
             <IonMenuButton autoHide={false} slot="end" />
           </IonToolbar>
         </IonHeader>

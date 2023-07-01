@@ -1,4 +1,4 @@
-import './ExploreContainer.css';
+import { IonGrid, IonRow, IonCol, IonImg } from '@ionic/react';
 import { useState, useEffect } from 'react'
 import InterpretBar from './InterpretContainer';
 
@@ -31,14 +31,25 @@ const ExploreContainer: React.FC<Record<string, never>> = () => {
     return <p>Loading...</p>;
   }
 
-  
+
 
   return (
-    <div className="container">
-      <strong>Welcome to polytlk. Please input chinese you want to understand.</strong>
-      {taskResult && <p>Task result: {taskResult}</p>}
-      <InterpretBar onTaskResult={handleTaskResult} config={config}/>
-    </div>
+    <IonGrid fixed={true}>
+      <IonRow><strong style={{ fontSize: "1.5em", textAlign: "center", width: "100%", marginTop: '4em' }}>Welcome to Polytlk. Please input chinese you want to understand.</strong></IonRow>
+      <IonRow className="ion-align-items-center" style={{'margin': "2em"}}>
+        {taskResult
+          ? <p>Task result: {taskResult}</p>
+          : <>
+            <IonCol size='3'></IonCol>
+            <IonCol size="6" className="ion-padding-top ion-padding-bottom">
+              <IonImg src="https://source.unsplash.com/random/800x600" alt="Your Description" style={{ width: '100%', height: '200px', objectFit: 'cover', margin: 'auto' }} />
+            </IonCol>
+            <IonCol size='3'></IonCol>
+          </>
+        }
+      </IonRow>
+      <InterpretBar onTaskResult={handleTaskResult} config={config} />
+    </IonGrid >
   );
 };
 
