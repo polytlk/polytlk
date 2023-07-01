@@ -21,6 +21,10 @@
 			"path": "apps/web-client"
 		},
 		{
+			"name": "k8s",
+			"path": "k8s"
+		},
+		{
 			"name": "root",
 			"path": "."
 		},

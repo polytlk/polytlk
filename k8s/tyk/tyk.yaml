@@ -22,6 +22,7 @@ secrets:
   # If you don't want to store plaintext secrets in the Helm value file and would
   # rather provide the k8s Secret externally please populate the value below
   useSecretName: ""
+  secrets.OrgID: "5e9d9544a1dcd60001d0ed20"
 
 redis:
   # The addrs value will allow you to set your Redis addresses.
@@ -125,18 +126,13 @@ gateway:
   ingress:
     enabled: false
     # specify your ingress controller class name below
-    className: "traefik"
-    annotations: {
-      kubernetes.io/ingress.class: "traefik"
-    }
+    className: "tyk"
       
       # kubernetes.io/tls-acme: "true"
     hosts:
       - host: local.testing
         paths:
           - path: /
-            pathType: ImplementationSpecific
-          - path: /hello
             pathType: ImplementationSpecific
     tls: []
   #  - secretName: chart-example-tls
