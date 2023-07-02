@@ -14,6 +14,7 @@ spec:
   CORS:
     enable: true
     allowed_origins:
+    - https://polytlk.ngrok.io
     - http://localhost:4200
     allowed_methods:
     - GET
