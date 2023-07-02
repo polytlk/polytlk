@@ -1,6 +1,10 @@
 load('ext://helm_remote', 'helm_remote')
+load('ext://helm_resource', 'helm_resource', 'helm_repo')
 load('ext://cert_manager', 'deploy_cert_manager')
 load('ext://secret', 'secret_from_dict')
+
+helm_repo(name='tyk-helm', url='https://helm.tyk.io/public/helm/charts/', labels=['helm'])
+
 
 
 # define tyk namespace
@@ -9,11 +13,16 @@ tyk_namespace = 'tyk'
 # create the namespace using local command and kubectl
 local('kubectl create namespace {} || true'.format(tyk_namespace))
 
-helm_remote('tyk-headless',
-            repo_name='tyk-helm',
-            repo_url='https://helm.tyk.io/public/helm/charts/',
-            namespace=tyk_namespace,
-            values=['tyk.yaml']
+
+helm_resource(
+    name='tyk-headless',
+    chart='tyk-helm/tyk-headless',
+    release_name='tyk-headless',
+    namespace=tyk_namespace,
+    flags=['--values=./tyk.yaml'],
+    labels=['api-gateway'],
+    resource_deps=['tyk-helm'],
+    port_forwards='8080'
 )
 
 system_namespace = 'tyk-operator-system'
@@ -36,11 +45,19 @@ k8s_yaml(secret_from_dict(
     }
 ))
 
-helm_remote('tyk-operator',
-            repo_name='tyk-helm',
-            repo_url='https://helm.tyk.io/public/helm/charts/',
-            namespace=system_namespace,
-            allow_duplicates=False
+helm_resource(
+    name='tyk-operator',
+    chart='tyk-helm/tyk-operator',
+    release_name='tyk-operator',
+    namespace=system_namespace,
+    labels=['api-gateway'],
+    resource_deps=['tyk-helm', 'tyk-headless']
 )
 
 k8s_yaml('./apis/eden.yaml')
+k8s_resource(
+  objects=['eden-api:apidefinition'],
+  new_name='eden-api',
+  labels=['api-gateway'],
+  resource_deps=['tyk-helm', 'tyk-headless']
+)

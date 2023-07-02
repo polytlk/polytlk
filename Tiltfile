@@ -12,14 +12,15 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'gateway-tyk-headless',
-  'tyk-operator-controller-manager'
+  'tyk-helm',
+  'tyk-headless',
+  'tyk-operator'
 ]
 
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker'] + base,
+  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + base,
   'korean': ['olivia-svc'] + base,
 }
 

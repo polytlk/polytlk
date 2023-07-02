@@ -38,7 +38,7 @@ redis:
   #   Example using tyk simple redis chart
   #   - redis.tyk.svc.cluster.local:6379
   #   Example using bitnami/redis
-    - redis-master.default.svc.cluster.local:6379
+  - redis-master.default.svc.cluster.local:6379
   #   Example using bitnami/redis with sentinel
   #   - tyk-redis.tyk.svc.cluster.local:26379
   #   Example using bitnami/redis-cluster
@@ -125,39 +125,26 @@ gateway:
   # annotation to that ingress controller.
   ingress:
     enabled: false
-    # specify your ingress controller class name below
-    className: "tyk"
-      
-      # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: local.testing
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-    tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
   resources: {}
-    # We usually recommend not to specify default resources and to leave this
-    # as a conscious choice for the user. This also increases chances charts
-    # run on environments with little resources, such as Minikube. If you do
-    # want to specify resources, uncomment the following lines, adjust them
-    # as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+  # We usually recommend not to specify default resources and to leave this
+  # as a conscious choice for the user. This also increases chances charts
+  # run on environments with little resources, such as Minikube. If you do
+  # want to specify resources, uncomment the following lines, adjust them
+  # as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
   securityContext:
     runAsUser: 1000
     fsGroup: 2000
   nodeSelector: {}
   tolerations:
-    - key: node-role.kubernetes.io/master
-      effect: NoSchedule
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
   affinity: {}
   extraEnvs: []
   ## extraVolumes A list of volumes to be added to the pod
@@ -190,17 +177,17 @@ pump:
     pullPolicy: IfNotPresent
   annotations: {}
   resources: {}
-    # We usually recommend not to specify default resources and to leave this
-    # as a conscious choice for the user. This also increases chances charts
-    # run on environments with little resources, such as Minikube. If you do
-    # want to specify resources, uncomment the following lines, adjust them
-    # as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
+  # We usually recommend not to specify default resources and to leave this
+  # as a conscious choice for the user. This also increases chances charts
+  # run on environments with little resources, such as Minikube. If you do
+  # want to specify resources, uncomment the following lines, adjust them
+  # as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
   securityContext:
     runAsUser: 1000
     fsGroup: 2000
