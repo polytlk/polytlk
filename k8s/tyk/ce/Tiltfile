@@ -1,0 +1,18 @@
+load('ext://helm_resource', 'helm_resource')
+
+# define tyk namespace
+tyk_namespace = 'tyk'
+
+# create the namespace using local command and kubectl
+local('kubectl create namespace {} || true'.format(tyk_namespace))
+
+helm_resource(
+    name='tyk-headless',
+    chart='tyk-helm/tyk-headless',
+    release_name='tyk-headless',
+    namespace=tyk_namespace,
+    flags=['--values=./tyk.yaml'],
+    labels=['api-gateway'],
+    resource_deps=['tyk-helm'],
+    port_forwards='8080'
+)

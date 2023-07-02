@@ -1,0 +1,47 @@
+load('ext://helm_remote', 'helm_remote')
+load('ext://helm_resource', 'helm_resource')
+load('ext://cert_manager', 'deploy_cert_manager')
+load('ext://secret', 'secret_from_dict')
+
+system_namespace = 'tyk-operator-system'
+local('kubectl create namespace {} || true'.format(system_namespace))
+
+# deploy cert manager
+deploy_cert_manager(version='v1.8.0')
+
+USE_TYK_PRO = os.environ.get('USE_TYK_PRO', False)
+
+OPERATOR_DEPS = []
+
+if USE_TYK_PRO:
+    local_resource(
+        name='tyk-copy-op-conf',
+        cmd="kubectl get secret tyk-operator-conf -n tyk-pro -o yaml | sed 's/namespace: tyk-pro/namespace: tyk-operator-system/' | kubectl apply -n tyk-operator-system --force -f -",
+        labels=['ops'],
+        resource_deps=['tyk-pro']
+    )
+    OPERATOR_DEPS = ['tyk-copy-op-conf']
+else:      
+    OPERATOR_DEPS = ['tyk-headless']
+
+    # create the secret
+    k8s_yaml(secret_from_dict(
+        name='tyk-operator-conf',
+        namespace=system_namespace,
+        inputs={
+            'TYK_MODE': 'ce',
+            'TYK_URL': 'http://gateway-svc-tyk-headless.tyk.svc.cluster.local:8080',
+            'TYK_ORG': '5e9d9544a1dcd60001d0ed20',
+            'TYK_AUTH': 'CHANGEME', 
+            'TYK_TLS_INSECURE_SKIP_VERIFY': 'true'
+        }
+    ))
+
+helm_resource(
+    name='tyk-operator',
+    chart='tyk-helm/tyk-operator',
+    release_name='tyk-operator',
+    namespace=system_namespace,
+    labels=['ops'],
+    resource_deps=OPERATOR_DEPS
+)

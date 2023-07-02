@@ -1,0 +1,7 @@
+k8s_yaml('./eden.yaml')
+k8s_resource(
+  objects=['eden-api:apidefinition'],
+  new_name='eden-api',
+  labels=['api-gateway'],
+  resource_deps=['tyk-operator']
+)

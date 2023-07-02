@@ -1,11 +1,18 @@
 import { Device } from '@capacitor/device';
 
+
+
 type Env = 'development' | 'simulated_ios' | 'real_dev_ios';
 
 export type ClientConfig = {
     baseUrl: string;
     env: Env
 };
+
+// USE (PRO) TYK DASHBOARD
+// const BASE_LOCAL_URL = 'http://localhost:3000'
+// USE (CE) TYK GATEWAY
+const BASE_LOCAL_URL = 'http://localhost:8080'
 
 class Config {
   private static instance: Config;
@@ -36,22 +43,22 @@ class Config {
       case 'development':
         this.data = {
             env,
-            // USE LOCAL K8s CLUSTER INSTEAD OF MSW
-            baseUrl: 'http://localhost:8080',
-            // USE MSW INSTEAD OF LOCAL K8s CLUSTER
+            // USE TYK GATEWAY INSTEAD OF MSW
+            baseUrl: BASE_LOCAL_URL,
+            // USE MSW INSTEAD OF TYK GATEWAY
             // baseUrl: 'http://localhost:4200',
         };
         break;
       case 'simulated_ios':
         this.data = {
             env,
-            baseUrl: 'http://localhost:6688'
+            baseUrl: BASE_LOCAL_URL
         };
         break;
       case 'real_dev_ios':
         this.data = {
             env,
-            baseUrl: 'https://ua5kk745.ngrok.app',
+            baseUrl: 'https://polytlk.ngrok.io',
         };
         break;
       default:

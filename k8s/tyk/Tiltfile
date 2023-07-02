@@ -1,63 +1,13 @@
-load('ext://helm_remote', 'helm_remote')
-load('ext://helm_resource', 'helm_resource', 'helm_repo')
-load('ext://cert_manager', 'deploy_cert_manager')
-load('ext://secret', 'secret_from_dict')
+load('ext://helm_resource', 'helm_repo')
 
 helm_repo(name='tyk-helm', url='https://helm.tyk.io/public/helm/charts/', labels=['helm'])
 
+include('./operator/Tiltfile')
+include('./apis/Tiltfile')
 
+USE_TYK_PRO = os.environ.get('USE_TYK_PRO', False)
 
-# define tyk namespace
-tyk_namespace = 'tyk'
-
-# create the namespace using local command and kubectl
-local('kubectl create namespace {} || true'.format(tyk_namespace))
-
-
-helm_resource(
-    name='tyk-headless',
-    chart='tyk-helm/tyk-headless',
-    release_name='tyk-headless',
-    namespace=tyk_namespace,
-    flags=['--values=./tyk.yaml'],
-    labels=['api-gateway'],
-    resource_deps=['tyk-helm'],
-    port_forwards='8080'
-)
-
-system_namespace = 'tyk-operator-system'
-local('kubectl create namespace {} || true'.format(system_namespace))
-
-# deploy cert manager
-deploy_cert_manager(version='v1.8.0')
-
-
-# create the secret
-k8s_yaml(secret_from_dict(
-    name='tyk-operator-conf',
-    namespace=system_namespace,
-    inputs={
-        'TYK_AUTH': 'CHANGEME', 
-        'TYK_MODE': 'ce',
-        'TYK_ORG': '5e9d9544a1dcd60001d0ed20',
-        'TYK_URL': 'http://gateway-svc-tyk-headless.tyk.svc.cluster.local:8080',
-        'TYK_TLS_INSECURE_SKIP_VERIFY': 'true'
-    }
-))
-
-helm_resource(
-    name='tyk-operator',
-    chart='tyk-helm/tyk-operator',
-    release_name='tyk-operator',
-    namespace=system_namespace,
-    labels=['api-gateway'],
-    resource_deps=['tyk-helm', 'tyk-headless']
-)
-
-k8s_yaml('./apis/eden.yaml')
-k8s_resource(
-  objects=['eden-api:apidefinition'],
-  new_name='eden-api',
-  labels=['api-gateway'],
-  resource_deps=['tyk-helm', 'tyk-headless']
-)
+if USE_TYK_PRO:
+    load_dynamic('./pro/Tiltfile')
+else:
+    load_dynamic('./ce/Tiltfile')

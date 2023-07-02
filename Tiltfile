@@ -8,20 +8,28 @@ config.clear_enabled_resources()
 config.define_string_list("to-run", args=True)
 cfg = config.parse()
 
+USE_TYK_PRO = os.environ.get('USE_TYK_PRO', False)
+
 base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
   'tyk-helm',
-  'tyk-headless',
   'tyk-operator'
 ]
+
+tyk = []
+
+if USE_TYK_PRO:
+    tyk = ['tyk-pro', 'mongo', 'tyk-copy-op-conf']
+else:
+    tyk = ['tyk-headless']
 
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + base,
-  'korean': ['olivia-svc'] + base,
+  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + base + tyk,
+  'korean': ['olivia-svc'] + base + tyk,
 }
 
 resources = []
