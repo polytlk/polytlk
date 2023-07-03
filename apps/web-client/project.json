@@ -67,7 +67,8 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "web-client:build:development"
+          "buildTarget": "web-client:build:development",
+          "allowedHosts": "polytlk.ngrok.io"
         },
         "production": {
           "buildTarget": "web-client:build:production",
