@@ -1,4 +1,7 @@
 load('ext://helm_resource', 'helm_resource')
+load('ext://dotenv', 'dotenv')
+
+dotenv()
 
 # define tyk namespace
 tyk_namespace = 'tyk-pro'
@@ -20,7 +23,10 @@ helm_resource(
     name='tyk-pro',
     chart='tyk-helm/tyk-pro',
     release_name='tyk-pro',
-    flags=['--values=./tyk-pro.yaml'],
+    flags=[
+        '--values=./tyk-pro.yaml',
+        '--set=dash.license={0}'.format(os.environ.get('TYK_DASHBOARD_KEY'))
+    ],
     namespace=tyk_namespace,
     labels=['api-gateway'],
     resource_deps=['mongo'],
