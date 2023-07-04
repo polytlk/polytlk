@@ -1,6 +1,6 @@
 import { assign } from "xstate";
 import { useMachine } from "@xstate/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   IonInput,
   IonItem,
@@ -12,10 +12,10 @@ import {
   IonCol,
   IonRow
 } from "@ionic/react";
-import type { ClientConfig } from "../utils/config";
 
 
 import { machine } from './machine'
+import ConfigContext from "../ConfigContext";
 
 const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
   <IonItem>
@@ -30,8 +30,11 @@ const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language
 
 const InterpretBar: React.FC<{
   onTaskResult: (res: string) => void;
-  config: ClientConfig;
-}> = ({ onTaskResult, config }) => {
+}> = ({ onTaskResult }) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const config = useContext(ConfigContext)!
+
+
   const [state, send,] = useMachine(machine, {
     devTools: true,
     guards: {

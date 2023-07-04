@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@byteowls/capacitor-oauth2':
+    specifier: ^4.0.2
+    version: 4.0.2(@capacitor/core@5.0.3)
   '@capacitor/core':
     specifier: ^5.0.3
     version: 5.0.3
@@ -32,6 +35,9 @@ dependencies:
   '@xstate/react':
     specifier: ^3.2.2
     version: 3.2.2(@types/react@18.0.28)(react@18.2.0)(xstate@4.38.0)
+  capacitor-secure-storage-plugin:
+    specifier: ^0.9.0
+    version: 0.9.0(@capacitor/core@5.0.3)
   ionicons:
     specifier: ^7.1.2
     version: 7.1.2
@@ -1622,6 +1628,14 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@byteowls/capacitor-oauth2@4.0.2(@capacitor/core@5.0.3):
+    resolution: {integrity: sha512-9D8/pXVUf43HzUY0N4CATLGN4ldpsnj3dVfL3RPix6i3hbqitsoOdgHaWTNv4Iwjz4s+onF+DK/2f2z1kHX3Ag==}
+    peerDependencies:
+      '@capacitor/core': '>=4'
+    dependencies:
+      '@capacitor/core': 5.0.3
+    dev: false
 
   /@capacitor/android@5.0.3(@capacitor/core@5.0.3):
     resolution: {integrity: sha512-jPN6JJUbN2cCrAjP+0Q4gIwIxleFVChZWh+/gsbDDfSpogdpZNwZnriUNxSRTZayL58tUzLHuxpJxY6hsddDrA==}
@@ -4957,6 +4971,14 @@ packages:
   /caniuse-lite@1.0.30001507:
     resolution: {integrity: sha512-SFpUDoSLCaE5XYL2jfqe9ova/pbQHEmbheDf5r4diNwbAgR3qxM9NQtfsiSscjqoya5K7kFcHPUQ+VsUkIJR4A==}
     dev: true
+
+  /capacitor-secure-storage-plugin@0.9.0(@capacitor/core@5.0.3):
+    resolution: {integrity: sha512-P5fiC94opcLHu41vceo9weXH+20g0SPYKkeAx+qm9eKNcVFqpcuI4dqwivXlGXYNMDygyjSQuAaFwZ4gW0Y91Q==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
+    dependencies:
+      '@capacitor/core': 5.0.3
+    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}

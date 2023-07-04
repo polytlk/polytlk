@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@byteowls/capacitor-oauth2':
+    specifier: ../../node_modules/@byteowls/capacitor-oauth
+    version: link:../../node_modules/@byteowls/capacitor-oauth
   '@capacitor/android':
     specifier: ../../node_modules/@capacitor/android
     version: link:../../node_modules/@capacitor/android

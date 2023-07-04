@@ -1,36 +1,17 @@
 import { IonGrid, IonRow, IonCol, IonImg } from '@ionic/react';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import InterpretBar from './InterpretContainer';
 
-
-import type { ClientConfig } from '../utils/config'
-import Config from '../utils/config'
 import LanguageDataComponent from './LanguageDataComponent';
 
 
-const ExploreContainer: React.FC<Record<string, never>> = () => {
+const ExploreContainer: React.FC = () => {
   const [taskResult, setTaskResult] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [config, setConfig] = useState<ClientConfig | null>(null);
-
-  useEffect(() => {
-    const fetchConfig = async () => {
-      const config = await Config.getInstance();
-      setConfig(config.get());
-      setIsLoading(false);
-    }
-
-    fetchConfig();
-  }, []);
-
 
   const handleTaskResult = (result: string) => {
     setTaskResult(result);
   };
 
-  if (isLoading || !config) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <IonGrid fixed={true}>
@@ -47,7 +28,7 @@ const ExploreContainer: React.FC<Record<string, never>> = () => {
           </>
         }
       </IonRow>
-      <InterpretBar onTaskResult={handleTaskResult} config={config} />
+      <InterpretBar onTaskResult={handleTaskResult} />
     </IonGrid >
   );
 };
