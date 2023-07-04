@@ -1,7 +1,10 @@
 load('ext://nerdctl', 'nerdctl_build')
 
 k8s_yaml('kubernetes.yaml')
-k8s_resource('heimdall-svc', labels=["auth"], port_forwards=[port_forward(8000, 8000, name='admin', link_path='/admin')])
+k8s_resource('heimdall-svc', labels=["auth"], port_forwards=[
+    port_forward(8000, 8000, name='admin', link_path='/admin'),
+    port_forward(8000, 8000, name='docs', link_path='/api/docs'),
+])
 
 nerdctl_build('heimdall-svc-img', '.',     
     live_update=[

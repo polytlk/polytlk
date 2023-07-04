@@ -81,6 +81,13 @@
         "command": "poetry run python manage.py migrate",
         "cwd": "apps/microservices/heimdall"
       }
+    },
+    "startapp": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run python manage.py startapp",
+        "cwd": "apps/microservices/heimdall"
+      }
     }
   },
   "tags": []
