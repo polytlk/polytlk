@@ -26,7 +26,7 @@ readme = 'README.md'
   djangorestframework = "^3.14.0"
   requests = "^2.31.0"
   pyjwt = "^2.7.0"
-  coreapi = "^2.3.3"
+  drf-spectacular = "^0.26.3"
 
 [build-system]
 requires = ["poetry-core"]

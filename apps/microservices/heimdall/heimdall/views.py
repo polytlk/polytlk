@@ -3,7 +3,10 @@ import time
 import jwt
 import requests
 from django.conf import settings
+from drf_spectacular.openapi import AutoSchema
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.serializers import CharField, Serializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
@@ -11,6 +14,9 @@ VALIDATION_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={0
 
 
 class OAuthResponseView(APIView):
+    permission_classes = [AllowAny]
+    schema = AutoSchema()
+
     def post(self, request, format=None):
         access_token = request.data.get('access_token', None)
 

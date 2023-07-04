@@ -37,12 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # third party
+
     'rest_framework',
     'rest_framework.schemas',
-    # my app
-    'heimdall',
+    'drf_spectacular',
 
+    'heimdall',
 )
 
 MIDDLEWARE = (
@@ -92,7 +92,7 @@ REST_FRAMEWORK = types.MappingProxyType({
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 })
 
 
