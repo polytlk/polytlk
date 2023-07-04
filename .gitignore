@@ -48,3 +48,6 @@ __pycache__
 .cache
 *.whl
 .hypothesis
+
+
+apps/microservices/heimdall/data/google-oauth.json
