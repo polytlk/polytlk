@@ -1,0 +1,7 @@
+{
+    "terminal.integrated.cwd": "../../..",
+    "python.defaultInterpreterPath": "../../../.venv/bin/python3.11",
+    "flake8.args": [
+        "--config=${workspaceFolder}/.flake8",
+    ]
+}

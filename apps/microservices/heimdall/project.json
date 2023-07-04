@@ -1,5 +1,5 @@
 {
-  "name": "microservices-heimdall",
+  "name": "heimdall",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/microservices/heimdall/heimdall",
@@ -44,12 +44,10 @@
       }
     },
     "lint": {
-      "executor": "@nxlv/python:flake8",
-      "outputs": [
-        "{workspaceRoot}/reports/apps/microservices/heimdall/pylint.txt"
-      ],
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/reports/apps/microservices/heimdall/pylint.txt"],
       "options": {
-        "outputFile": "reports/apps/microservices/heimdall/pylint.txt"
+        "command": "./apps/microservices/heimdall/scripts/check.sh -f {args.files} -c lint"
       }
     },
     "test": {
@@ -60,6 +58,27 @@
       ],
       "options": {
         "command": "poetry run pytest tests/",
+        "cwd": "apps/microservices/heimdall"
+      }
+    },
+    "init": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run django-admin startproject heimdall .",
+        "cwd": "apps/microservices/heimdall"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run python manage.py runserver",
+        "cwd": "apps/microservices/heimdall"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run python manage.py migrate",
         "cwd": "apps/microservices/heimdall"
       }
     }
