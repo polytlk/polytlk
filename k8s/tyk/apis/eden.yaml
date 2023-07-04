@@ -5,6 +5,7 @@ metadata:
 spec:
   name: eden-api
   use_keyless: true
+  # enable_jwt: true
   protocol: http
   active: true
   proxy:
@@ -14,7 +15,6 @@ spec:
   CORS:
     enable: true
     allowed_origins:
-    - https://polytlk.ngrok.io
     - http://localhost:4200
     allowed_methods:
     - GET
@@ -25,30 +25,4 @@ spec:
     allow_credentials: false
     max_age: 24
     options_passthrough: false
-    debug: true
-  version_data:
-    not_versioned: true
-    default_version: ""
-    versions:
-      "0.1.0":
-        name: "0.1.0"
-        use_extended_paths: true
-        extended_paths:
-          whitelist:
-          - path: "/task/{task_id}/stream"
-            method_actions:
-              GET:
-                action: "no_action"
-                code: 200
-                headers: {}
-          - path: "/chinese"
-            method_actions:
-              POST:
-                action: "no_action"
-                code: 200
-                headers: {}
-          track_endpoints:
-          - path: "/task/{task_id}/stream"
-            method: "GET"
-          - path: "/interpretation"
-            method: "POST"
+
