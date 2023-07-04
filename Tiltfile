@@ -19,7 +19,8 @@ base = [
   'tyk-helm',
   'tyk-operator',
   'react-dev-server',
-  'dev-proxy'
+  'ngrok-tunnel'
+  # 'dev-proxy'
 ]
 
 tyk = []
@@ -66,6 +67,7 @@ helm_remote('redis',
 )
 
 local_resource(name='react-dev-server', serve_cmd='nx run web-client:serve:development', labels=['host_machine'])
-local_resource(name='dev-proxy', serve_cmd='nx run local-dev-proxy:serve:development', labels=['host_machine'])
+local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
+# local_resource(name='dev-proxy', serve_cmd='nx run local-dev-proxy:serve:development', labels=['host_machine'])
 
 include('./k8s/tyk/Tiltfile')

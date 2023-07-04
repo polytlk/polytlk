@@ -4,8 +4,7 @@ metadata:
   name: eden-api
 spec:
   name: eden-api
-  use_keyless: true
-  # enable_jwt: true
+  enable_jwt: true
   protocol: http
   active: true
   proxy:

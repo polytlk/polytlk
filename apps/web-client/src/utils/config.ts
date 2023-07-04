@@ -20,7 +20,8 @@ const baseConfig = {
         appId: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
         responseType: "token", // implicit flow
         accessTokenEndpoint: "", // clear the tokenEndpoint as we know that implicit flow gets the accessToken from the authorizationRequest
-        redirectUrl: "https://polytlk.ngrok.io",
+        // redirectUrl: "https://polytlk.ngrok.io",
+        redirectUrl: "http://localhost:4200",
         windowOptions: "height=600,left=0,top=0"
       },
       // ios: {
