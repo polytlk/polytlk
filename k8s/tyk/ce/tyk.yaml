@@ -146,7 +146,13 @@ gateway:
   - key: node-role.kubernetes.io/master
     effect: NoSchedule
   affinity: {}
-  extraEnvs: []
+  extraEnvs:
+  - name: TYK_GW_ENABLEHASHEDKEYSLISTING
+    value: "true"
+  - name: TYK_GW_ENABLEKEYLOGGING
+    value: "true"
+  - name: TYK_GW_LOGLEVEL
+    value: "debug"
   ## extraVolumes A list of volumes to be added to the pod
   ## extraVolumes:
   ##   - name: ca-certs

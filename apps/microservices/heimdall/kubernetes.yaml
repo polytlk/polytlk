@@ -31,4 +31,10 @@ spec:
         image: heimdall-svc-img
         ports:
         - containerPort: 8000
+        env:
+        - name: DJANGO_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: django-secret-key
+              key: DJANGO_SECRET
 ---

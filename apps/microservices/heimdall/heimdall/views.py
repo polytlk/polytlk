@@ -1,3 +1,5 @@
+import json
+import logging
 import time
 
 import jwt
@@ -11,6 +13,31 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 VALIDATION_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={0}'
+EXPIRATION_TIME = 3600
+ORG_ID = '5e9d9544a1dcd60001d0ed20'
+GATEWAY_HOST = 'gateway-svc-tyk-headless.tyk.svc.cluster.local'
+TYK_MANAGEMENT_API_KEY = 'CHANGEME'
+EDEN_API_ID = 'ZGVmYXVsdC9lZGVuLWFwaQ'
+
+KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
+    'apply_policies': [],
+    'org_id': ORG_ID,
+    'expires': 0,
+    'allowance': 0,
+    'per': 0,
+    'quota_max': 0,
+    'rate': 0,
+    'access_rights': {},
+    'jwt_data': {},
+}
+
+logger = logging.getLogger(__name__)
+
+def extract_signature(jwt_token):
+    parts = jwt_token.split('.')
+    if len(parts) != 3:
+        raise ValueError('Invalid JWT token')
+    return parts[2]
 
 
 class OAuthResponseView(APIView):
@@ -31,19 +58,42 @@ class OAuthResponseView(APIView):
 
         user_info = raw_response.json()
 
-        # Save user_info to your database here, as per your needs
-
         # Now we know that the access token is valid, and we have the user's information
         # We can create a JWT that includes this information
-
         payload = {
-            'sub': user_info['sub'],  # The subject of the token (the user it identifies) should be the Google user ID
+            # The subject of the token -> Google user ID
+            'sub': user_info['sub'],
             'email': user_info['email'],
-            'exp': time.time() + 3600,  # Expiration time. This is in Unix timestamp format. This token will expire in 1 hour.
+            # Expiration time. This is in Unix timestamp format. This token will expire in 1 hour.
+            'exp': time.time() + EXPIRATION_TIME,
         }
 
         secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
 
         token = jwt.encode(payload, secret, algorithm='HS256')
+        signiture = extract_signature(token)
+
+        url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
+        headers = {
+            'Content-Type': 'application/json',
+            # 'Authorization': 'Bearer {0}'.format(access_token),
+            'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,
+        }
+
+        KEY_REQUEST_TEMPLATE['access_rights'][EDEN_API_ID] = {
+            'api_name': 'eden-api',
+            'api_id': EDEN_API_ID,
+            'versions': [
+                'Default',
+            ],
+        }
+
+        KEY_REQUEST_TEMPLATE['jwt_data'] = {'secret': token}
+
+        logger.info('url: ' + url)
+
+        response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
+
+        logger.info('createkeyintykres: ' + response.text)
 
         return Response({'jwt': token})
