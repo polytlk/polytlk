@@ -5,3 +5,11 @@ k8s_resource(
   labels=['api-gateway'],
   resource_deps=['tyk-operator']
 )
+
+k8s_yaml('./heimdall.yaml')
+k8s_resource(
+  objects=['heimdall-api:apidefinition'],
+  new_name='heimdall-api',
+  labels=['api-gateway'],
+  resource_deps=['tyk-operator']
+)
