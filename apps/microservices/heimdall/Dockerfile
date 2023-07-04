@@ -32,4 +32,4 @@ ENV PATH="/code/venv/bin:$PATH"
 COPY --from=build /code/venv /code/venv
 COPY . /code
 
-CMD ["python", "manage.py", "runserver"]
+CMD ["uvicorn", "heimdall.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--reload"]

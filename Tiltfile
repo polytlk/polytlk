@@ -18,6 +18,8 @@ base = [
   'redis-master',
   'tyk-helm',
   'tyk-operator',
+  'react-dev-server',
+  'dev-proxy'
 ]
 
 tyk = []
@@ -62,5 +64,8 @@ helm_remote('redis',
             repo_url='https://charts.bitnami.com/bitnami',
             values=['redis.yaml']
 )
+
+local_resource(name='react-dev-server', serve_cmd='nx run web-client:serve:development', labels=['host_machine'])
+local_resource(name='dev-proxy', serve_cmd='nx run local-dev-proxy:serve:development', labels=['host_machine'])
 
 include('./k8s/tyk/Tiltfile')

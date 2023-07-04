@@ -92,8 +92,10 @@ class OAuthResponseView(APIView):
 
         logger.info('url: ' + url)
 
-        response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
+        raw_key_response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
 
-        logger.info('createkeyintykres: ' + response.text)
+        key_info = raw_key_response.json()
+        
+        logger.info('createkeyintykres: ' + raw_key_response.text)
 
-        return Response({'jwt': token})
+        return Response({'token': key_info['key']})

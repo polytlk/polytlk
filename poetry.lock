@@ -1223,6 +1223,7 @@ djangorestframework = "^3.14.0"
 drf-spectacular = "^0.26.3"
 pyjwt = "^2.7.0"
 requests = "^2.31.0"
+uvicorn = {version = "^0.22.0", extras = ["standard"]}
 
 [package.source]
 type = "directory"

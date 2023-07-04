@@ -23,7 +23,7 @@ from .views import OAuthResponseView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/exchange/', OAuthResponseView.as_view()),
+    path('exchange/', OAuthResponseView.as_view()),
 ]
 
 urlpatterns.extend([
