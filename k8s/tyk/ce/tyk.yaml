@@ -151,21 +151,26 @@ gateway:
     value: "true"
   - name: TYK_GW_ENABLEKEYLOGGING
     value: "true"
+  - name: TYK_GW_ALLOWMASTERKEYS
+    value: "true"
   - name: TYK_GW_LOGLEVEL
     value: "debug"
+  - name: TYK_GW_POLICIES_POLICYSOURCE
+    value: "file"
+  - name: TYK_GW_POLICIES_POLICYRECORDNAME
+    value: "./policies/policies.json"
   ## extraVolumes A list of volumes to be added to the pod
-  ## extraVolumes:
-  ##   - name: ca-certs
-  ##     secret:
-  ##       defaultMode: 420
-  ##       secretName: ca-certs
-  extraVolumes: []
+  extraVolumes:
+  - name: policy-config
+    configMap:
+      name: policy-config
+
   ## extraVolumeMounts A list of volume mounts to be added to the pod
-  ## extraVolumeMounts:
-  ##   - name: ca-certs
-  ##     mountPath: /etc/ssl/certs/ca-certs.crt
-  ##     readOnly: true
-  extraVolumeMounts: []
+  extraVolumeMounts:
+  - name: policy-config
+    mountPath: "/opt/tyk-gateway/policies"
+    readOnly: true
+
   mounts: []
 
 # If pump is enabled the Gateway will create and collect analytics data to send

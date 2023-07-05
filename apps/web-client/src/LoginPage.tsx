@@ -12,9 +12,13 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
 
   const googleLogin = async () => {
-    const { access_token } = await OAuth2Client.authenticate(config.oAuth2AuthOpts)
+    console.log("googleLogin -> calling")
+    const { access_token } = await OAuth2Client.authenticate(config.oAuth2AuthOpts).catch((e) => { console.log("error happened authing", e)})
+    console.log("googleLogin -> access_token", access_token)
+
     const url = `${config.baseUrl}/api/auth/exchange/`
 
+    console.log("googleLogin -> calling heimdall", url)
     // Here, make the fetch request to /api/exchange
     const rawExchangeResponse = await fetch(url, {
       method: 'POST',
@@ -29,7 +33,8 @@ const LoginPage: React.FC = () => {
     const { token } = await rawExchangeResponse.json()
 
     if (token) {
-      setToken(token);
+      const keyData = JSON.parse(atob(token))
+      setToken(keyData.id);
       history.push('/home');
     }
   };

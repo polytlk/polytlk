@@ -6,6 +6,10 @@ tyk_namespace = 'tyk'
 # create the namespace using local command and kubectl
 local('kubectl create namespace {} || true'.format(tyk_namespace))
 
+k8s_yaml('policy-configmap.yaml')
+
+local('kubectl apply -f policy-configmap.yaml -n tyk')
+
 helm_resource(
     name='tyk-headless',
     chart='tyk-helm/tyk-headless',

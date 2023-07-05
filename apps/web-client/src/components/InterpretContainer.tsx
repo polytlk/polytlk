@@ -16,6 +16,7 @@ import {
 
 import { machine } from './machine'
 import ConfigContext from "../ConfigContext";
+import AuthContext from "../AuthContext";
 
 const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
   <IonItem>
@@ -31,6 +32,7 @@ const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language
 const InterpretBar: React.FC<{
   onTaskResult: (res: string) => void;
 }> = ({ onTaskResult }) => {
+  const { token } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!
 
@@ -47,6 +49,7 @@ const InterpretBar: React.FC<{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify({ user_input: context.text }),
         })

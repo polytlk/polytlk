@@ -71,14 +71,16 @@ class OAuthResponseView(APIView):
         secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
 
         token = jwt.encode(payload, secret, algorithm='HS256')
-        signiture = extract_signature(token)
+        # signiture = extract_signature(token)
 
-        url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
+        url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, token)
         headers = {
             'Content-Type': 'application/json',
             # 'Authorization': 'Bearer {0}'.format(access_token),
             'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,
         }
+
+        # KEY_REQUEST_TEMPLATE['jwt_data'] = {'secret': token}
 
         KEY_REQUEST_TEMPLATE['access_rights'][EDEN_API_ID] = {
             'api_name': 'eden-api',
@@ -87,8 +89,6 @@ class OAuthResponseView(APIView):
                 'Default',
             ],
         }
-
-        KEY_REQUEST_TEMPLATE['jwt_data'] = {'secret': token}
 
         logger.info('url: ' + url)
 
