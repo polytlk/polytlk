@@ -168,18 +168,16 @@ gateway:
   - name: policy-config
     configMap:
       name: policy-config
-  - name: example-javascript-middleware
+  - name: sse-auth-pre-middleware
     configMap:
-      name: example-javascript-middleware-mk66m9ckfm
-
-
+      name: sse-auth-pre-middleware-tbmcf478cg
 
   ## extraVolumeMounts A list of volume mounts to be added to the pod
   extraVolumeMounts:
   - name: policy-config
     mountPath: "/opt/tyk-gateway/policies"
     readOnly: true
-  - name: example-javascript-middleware
+  - name: sse-auth-pre-middleware
     mountPath: "/opt/tyk-gateway/middleware"
     readOnly: true
 
