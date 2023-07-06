@@ -76,7 +76,7 @@ const InterpretBar: React.FC<{
   useEffect(() => {
     if (state.context.taskId) {
       const eventSource = new EventSource(
-        `${config.baseUrl}/api/chinese/task/${state.context.taskId}/stream`
+        `${config.baseUrl}/api/chinese/task/${state.context.taskId}/stream?key=${token}`
       );
 
       eventSource.onmessage = (event) => {

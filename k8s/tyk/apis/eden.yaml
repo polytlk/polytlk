@@ -4,13 +4,7 @@ metadata:
   name: eden-api
 spec:
   name: eden-api
-  enable_jwt: true
-  jwt_signing_method: hmac
-  jwt_skip_kid: true
-  jwt_source: ZGphbmdvLWluc2VjdXJlLTM2MiZvNWd3d3UrOWQ4I29oczJyNTl5KWJoaGw5Z3BfYnVobnp5di1nKm0jbykmNWIt
-  jwt_policy_field_name: pol
-  jwt_default_policies:
-  - default/jwt-policy
+  use_standard_auth: true
   protocol: http
   active: true
   proxy:
