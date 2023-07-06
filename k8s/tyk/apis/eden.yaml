@@ -30,4 +30,9 @@ spec:
     allow_credentials: false
     max_age: 24
     options_passthrough: true
+  custom_middleware:
+    driver: otto
+    pre:
+    - name: "exampleJavaScriptMiddlewarePreHook"
+      path: "middleware/example-javascript-middleware.js"
 

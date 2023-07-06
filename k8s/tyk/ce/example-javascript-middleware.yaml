@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  example-javascript-middleware.js: "var exampleJavaScriptMiddlewarePreHook = new TykJS.TykMiddleware.NewMiddleware({});\n\nexampleJavaScriptMiddlewarePreHook.NewProcessRequest(function(request, session) {\n    // You can log to Tyk console output by calling the built-in log() function:\n    log(\"Hello from the Tyk JavaScript middleware pre hook function\")\n    \n    // Add a request headers\n    request.SetHeaders[\"Hello\"] = \"World\";\n\n    // You must return both the request and session metadata \n    return exampleJavaScriptMiddlewarePreHook.ReturnData(request, {}  );\n});"
+kind: ConfigMap
+metadata:
+  name: example-javascript-middleware-mk66m9ckfm
+  namespace: tyk

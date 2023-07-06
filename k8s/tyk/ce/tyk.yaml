@@ -147,11 +147,15 @@ gateway:
     effect: NoSchedule
   affinity: {}
   extraEnvs:
-  - name: TYK_GW_ENABLEHASHEDKEYSLISTING
-    value: "true"
-  - name: TYK_GW_ENABLEKEYLOGGING
-    value: "true"
-  - name: TYK_GW_ALLOWMASTERKEYS
+  # - name: TYK_GW_ENABLEHASHEDKEYSLISTING
+  #   value: "true"
+  # - name: TYK_GW_ENABLEKEYLOGGING
+  #   value: "true"
+  # - name: TYK_GW_ALLOWMASTERKEYS
+  #   value: "true"
+  # - name: TYK_GW_PROXYENABLEHTTP2
+  #   value: "true"
+  - name: TYK_GW_ENABLEJSVM
     value: "true"
   - name: TYK_GW_LOGLEVEL
     value: "debug"
@@ -164,11 +168,19 @@ gateway:
   - name: policy-config
     configMap:
       name: policy-config
+  - name: example-javascript-middleware
+    configMap:
+      name: example-javascript-middleware-mk66m9ckfm
+
+
 
   ## extraVolumeMounts A list of volume mounts to be added to the pod
   extraVolumeMounts:
   - name: policy-config
     mountPath: "/opt/tyk-gateway/policies"
+    readOnly: true
+  - name: example-javascript-middleware
+    mountPath: "/opt/tyk-gateway/middleware"
     readOnly: true
 
   mounts: []
