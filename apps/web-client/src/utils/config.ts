@@ -9,20 +9,21 @@ export type ClientConfig = {
     oAuth2AuthOpts: OAuth2AuthenticateOptions 
 };
 
-const hi = 'h'
-
 const baseConfig = {
     baseUrl: 'http://localhost:8080',
     oAuth2AuthOpts: {
       authorizationBaseUrl: "https://accounts.google.com/o/oauth2/auth",
       accessTokenEndpoint: "https://www.googleapis.com/oauth2/v4/token",
       scope: "email profile",
-      resourceUrl: "https://www.googleapis.com/userinfo/v2/me",
-      logsEnabled: true,
-      // additionalResourceHeaders: {
-      //   'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-      //   'Access-Control-Allow-Origin': 'https://www.googleapis.com'
-      // },
+      resourceUrl: "https://www.googleapis.com/oauth2/v3/userinfo",
+      logsEnabled: false,
+      additionalResourceHeaders: {
+        'Origin': 'http://localhost:4200',
+        'Referer': 'http://localhost:4200/',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'cross-site'
+      },
       web: {
         appId: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
         responseType: "token", // implicit flow
