@@ -30,4 +30,14 @@ spec:
     - name: "sseAuthMiddlewarePreHook"
       path: "middleware/sse-auth-pre-middleware.js"
       require_session: false
+  version_data:
+    default_version: Default
+    not_versioned: true
+    versions:
+      Default:
+        name: Default
+        use_extended_paths: true
+        global_headers:
+          Authorization: "Bearer $tyk_meta.jwt"
+
 
