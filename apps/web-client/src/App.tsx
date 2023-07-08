@@ -4,6 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
 import Home from './pages/Home';
 
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -34,6 +35,8 @@ import Config from './utils/config'
 import ConfigContext from './ConfigContext';
 
 setupIonicReact();
+
+
 
 const App: React.FC = () => {
   const iframeRef = useRef<HTMLIFrameElement>(document.getElementById("xstate-inspector") as HTMLIFrameElement);
