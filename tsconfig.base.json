@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@polytlk/echo-plugin": ["echo-plugin/src/index.ts"]
+      "@polytlk/echo-plugin": ["libs/echo-plugin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

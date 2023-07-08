@@ -1,3 +1,4 @@
+load('ext://uibutton', 'cmd_button', 'location', 'text_input')
 load('ext://nerdctl', 'nerdctl_build')
 load('ext://helm_remote', 'helm_remote')
 
@@ -18,6 +19,7 @@ base = [
   'redis-master',
   'tyk-helm',
   'tyk-operator',
+  'verdaccio',
   'react-dev-server',
   # 'ngrok-tunnel'
   # 'dev-proxy'
@@ -67,6 +69,19 @@ helm_remote('redis',
 )
 
 local_resource(name='react-dev-server', serve_cmd='nx run web-client:serve:development', labels=['host_machine'])
+local_resource(name='verdaccio', serve_cmd='nx local-registry', labels=['host_machine'])
+
+cmd_button(name='publish-btn',
+          argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+          text='local publish',
+          location=location.NAV,
+          icon_name='waving_hand',
+          inputs=[
+              text_input('ver'),
+              text_input('tag'),
+          ]
+)
+
 # local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
 # local_resource(name='dev-proxy', serve_cmd='nx run local-dev-proxy:serve:development', labels=['host_machine'])
 

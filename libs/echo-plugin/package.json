@@ -1,0 +1,22 @@
+{
+  "name": "@polytlk/echo-plugin",
+  "version": "0.0.6",
+  "description": "dsdasd",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dethereum/polytlk.git"
+  },
+  "author": "haiturtle",
+  "devDependencies": {
+    "@capacitor/ios": "../../node_modules/@capacitor/ios"
+  },
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  }
+}
