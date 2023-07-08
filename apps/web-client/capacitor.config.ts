@@ -6,7 +6,6 @@ const config: CapacitorConfig = {
   webDir: '../../dist/apps/web-client',
   loggingBehavior: 'production',
   bundledWebRuntime: false
-  
 };
 
 export default config

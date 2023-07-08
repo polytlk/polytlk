@@ -20,6 +20,9 @@ devDependencies:
   '@capacitor/ios':
     specifier: ../../node_modules/@capacitor/ios
     version: link:../../node_modules/@capacitor/ios
+  '@polytlk/echo-plugin':
+    specifier: ../../node_modules/@polytlk/echo-plugin
+    version: link:../../node_modules/@polytlk/echo-plugin
 
 packages:
 

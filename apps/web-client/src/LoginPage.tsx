@@ -4,6 +4,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from 
 import { OAuth2Client } from "@byteowls/capacitor-oauth2";
 import AuthContext from './AuthContext';
 import ConfigContext from './ConfigContext';
+import { EchoPlugin } from '@polytlk/echo-plugin'
 
 const LoginPage: React.FC = () => {
   const { setToken } = useContext(AuthContext);
@@ -12,13 +13,13 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
 
   const googleLogin = async () => {
-    console.log("googleLogin -> calling")
-    const { access_token } = await OAuth2Client.authenticate(config.oAuth2AuthOpts).catch((e) => { console.log("error happened authing", e)})
-    console.log("googleLogin -> access_token", access_token)
+    EchoPlugin.echo({ value: "googleLogin -> calling" })
+    const { access_token } = await OAuth2Client.authenticate(config.oAuth2AuthOpts).catch((e) => { console.log("error happened authing", e) })
+    EchoPlugin.echo({ value: `googleLogin -> access_token ${access_token}` })
 
     const url = `${config.baseUrl}/api/auth/exchange/`
 
-    console.log("googleLogin -> calling heimdall", url)
+    EchoPlugin.echo({ value: `googleLogin -> calling heimdall -> ${url}` })
     // Here, make the fetch request to /api/exchange
     const rawExchangeResponse = await fetch(url, {
       method: 'POST',

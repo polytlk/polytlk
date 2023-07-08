@@ -8,12 +8,15 @@ PODS:
   - CapacitorDevice (5.0.4):
     - Capacitor
   - OAuthSwift (2.2.0)
+  - PolytlkEchoPlugin (0.0.1):
+    - Capacitor
 
 DEPENDENCIES:
   - "ByteowlsCapacitorOauth2 (from `../../../../node_modules/.pnpm/@byteowls+capacitor-oauth2@4.0.2_@capacitor+core@5.0.3/node_modules/@byteowls/capacitor-oauth2`)"
   - "Capacitor (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device`)"
+  - PolytlkEchoPlugin (from `../../../../echo-plugin`)
 
 SPEC REPOS:
   trunk:
@@ -28,6 +31,8 @@ EXTERNAL SOURCES:
     :path: "../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios"
   CapacitorDevice:
     :path: "../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device"
+  PolytlkEchoPlugin:
+    :path: "../../../../echo-plugin"
 
 SPEC CHECKSUMS:
   ByteowlsCapacitorOauth2: 86f9a61aa413119226b12aabc5d03f185e9e1d28
@@ -35,7 +40,8 @@ SPEC CHECKSUMS:
   CapacitorCordova: def732a63679698df6fb392bbe6d269a0b61e937
   CapacitorDevice: eb4b5e3b42ac35d2527f20aad296b59e0785dc8d
   OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
+  PolytlkEchoPlugin: 83c1873ee1fb2d248ecf9e22a6d1a33ae6e63e9d
 
-PODFILE CHECKSUM: 01f15f1f91728c0ce18857da2e8b4b295ff90d7a
+PODFILE CHECKSUM: 56fed3c138c30b520291180bf8e9850d20d43bef
 
 COCOAPODS: 1.12.1
