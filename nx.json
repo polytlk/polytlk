@@ -46,6 +46,11 @@
         "style": "css",
         "linter": "eslint"
       }
+    },
+    "@nx/react": {
+      "application": {
+        "babel": true
+      }
     }
   },
   "plugins": ["@nxlv/python"]

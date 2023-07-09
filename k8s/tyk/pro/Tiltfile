@@ -1,0 +1,34 @@
+load('ext://helm_resource', 'helm_resource')
+load('ext://dotenv', 'dotenv')
+
+dotenv()
+
+# define tyk namespace
+tyk_namespace = 'tyk-pro'
+# create the namespace using local command and kubectl
+local('kubectl create namespace {} || true'.format(tyk_namespace))
+
+update_settings(k8s_upsert_timeout_secs=60) 
+
+helm_resource(
+    name='mongo',
+    chart='tyk-helm/simple-mongodb',
+    release_name='mongo',
+    namespace=tyk_namespace,
+    labels=['api-gateway'],
+    resource_deps=['tyk-helm']
+)
+
+helm_resource(
+    name='tyk-pro',
+    chart='tyk-helm/tyk-pro',
+    release_name='tyk-pro',
+    flags=[
+        '--values=./tyk-pro.yaml',
+        '--set=dash.license={0}'.format(os.environ.get('TYK_DASHBOARD_KEY'))
+    ],
+    namespace=tyk_namespace,
+    labels=['api-gateway'],
+    resource_deps=['mongo'],
+    port_forwards=['3000']
+)

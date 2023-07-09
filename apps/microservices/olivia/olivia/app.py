@@ -1,31 +1,25 @@
 """Perform Korean NLP tasks for polytlk."""
-import logging
+from collections.abc import Iterable
+from typing import Any
 
+import esupar
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from konlpy.tag import Mecab
 from pydantic import BaseModel
 
-logging.config.fileConfig('logging.ini')
-log = logging.getLogger('olivia')
-
 app = FastAPI()
-mecab = Mecab()
 
-origins = [
-    'http://localhost:4200',
-]
+nlp = esupar.load('ko')
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
+def check_list_str(doc: Any) -> list[str]:
+    """Ensure input is list of str."""
+    if not isinstance(doc, Iterable):
+        raise TypeError('Expected input to be an iterable, got {0}'.format(type(doc).__name__))
 
-hi = 'as'
+    if not all(isinstance(str_maybe, str) for str_maybe in doc):
+        raise TypeError('Expected all elements to be str')
+
+    return list(doc)
 
 
 class KoreanQuery(BaseModel):
@@ -34,68 +28,16 @@ class KoreanQuery(BaseModel):
     user_input: str  # should be valid korean text
 
 
-def generate_tokens(user_input):
-    """
-    Process korean text into tokens and pos tags.
+def generate_tokens(user_input: str) -> list[str]:
+    """Process korean text into doc and return tokens."""
+    doc = nlp(user_input)
+    tokens = doc.values[1]
 
-    The Sejong part-of-speech tagging system is used for POS
-    Sejong POS comes from the Sejong Corpus.
-    The Sejong Corpus is a large tagged corpus of Korean.
-    It's one of the most important resources for Korean NLP.
-
-    NNG: General Nouns
-    NNP: Proper Nouns
-    NNB: Bound Nouns
-    NR: Numeral
-    NP: Pronoun
-    VV: Verbs
-    VA: Adjectives
-    VX: Auxiliary Verbs
-    VCP: Copula (i.e., "be" verb)
-    MM: Determiner
-    MAG: Adverbs
-    MAJ: Conjunction Adverb
-    IC: Interjections
-    JKS: Subject Marking Particles
-    JKC: Complement Marking Particles
-    JKG: Possession Marking Particles
-    JKO: Object Marking Particles
-    JKB: Adverbial Marking Particles
-    JKV: Vocative Marking Particles
-    JKQ: Quotation Marking Particles
-    JX: Auxiliary Particles
-    JC: Connecting Particles
-    EP: Pre-final Endings
-    EF: Final Endings
-    EC: Connective Endings
-    ETN: Nominalizing Endings
-    ETM: Modifier Endings
-    XPN: Prefix
-    XPV: Suffix
-    XSN: Noun Suffix
-    XSV: Verb Suffix
-    XSA: Adjective Suffix
-    XR: Root
-    SF: Sentence-final Ending Punctuation
-    SP: Short Pause
-    SS: Dashes, Ellipsis
-    SE: Sentence-initial Punctuation
-    SO: Other Symbols
-    SL: Foreign Language
-    SH: Chinese Characters
-    SW: Korean Alphabet
-    """
-    log.info('User Input \t-> {0}'.format(user_input))
-
-    tokens = mecab.morphs(user_input)
-    log.info('Result \t-> {0}'.format(tokens))
-    log.info('Result \t-> {0}'.format(mecab.pos(user_input)))
-
-    return tokens
+    return check_list_str(tokens)
 
 
 @app.post('/korean/')
-async def korean_endpoint(user_query: KoreanQuery):
+async def korean_endpoint(user_query: KoreanQuery) -> Any:
     """Do NLP preprocessing and other logic before calling socrates."""
     tokens = generate_tokens(user_query.user_input)
 

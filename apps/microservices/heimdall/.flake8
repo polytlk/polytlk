@@ -1,0 +1,36 @@
+[flake8]
+# Base flake8 configuration:
+# https://flake8.pycqa.org/en/latest/user/configuration.html
+format = wemake
+show-source = true
+statistics = false
+doctests = true
+
+# Plugins:
+max-complexity = 6
+# override wemake config on main
+max-line-length = 100 
+
+# darglint configuration:
+# https://github.com/terrencepreilly/darglint
+strictness = long
+docstring-style = numpy
+
+# Self settings:
+max-imports = 17
+
+# Excluding some directories:
+exclude =
+  .git
+  __pycache__
+  .venv
+  .eggs
+  *.egg
+  dist
+
+per-file-ignores =
+  # There are multiple fixtures, `assert`s, and subprocesses in tests:
+  tests/*.py: S101, S105, S404, S603, S607, WPS211, WPS226, WPS323
+  apps/microservices/heimdall/tests/*.py: S101, S105, S404, S603, S607, WPS211, WPS226, WPS323
+  heimdall/settings.py: WPS226
+  apps/microservices/heimdall/heimdall/settings.py: WPS226

@@ -1,0 +1,53 @@
+{
+  "name": "echo-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/echo-plugin/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/echo-plugin",
+        "main": "libs/echo-plugin/src/index.ts",
+        "tsConfig": "libs/echo-plugin/tsconfig.lib.json",
+        "assets": [],
+        "project": "libs/echo-plugin/package.json",
+        "rollupConfig": "libs/echo-plugin/rollup.config.js",
+        "external": ["@capacitor/core"],
+        "compiler": "tsc",
+        "format": ["esm"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs echo-plugin {args.ver} {args.tag}",
+      "dependsOn": ["build"],
+      "forwardAllArgs": true
+    },
+    "verify": {
+      "command":  "cd libs/echo-plugin/ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ../../.."
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/echo-plugin/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/echo-plugin/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

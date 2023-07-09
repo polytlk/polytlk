@@ -1,39 +1,40 @@
-[tool.coverage.run]
-branch = true
-source = [ "olivia" ]
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core==1.1.0"]
 
 [tool.coverage.report]
-exclude_lines = ['if TYPE_CHECKING:']
+exclude_lines = ["if TYPE_CHECKING:"]
 show_missing = true
 
-[tool.pytest.ini_options]
-addopts = "--cov --cov-fail-under=100 --cov-report html:'../../../coverage/apps/microservices/olivia/html' --cov-report xml:'../../../coverage/apps/microservices/olivia/coverage.xml' --junitxml='../../../reports/apps/microservices/olivia/unittests/junit.xml' --html='../../../reports/apps/microservices/olivia/unittests/html/index.html'"
+[tool.coverage.run]
+branch = true
+source = ["olivia"]
+
+[tool.isort]
+known_third_party = ["olivia."]
+
+[tool.mypy]
+ignore_missing_imports = true
+namespace_packages = true
+strict = true
 
 [tool.poetry]
-name = "polytlk-olivia"
-version = "1.0.0"
+authors = []
 description = "Olivia: microservice for korean NLP"
-authors = [ ]
-license = 'Proprietary'
-readme = 'README.md'
+license = "Proprietary"
+name = "polytlk-olivia"
+readme = "README.md"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+esupar = "^1.6.2"
+fastapi = "^0.95.2"
+opentelemetry-api = "^1.18.0"
+python = ">=3.11,<4.0"
+
+[tool.poetry.dependencies.uvicorn]
+extras = ["standard"]
+version = "^0.22.0"
 
 [[tool.poetry.packages]]
 include = "olivia"
-
-[tool.poetry.dependencies]
-python = ">=3.11,<4.0"
-fastapi = "^0.95.2"
-uvicorn = {extras = ["standard"], version = "^0.22.0"}
-konlpy = "^0.6.0"
-mecab = "^0.996.3"
-  
-[tool.poetry.group.dev.dependencies]
-autopep8 = "2.0.0"
-wemake-python-styleguide = {git = "https://github.com/wemake-services/wemake-python-styleguide.git"}
-
-[tool.poetry.scripts]
-start = "olivia.asgi:start"
-
-[build-system]
-requires = ["poetry-core==1.1.0"]
-build-backend = "poetry.core.masonry.api"

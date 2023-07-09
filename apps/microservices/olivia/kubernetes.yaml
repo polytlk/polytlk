@@ -18,3 +18,15 @@ spec:
           image: olivia-svc-img
           ports:
             - containerPort: 6079
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: olivia-svc
+spec:
+  selector:
+    app: olivia-svc
+  ports:
+    - protocol: TCP
+      port: 6079
+      targetPort: 6079

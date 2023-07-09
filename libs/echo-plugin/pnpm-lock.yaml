@@ -1,0 +1,10 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+devDependencies:
+  '@capacitor/ios':
+    specifier: ../../node_modules/@capacitor/ios
+    version: link:../../node_modules/@capacitor/ios
