@@ -41,7 +41,7 @@ print(color.blue('LOCAL MODE: ') + '\t' + LOCAL_MODE.upper())
 print('')
 
 if LOCAL_MODE == 'msw':
-  print(color.blue('DESCRIPTION: ') + '\t' + 'optimized for frontend development. use frontend and mocks only.')
+  print(color.blue('DESCRIPTION: ') + '\t' + 'optimized for frontend development. use frontend and mocks only. LANGUAGE param is inert')
 elif LOCAL_MODE == 'expose_cluster':
   print(color.blue('DESCRIPTION: ') + '\t' + 'for testing changes on a real iOS device locally. use ngrok to expose cluster to public internet for your iOS device.')
 else:
@@ -83,6 +83,13 @@ groups = {
   'korean': ['olivia-svc'] + final_base,
 }
 
+# if msw is enabled overwrite and only run FE stuff
+if LOCAL_MODE == 'msw':
+  groups = {
+    'chinese': host,
+    'korean': host,
+  }
+
 resources = []
 
 for arg in language:
@@ -93,25 +100,6 @@ for arg in language:
     resources.append(arg)
 
 config.set_enabled_resources(resources)
-
-include('./apps/microservices/socrates/Tiltfile')
-include('./apps/microservices/eden/Tiltfile')
-include('./apps/microservices/olivia/Tiltfile')
-include('./apps/microservices/heimdall/Tiltfile')
-
-include('./apps/workers/eden/Tiltfile')
-
-helm_remote('opentelemetry-collector',
-            repo_name='open-telemetry',
-            repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
-            values=['otel-collector-config.yaml']
-)
-
-helm_remote('redis',
-            repo_name='bitnami',
-            repo_url='https://charts.bitnami.com/bitnami',
-            values=['redis.yaml']
-)
 
 if LOCAL_MODE == 'expose_cluster':
   local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
@@ -130,5 +118,25 @@ else:
             ]
   )
 
+# do not load non front end dependencies if mode is msw
+if not LOCAL_MODE == 'msw':
+  include('./apps/microservices/socrates/Tiltfile')
+  include('./apps/microservices/eden/Tiltfile')
+  include('./apps/microservices/olivia/Tiltfile')
+  include('./apps/microservices/heimdall/Tiltfile')
 
-include('./k8s/tyk/Tiltfile')
+  include('./apps/workers/eden/Tiltfile')
+
+  helm_remote('opentelemetry-collector',
+              repo_name='open-telemetry',
+              repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
+              values=['otel-collector-config.yaml']
+  )
+
+  helm_remote('redis',
+              repo_name='bitnami',
+              repo_url='https://charts.bitnami.com/bitnami',
+              values=['redis.yaml']
+  )
+
+  include('./k8s/tyk/Tiltfile')
