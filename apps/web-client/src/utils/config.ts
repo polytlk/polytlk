@@ -1,44 +1,36 @@
-import type { OAuth2AuthenticateOptions } from '@byteowls/capacitor-oauth2';
 import { Device } from '@capacitor/device';
 
 type Env = 'development' | 'simulated_ios' | 'real_dev_ios';
 
+type baseUrl = 'http://localhost:8080' | 'http://localhost:4200' | 'https://polytlk.ngrok.io'
+
 export type ClientConfig = {
-    baseUrl: string;
-    env: Env
-    oAuth2AuthOpts: OAuth2AuthenticateOptions 
+  baseUrl: baseUrl;
+  env: Env
+  oAuth2AuthOpts: {
+    scope: string;
+    web: {
+      appId: string
+    }
+  }
 };
 
+
 const baseConfig = {
-    baseUrl: 'http://localhost:8080',
-    oAuth2AuthOpts: {
-      authorizationBaseUrl: "https://accounts.google.com/o/oauth2/auth",
-      accessTokenEndpoint: "https://www.googleapis.com/oauth2/v4/token",
-      scope: "email profile",
-      // resourceUrl: "https://www.googleapis.com/oauth2/v3/userinfo",
-      resourceUrl: "",
-      logsEnabled: false,
-      web: {
-        appId: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
-        responseType: "token", // implicit flow
-        accessTokenEndpoint: "", // clear the tokenEndpoint as we know that implicit flow gets the accessToken from the authorizationRequest
-        // redirectUrl: "https://polytlk.ngrok.io",
-        redirectUrl: "http://localhost:4200",
-        windowOptions: "height=600,left=0,top=0"
-      },
-      // ios: {
-      //   appId: environment.oauthAppId.google.ios,
-      //   responseType: "code", // if you configured a ios app in google dev console the value must be "code"
-      //   redirectUrl: "com.companyname.appname:/" // Bundle ID from google dev console
-      // }
-    }
+  baseUrl: process.env.NODE_ENV === 'development' && process.env.NX_LOCAL_MODE === 'msw' ? 'http://localhost:4200' : 'http://localhost:8080',
+  oAuth2AuthOpts: {
+    scope: "email profile",
+    web: {
+      appId: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
+    },
+  }
 } as const
 
 class Config {
   private static instance: Config;
   private data: ClientConfig | null = null;
 
-  private constructor() {}
+  private constructor() { }
 
   public static async getInstance(): Promise<Config> {
     if (!Config.instance) {
@@ -62,22 +54,21 @@ class Config {
     switch (env) {
       case 'development':
         this.data = {
-            ...baseConfig,
-            env,
-            // USE MSW INSTEAD OF TYK GATEWAY
-            // baseUrl: 'http://localhost:4200',
+          ...baseConfig,
+          env,
         };
         break;
       case 'simulated_ios':
         this.data = {
-            ...baseConfig,
-            env,
+          ...baseConfig,
+          env,
         };
         break;
       case 'real_dev_ios':
         this.data = {
-            ...baseConfig,
-            env,
+          ...baseConfig,
+          env,
+          baseUrl: 'https://polytlk.ngrok.io'
         };
         break;
       default:

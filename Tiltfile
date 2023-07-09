@@ -1,6 +1,8 @@
 load('ext://uibutton', 'cmd_button', 'location', 'text_input')
 load('ext://nerdctl', 'nerdctl_build')
 load('ext://helm_remote', 'helm_remote')
+load('ext://dotenv', 'dotenv')
+load('ext://color', 'color')
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -9,7 +11,44 @@ config.clear_enabled_resources()
 config.define_string_list("to-run", args=True)
 cfg = config.parse()
 
-USE_TYK_PRO = os.environ.get('USE_TYK_PRO', False)
+# get the group to run. default to chinese if empty
+language = cfg.get('to-run', [])
+
+if len(language) == 0:
+    language.append("chinese")
+elif len(language) > 1:
+    language = language[:1]
+
+
+############ SETUP LOCAL MODES IN THIS BLOCK ###################################
+dotenv()
+print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
+USE_TYK_PRO = os.environ.get('USE_TYK_PRO', 'False') == 'True'
+if USE_TYK_PRO:
+  print(color.blue('TYK MODE: ') + '\t' + 'Self Managed'.upper())
+else:
+  print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
+
+LOCAL_MODE = os.environ.get('LOCAL_MODE', 'default').lower()
+if LOCAL_MODE not in ['msw', 'expose_cluster']:
+  LOCAL_MODE = 'default'
+
+if language[0].lower() not in ['chinese', 'korean']:
+  language[0] = 'chinese'
+
+print(color.blue('LANGUAGE: ') + '\t' + language[0].upper())
+print(color.blue('LOCAL MODE: ') + '\t' + LOCAL_MODE.upper())
+print('')
+
+if LOCAL_MODE == 'msw':
+  print(color.blue('DESCRIPTION: ') + '\t' + 'optimized for frontend development. use frontend and mocks only.')
+elif LOCAL_MODE == 'expose_cluster':
+  print(color.blue('DESCRIPTION: ') + '\t' + 'for testing changes on a real iOS device locally. use ngrok to expose cluster to public internet for your iOS device.')
+else:
+  print(color.blue('DESCRIPTION: ') + '\t' + 'default way of working. spins up requested backend services based on LANGUAGE, webpack dev server, and a verdaccio server.')
+print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
+#################################################################################
+
 
 base = [
   'heimdall-svc',
@@ -19,10 +58,6 @@ base = [
   'redis-master',
   'tyk-helm',
   'tyk-operator',
-  'verdaccio',
-  'react-dev-server',
-  # 'ngrok-tunnel'
-  # 'dev-proxy'
 ]
 
 tyk = []
@@ -32,15 +67,25 @@ if USE_TYK_PRO:
 else:
     tyk = ['tyk-headless']
 
+host = []
+
+if LOCAL_MODE == 'expose_cluster':
+  host = ['ngrok-tunnel']
+else:
+  host = ['react-dev-server', 'verdaccio']
+
+final_base = base + host + tyk
+
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + base + tyk,
-  'korean': ['olivia-svc'] + base + tyk,
+  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
+  'korean': ['olivia-svc'] + final_base,
 }
 
 resources = []
-for arg in cfg.get('to-run', []):
+
+for arg in language:
   if arg in groups:
     resources += groups[arg]
   else:
@@ -68,21 +113,22 @@ helm_remote('redis',
             values=['redis.yaml']
 )
 
-local_resource(name='react-dev-server', serve_cmd='nx run web-client:serve:development', labels=['host_machine'])
-local_resource(name='verdaccio', serve_cmd='nx local-registry', labels=['host_machine'])
+if LOCAL_MODE == 'expose_cluster':
+  local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
+else:
+  local_resource(name='react-dev-server', serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE), labels=['host_machine'])
+  local_resource(name='verdaccio', serve_cmd='nx local-registry', labels=['host_machine'])
 
-cmd_button(name='publish-btn',
-          argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
-          text='local publish',
-          location=location.NAV,
-          icon_name='waving_hand',
-          inputs=[
-              text_input('ver'),
-              text_input('tag'),
-          ]
-)
+  cmd_button(name='publish-btn',
+            argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+            text='local publish',
+            location=location.NAV,
+            icon_name='waving_hand',
+            inputs=[
+                text_input('ver'),
+                text_input('tag'),
+            ]
+  )
 
-# local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
-# local_resource(name='dev-proxy', serve_cmd='nx run local-dev-proxy:serve:development', labels=['host_machine'])
 
 include('./k8s/tyk/Tiltfile')
