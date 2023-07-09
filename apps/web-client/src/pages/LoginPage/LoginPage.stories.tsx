@@ -1,5 +1,5 @@
 import type { Meta } from '@storybook/react';
-import LoginPage from './index';
+import { LoginPage } from './LoginPage';
 
 const Story: Meta<typeof LoginPage> = {
   component: LoginPage,
