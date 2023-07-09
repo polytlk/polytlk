@@ -104,9 +104,26 @@ config.set_enabled_resources(resources)
 if LOCAL_MODE == 'expose_cluster':
   local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
 else:
-  local_resource(name='react-dev-server', serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE), labels=['host_machine'])
-  local_resource(name='storybook', serve_cmd='nx storybook web-client', labels=['host_machine'])
-  local_resource(name='verdaccio', serve_cmd='nx local-registry', labels=['host_machine'])
+  local_resource(
+    name='react-dev-server',
+    serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE),
+    labels=['host_machine'],
+    links=link('http://localhost:4200', 'frontend')
+  )
+
+  local_resource(
+    name='storybook',
+    serve_cmd='nx storybook web-client',
+    labels=['host_machine'],
+    links=link('http://localhost:4400', 'storybook')
+  )
+
+  local_resource(
+    name='verdaccio',
+    serve_cmd='nx local-registry',
+    labels=['host_machine'],
+    links=link('http://localhost:4873', 'registry')
+  )
 
   cmd_button(name='publish-btn',
             argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
