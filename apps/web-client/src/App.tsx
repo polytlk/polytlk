@@ -29,7 +29,7 @@ import { useEffect, useRef, useState } from 'react'
 import { inspect } from "@xstate/inspect";
 import { IframeContext } from './context'
 import AuthContext from './AuthContext';
-import LoginPage from './LoginPage';
+import LoginPage from './pages/LoginPage';
 import type { ClientConfig } from './utils/config'
 import Config from './utils/config'
 import ConfigContext from './ConfigContext';

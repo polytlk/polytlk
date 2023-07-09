@@ -3,7 +3,6 @@ import type { ComponentType, FunctionComponent } from 'react';
 
 import { useContext } from 'react';
 import AuthContext from './AuthContext';
-import { EchoPlugin } from '@polytlk/echo-plugin';
 
 
 interface PrivateRouteProps {
@@ -13,7 +12,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: FunctionComponent<PrivateRouteProps> = ({ component: Component, ...rest }) => {
     const { token } = useContext(AuthContext);
-    EchoPlugin.echo({ value: `PrivateRoute -> token -> ${token}` })
+    console.log({ value: `PrivateRoute -> token -> ${token}` })
   
     return (
       <Route {...rest} >

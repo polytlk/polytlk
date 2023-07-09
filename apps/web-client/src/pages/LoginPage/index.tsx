@@ -1,9 +1,8 @@
 import { useHistory } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
-import AuthContext from './AuthContext';
-import ConfigContext from './ConfigContext';
-import { EchoPlugin } from '@polytlk/echo-plugin'
+import AuthContext from '../../AuthContext';
+import ConfigContext from '../../ConfigContext';
 
 import useScript from 'react-script-hook';
 
@@ -90,7 +89,7 @@ const LoginPage: React.FC = () => {
 
           const url = `${config.baseUrl}/api/auth/exchange/`
 
-          EchoPlugin.echo({ value: `googleLogin -> calling heimdall -> ${url}` })
+          console.log({ value: `googleLogin -> calling heimdall -> ${url}` })
           // Here, make the fetch request to /api/exchange
           const rawExchangeResponse = await fetch(url, {
             method: 'POST',
