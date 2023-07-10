@@ -34,11 +34,11 @@ const baseConfig = {
 } as const;
 
 class Config {
-  private static instance: Config;
+  private static instance: Config | null = null;
   private data: ClientConfig | null = null;
 
   public static async getInstance(): Promise<Config> {
-    if (!Config.instance) {
+    if (Config.instance == null) {
       const _config = new Config();
       await _config.load();
       Config.instance = _config;

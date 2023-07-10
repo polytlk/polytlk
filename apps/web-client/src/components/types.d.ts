@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Interpreter } from 'xstate';
 
-export interface TaskStateSchema extends StateSchema {
+export type TaskStateSchema = {
   states: {
     idle: {};
     loading: {};
     completed: {};
   };
-}
+} & StateSchema;
 
 type MachineEvents =
   | { type: 'SUBMIT' }
@@ -16,14 +16,14 @@ type MachineEvents =
   | { type: 'TASK_RECEIVED'; taskId: string }
   | { type: 'NEW_TASK' };
 
-interface MachineContext {
+type MachineContext = {
   language: string;
   text: string;
   taskId: string;
   inputError: string;
   inputColor: string;
   loading: boolean;
-}
+};
 
 export type MachineService = Interpreter<
   MachineContext,

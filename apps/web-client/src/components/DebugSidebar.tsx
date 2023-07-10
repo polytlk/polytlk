@@ -16,7 +16,11 @@ const DebugSidebar: FC = () => {
   const containerRef = useRef<HTMLIonContentElement>(null);
 
   useEffect(() => {
-    if (containerRef.current && iframeRef && iframeRef.current) {
+    if (
+      containerRef.current != null &&
+      iframeRef != null &&
+      iframeRef.current != null
+    ) {
       containerRef.current.appendChild(iframeRef.current);
       iframeRef.current.style.display = 'block';
       iframeRef.current.style.width = '100%';

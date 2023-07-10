@@ -34,15 +34,16 @@ import Config from './utils/config';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const iframeRef = useRef<HTMLIFrameElement>(
-    document.getElementById('xstate-inspector') as HTMLIFrameElement
+  const iframeRef = useRef<HTMLIFrameElement | null>(
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    document.getElementById('xstate-inspector') as HTMLIFrameElement | null
   );
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [config, setConfig] = useState<ClientConfig | null>(null);
 
   useEffect(() => {
-    if (iframeRef.current) {
+    if (iframeRef.current != null) {
       inspect({
         iframe: iframeRef.current,
       });
@@ -59,7 +60,7 @@ const App: React.FC = () => {
     fetchConfig();
   }, []);
 
-  if (isLoading || !config) {
+  if (isLoading || config == null) {
     return <p>Loading...</p>;
   }
 

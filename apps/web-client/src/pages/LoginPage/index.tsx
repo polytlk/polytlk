@@ -19,28 +19,33 @@ const LoginContainer: FC = () => {
     src: 'https://accounts.google.com/gsi/client',
     onload: () => {
       //@ts-expect-error ssss
-      const client = google.accounts.oauth2['initTokenClient']({
-        client_id: config.oAuth2AuthOpts.web?.appId,
+      const client = google.accounts.oauth2.initTokenClient({
+        client_id: config.oAuth2AuthOpts.web.appId,
         scope: config.oAuth2AuthOpts.scope,
         callback: async (response: CodeResponse | TokenResponse) => {
-          const { access_token } = response as TokenResponse;
-          const url = `${config.baseUrl}/api/auth/exchange/`;
-          const rawExchangeResponse = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              access_token: access_token,
-            }),
-          });
+          if ('access_token' in response) {
+            const { access_token } = response;
+            const url = `${config.baseUrl}/api/auth/exchange/`;
+            const rawExchangeResponse = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                access_token: access_token,
+              }),
+            });
 
-          const { token } = await rawExchangeResponse.json();
+            const { token } = await rawExchangeResponse.json();
 
-          if (token) {
-            const keyData = JSON.parse(atob(token));
-            setToken(keyData.id);
-            history.push('/home');
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (token) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              const keyData = JSON.parse(atob(token));
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              setToken(keyData.id);
+              history.push('/home');
+            }
           }
         },
       });

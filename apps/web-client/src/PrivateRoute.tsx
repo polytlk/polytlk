@@ -5,9 +5,9 @@ import { Redirect, Route } from 'react-router-dom';
 
 import AuthContext from './AuthContext';
 
-interface PrivateRouteProps {
+type PrivateRouteProps = {
   component: ComponentType;
-}
+};
 
 const PrivateRoute: FunctionComponent<
   PrivateRouteProps & Record<string, unknown>
@@ -16,7 +16,9 @@ const PrivateRoute: FunctionComponent<
   console.log({ value: `PrivateRoute -> token -> ${token}` });
 
   return (
-    <Route {...rest}>{token ? <Component /> : <Redirect to="/login" />}</Route>
+    <Route {...rest}>
+      {token !== '' ? <Component /> : <Redirect to="/login" />}
+    </Route>
   );
 };
 

@@ -9,9 +9,9 @@ import {
   IonToolbar,
 } from '@ionic/react';
 
-interface LoginPageProps {
+type LoginPageProps = {
   newGoogleLogin: () => void;
-}
+};
 
 export const LoginPage: FC<LoginPageProps> = ({ newGoogleLogin }) => (
   <IonPage>

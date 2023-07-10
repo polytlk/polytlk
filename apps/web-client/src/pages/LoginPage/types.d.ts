@@ -7,7 +7,7 @@ type ErrorCode =
   | 'server_error'
   | 'temporarily_unavailable';
 
-export interface CodeResponse {
+export type CodeResponse = {
   /** The authorization code of a successful token response */
   code: string;
   /**	A space-delimited list of [scopes](https://developers.google.com/identity/protocols/oauth2/scopes) that are approved by the user */
@@ -20,9 +20,9 @@ export interface CodeResponse {
   error_description?: string;
   /** A URI identifying a human-readable web page with information about the error, used to provide the client developer with additional information about the error */
   error_uri?: string;
-}
+};
 
-export interface TokenResponse {
+export type TokenResponse = {
   /** The access token of a successful token response. */
   access_token: string;
   /** The lifetime in seconds of the access token. */
@@ -43,4 +43,4 @@ export interface TokenResponse {
   error_description?: string;
   /** A URI identifying a human-readable web page with information about the error, used to provide the client developer with additional information about the error. */
   error_uri?: string;
-}
+};

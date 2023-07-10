@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
 
 import {
@@ -28,7 +29,7 @@ const LanguageSelector: FC<{
     <IonSelect
       value={language}
       placeholder="Select One"
-      onIonChange={(e) => onLanguageChange(e.detail.value)}
+      onIonChange={(e) => onLanguageChange(e.detail.value + '')}
     >
       <IonSelectOption value="zh">
         <span role="img" aria-label="chinese flag">
@@ -88,14 +89,16 @@ const InterpretBar: FC<{
   });
 
   useEffect(() => {
-    if (state.context.taskId) {
+    if (state.context.taskId !== '') {
       const eventSource = new EventSource(
         `${config.baseUrl}/api/chinese/task/${state.context.taskId}/stream?key=${token}`
       );
 
       eventSource.onmessage = (event) => {
+        // TODO: add zod schema here
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         const result = event.data
-          ? JSON.parse(event.data)['ari_data']
+          ? JSON.parse(event.data).ari_data
           : 'ari could not be generated :(';
         onTaskResult(result);
         send('NEW_TASK');
@@ -114,7 +117,7 @@ const InterpretBar: FC<{
 
   return (
     <>
-      {state.context.inputError && (
+      {state.context.inputError !== '' && (
         <IonRow>
           <p>{state.context.inputError}</p>
         </IonRow>

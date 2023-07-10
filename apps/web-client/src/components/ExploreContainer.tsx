@@ -26,7 +26,7 @@ const ExploreContainer: React.FC = () => {
         </strong>
       </IonRow>
       <IonRow className="ion-align-items-center" style={{ margin: '2em' }}>
-        {taskResult ? (
+        {taskResult !== '' ? (
           <LanguageDataComponent data={JSON.parse(taskResult)} />
         ) : (
           <>

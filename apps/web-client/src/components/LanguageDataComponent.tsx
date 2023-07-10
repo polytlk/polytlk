@@ -7,13 +7,13 @@ import {
 } from '@ionic/react';
 import React from 'react';
 
-interface LanguageDataProps {
+type LanguageDataProps = {
   data: {
-    words: Array<[string, string, string]>;
+    words: [string, string, string][];
     meaning: string;
-    dialogue: Array<[string, string, string]>;
+    dialogue: [string, string, string][];
   };
-}
+};
 
 const LanguageDataComponent: React.FC<LanguageDataProps> = (props) => {
   const { data } = props;
