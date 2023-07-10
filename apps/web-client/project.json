@@ -31,9 +31,7 @@
             "input": "apps/web-client/src/theme/variables.css"
           }
         ],
-        "scripts": [],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/web-client/webpack.config.js"
+        "scripts": []
       },
       "configurations": {
         "development": {
@@ -80,7 +78,8 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/web-client/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/web-client/**/*.{ts,tsx,js,jsx}"],
+        "hasTypeAwareRules": true
       }
     },
     "test": {

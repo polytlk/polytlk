@@ -1,6 +1,6 @@
-import { createMachine, assign } from "xstate";
-
 import type { MachineContext, MachineEvents } from './types'
+
+import { assign,createMachine } from "xstate";
 
 export const machine = createMachine<MachineContext, MachineEvents>({
     id: "task",

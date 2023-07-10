@@ -1,12 +1,13 @@
-import { useHistory } from 'react-router-dom';
 import type { FC } from 'react'
-import { useContext, useCallback } from 'react';
+import type { CodeResponse, TokenResponse } from './types'
+
+import { useCallback,useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import useScript from 'react-script-hook';
+
 import AuthContext from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
-import useScript from 'react-script-hook';
 import { LoginPage } from './LoginPage';
-
-import type { CodeResponse, TokenResponse } from './types'
 
 const LoginContainer: FC = () => {
     const { setToken } = useContext(AuthContext);

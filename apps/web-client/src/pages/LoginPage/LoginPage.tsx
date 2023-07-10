@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
+
+import { IonButton,IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 
 interface LoginPageProps {
   newGoogleLogin: () => void;

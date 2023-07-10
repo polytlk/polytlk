@@ -1,7 +1,7 @@
-import { IonGrid, IonRow, IonCol, IonImg } from '@ionic/react';
+import { IonCol, IonGrid, IonImg,IonRow } from '@ionic/react';
 import { useState } from 'react'
-import InterpretBar from './InterpretContainer';
 
+import InterpretBar from './InterpretContainer';
 import LanguageDataComponent from './LanguageDataComponent';
 
 

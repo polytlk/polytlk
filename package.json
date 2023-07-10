@@ -8,6 +8,7 @@
     "@ionic/react": "^7.0.0",
     "@ionic/react-router": "^7.0.0",
     "@xstate/react": "^3.2.2",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
     "ionicons": "^7.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

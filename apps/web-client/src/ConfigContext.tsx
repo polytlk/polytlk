@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ClientConfig } from './utils/config';
 
 // Create a Context with default value as empty string

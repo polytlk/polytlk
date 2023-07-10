@@ -1,7 +1,8 @@
-import { Route, Redirect } from 'react-router-dom';
 import type { ComponentType, FunctionComponent } from 'react';
 
 import { useContext } from 'react';
+import { Redirect,Route } from 'react-router-dom';
+
 import AuthContext from './AuthContext';
 
 

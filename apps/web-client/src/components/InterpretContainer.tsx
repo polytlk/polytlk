@@ -1,22 +1,22 @@
-import { assign } from "xstate";
-import { useMachine } from "@xstate/react";
 import type { FC } from 'react';
-import { useEffect, useContext } from "react";
+
 import {
+  IonButton,
+  IonCol,
   IonInput,
   IonItem,
   IonLabel,
-  IonSelect,
-  IonSelectOption,
-  IonButton,
   IonLoading,
-  IonCol,
-  IonRow
-} from "@ionic/react";
+  IonRow,
+  IonSelect,
+  IonSelectOption} from "@ionic/react";
+import { useMachine } from "@xstate/react";
+import { useContext,useEffect } from "react";
+import { assign } from "xstate";
 
-import { machine } from './machine'
-import ConfigContext from "../ConfigContext";
 import AuthContext from "../AuthContext";
+import ConfigContext from "../ConfigContext";
+import { machine } from './machine'
 
 const LanguageSelector: FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
   <IonItem>

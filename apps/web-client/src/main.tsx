@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+
 import App from './App';
 
 if (process.env.NODE_ENV === 'development' && process.env.NX_LOCAL_MODE === 'msw') {

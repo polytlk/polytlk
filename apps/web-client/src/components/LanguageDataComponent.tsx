@@ -1,5 +1,5 @@
+import { IonItem, IonLabel, IonList, IonListHeader, IonText } from '@ionic/react';
 import React from 'react';
-import { IonList, IonListHeader, IonItem, IonLabel, IonText } from '@ionic/react';
 
 interface LanguageDataProps {
   data: {
