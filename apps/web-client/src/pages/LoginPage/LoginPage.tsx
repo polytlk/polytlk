@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
 
 interface LoginPageProps {
   newGoogleLogin: () => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ newGoogleLogin }) => (
+export const LoginPage: FC<LoginPageProps> = ({ newGoogleLogin }) => (
   <IonPage>
     <IonHeader>
       <IonToolbar>

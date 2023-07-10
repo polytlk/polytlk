@@ -30,8 +30,6 @@ class Config {
   private static instance: Config;
   private data: ClientConfig | null = null;
 
-  private constructor() { }
-
   public static async getInstance(): Promise<Config> {
     if (!Config.instance) {
       const _config = new Config();

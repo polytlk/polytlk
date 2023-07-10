@@ -7,10 +7,9 @@ import AuthContext from './AuthContext';
 
 interface PrivateRouteProps {
     component: ComponentType;
-    [x: string]: any;  // To accept rest of the properties same as Route component
 }
 
-const PrivateRoute: FunctionComponent<PrivateRouteProps> = ({ component: Component, ...rest }) => {
+const PrivateRoute: FunctionComponent<PrivateRouteProps & Record<string, unknown>> = ({ component: Component, ...rest }) => {
     const { token } = useContext(AuthContext);
     console.log({ value: `PrivateRoute -> token -> ${token}` })
   

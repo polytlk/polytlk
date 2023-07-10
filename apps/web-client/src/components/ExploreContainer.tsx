@@ -6,7 +6,7 @@ import LanguageDataComponent from './LanguageDataComponent';
 
 
 const ExploreContainer: React.FC = () => {
-  const [taskResult, setTaskResult] = useState<any>(null);
+  const [taskResult, setTaskResult] = useState<string>('');
 
   const handleTaskResult = (result: string) => {
     setTaskResult(result);
@@ -16,7 +16,7 @@ const ExploreContainer: React.FC = () => {
   return (
     <IonGrid fixed={true}>
       <IonRow><strong style={{ fontSize: "1.5em", textAlign: "center", width: "100%", marginTop: '4em' }}>Welcome to Polytlk. Please input chinese you want to understand.</strong></IonRow>
-      <IonRow className="ion-align-items-center" style={{'margin': "2em"}}>
+      <IonRow className="ion-align-items-center" style={{ 'margin': "2em" }}>
         {taskResult
           ? <LanguageDataComponent data={JSON.parse(taskResult)} />
           : <>

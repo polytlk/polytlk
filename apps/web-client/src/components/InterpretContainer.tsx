@@ -1,6 +1,7 @@
 import { assign } from "xstate";
 import { useMachine } from "@xstate/react";
-import React, { useEffect, useContext } from "react";
+import type { FC } from 'react';
+import { useEffect, useContext } from "react";
 import {
   IonInput,
   IonItem,
@@ -13,23 +14,22 @@ import {
   IonRow
 } from "@ionic/react";
 
-
 import { machine } from './machine'
 import ConfigContext from "../ConfigContext";
 import AuthContext from "../AuthContext";
 
-const LanguageSelector: React.FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
+const LanguageSelector: FC<{ language: string; onLanguageChange: (language: string) => void }> = ({ language, onLanguageChange }) => (
   <IonItem>
     <IonLabel>Language</IonLabel>
     <IonSelect value={language} placeholder="Select One" onIonChange={e => onLanguageChange(e.detail.value)}>
-      <IonSelectOption value="zh"><span role="img">🇨🇳</span></IonSelectOption>
-      <IonSelectOption value="kr"><span role="img">🇰🇷</span></IonSelectOption>
+      <IonSelectOption value="zh"><span role="img" aria-label="chinese flag">🇨🇳</span></IonSelectOption>
+      <IonSelectOption value="kr"><span role="img" aria-label="korean flag">🇰🇷</span></IonSelectOption>
     </IonSelect>
   </IonItem>
 );
 
 
-const InterpretBar: React.FC<{
+const InterpretBar: FC<{
   onTaskResult: (res: string) => void;
 }> = ({ onTaskResult }) => {
   const { token } = useContext(AuthContext);
@@ -90,7 +90,7 @@ const InterpretBar: React.FC<{
         eventSource.close();
       };
     }
-  }, [state.context.taskId, onTaskResult, config.baseUrl, send]);
+  }, [state.context.taskId, onTaskResult, config.baseUrl, send, token]);
 
   const handleSubmit = () => {
     send("SUBMIT");

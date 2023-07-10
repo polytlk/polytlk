@@ -25,4 +25,4 @@ interface MachineContext {
     loading: boolean
 }
 
-export type MachineService = Interpreter<MachineContext, any, MachineEvents, any>;
+export type MachineService = Interpreter<MachineContext, unknown, MachineEvents, unknown>;

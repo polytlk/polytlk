@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import type { FC } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
 
 import { IframeContext } from '../context'
 
-const DebugSidebar: React.FC<{}> = () => {
-    const iframeRef = React.useContext(IframeContext);
+const DebugSidebar: FC = () => {
+    const iframeRef = useContext(IframeContext);
     const containerRef = useRef<HTMLIonContentElement>(null);
 
     useEffect(() => {
