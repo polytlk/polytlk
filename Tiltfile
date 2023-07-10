@@ -1,5 +1,4 @@
 load('ext://uibutton', 'cmd_button', 'location', 'text_input')
-load('ext://nerdctl', 'nerdctl_build')
 load('ext://helm_remote', 'helm_remote')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
@@ -108,7 +107,7 @@ else:
     name='react-dev-server',
     serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE),
     labels=['host_machine'],
-    links=link('http://localhost:4200', 'frontend')
+    links=link('http://localhost:4200/', 'frontend')
   )
 
   local_resource(
