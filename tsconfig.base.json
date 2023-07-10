@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@polytlk/echo-plugin": ["libs/echo-plugin/src/index.ts"]
-    }
+    },
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
   },
   "exclude": ["node_modules", "tmp"]
 }
