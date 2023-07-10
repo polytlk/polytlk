@@ -2,41 +2,46 @@ import { Device } from '@capacitor/device';
 
 type Env = 'development' | 'simulated_ios' | 'real_dev_ios';
 
-type baseUrl = 'http://localhost:8080' | 'http://localhost:4200' | 'https://polytlk.ngrok.io'
+type baseUrl =
+  | 'http://localhost:8080'
+  | 'http://localhost:4200'
+  | 'https://polytlk.ngrok.io';
 
 export type ClientConfig = {
   baseUrl: baseUrl;
-  env: Env
+  env: Env;
   oAuth2AuthOpts: {
     scope: string;
     web: {
-      appId: string
-    }
-  }
+      appId: string;
+    };
+  };
 };
 
-
 const baseConfig = {
-  baseUrl: process.env.NODE_ENV === 'development' && process.env.NX_LOCAL_MODE === 'msw' ? 'http://localhost:4200' : 'http://localhost:8080',
+  baseUrl:
+    process.env.NODE_ENV === 'development' &&
+    process.env.NX_LOCAL_MODE === 'msw'
+      ? 'http://localhost:4200'
+      : 'http://localhost:8080',
   oAuth2AuthOpts: {
-    scope: "email profile",
+    scope: 'email profile',
     web: {
-      appId: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
+      appId:
+        '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
     },
-  }
-} as const
+  },
+} as const;
 
 class Config {
-  private static instance: Config;
+  private static instance: Config | null = null;
   private data: ClientConfig | null = null;
 
-  private constructor() { }
-
   public static async getInstance(): Promise<Config> {
-    if (!Config.instance) {
+    if (Config.instance == null) {
       const _config = new Config();
       await _config.load();
-      Config.instance = _config
+      Config.instance = _config;
     }
     return Config.instance;
   }
@@ -45,7 +50,7 @@ class Config {
     const { platform, isVirtual } = await Device.getInfo();
     let env: Env;
 
-    if (platform === "web") {
+    if (platform === 'web') {
       env = 'development';
     } else {
       env = isVirtual ? 'simulated_ios' : 'real_dev_ios';
@@ -68,14 +73,14 @@ class Config {
         this.data = {
           ...baseConfig,
           env,
-          baseUrl: 'https://polytlk.ngrok.io'
+          baseUrl: 'https://polytlk.ngrok.io',
         };
         break;
       default:
         throw new Error(`Unsupported environment: ${env}`);
     }
 
-    Object.freeze(this.data);  // Prevents further modifications to the config object
+    Object.freeze(this.data); // Prevents further modifications to the config object
   }
 
   public get(): ClientConfig {
@@ -86,5 +91,4 @@ class Config {
   }
 }
 
-export default Config
-
+export default Config;

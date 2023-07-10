@@ -1,25 +1,25 @@
-import { Route, Redirect } from 'react-router-dom';
 import type { ComponentType, FunctionComponent } from 'react';
 
 import { useContext } from 'react';
+import { Redirect, Route } from 'react-router-dom';
+
 import AuthContext from './AuthContext';
-import { EchoPlugin } from '@polytlk/echo-plugin';
 
+type PrivateRouteProps = {
+  component: ComponentType;
+};
 
-interface PrivateRouteProps {
-    component: ComponentType;
-    [x: string]: any;  // To accept rest of the properties same as Route component
-}
+const PrivateRoute: FunctionComponent<
+  PrivateRouteProps & Record<string, unknown>
+> = ({ component: Component, ...rest }) => {
+  const { token } = useContext(AuthContext);
+  console.log({ value: `PrivateRoute -> token -> ${token}` });
 
-const PrivateRoute: FunctionComponent<PrivateRouteProps> = ({ component: Component, ...rest }) => {
-    const { token } = useContext(AuthContext);
-    EchoPlugin.echo({ value: `PrivateRoute -> token -> ${token}` })
-  
-    return (
-      <Route {...rest} >
-        {token ? <Component /> : <Redirect to="/login" />}
-      </Route>
-    );
-  };
-  
-  export default PrivateRoute;
+  return (
+    <Route {...rest}>
+      {token !== '' ? <Component /> : <Redirect to="/login" />}
+    </Route>
+  );
+};
+
+export default PrivateRoute;

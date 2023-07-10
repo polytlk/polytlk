@@ -1,11 +1,10 @@
 {
   "name": "web-client",
+  "type": "module",
   "devDependencies": {
     "@capacitor/android": "../../node_modules/@capacitor/android",
     "@capacitor/cli": "^5.0.3",
     "@capacitor/device": "../../node_modules/@capacitor/device",
-    "@capacitor/ios": "../../node_modules/@capacitor/ios",
-    "@byteowls/capacitor-oauth2": "../../node_modules/@byteowls/capacitor-oauth",
-    "@polytlk/echo-plugin": "../../node_modules/@polytlk/echo-plugin"
+    "@capacitor/ios": "../../node_modules/@capacitor/ios"
   }
 }

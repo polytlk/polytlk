@@ -1,10 +1,11 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nrwl/nx", "simple-import-sort", "import"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": ["plugin:prettier/recommended"],
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
@@ -18,7 +19,25 @@
               }
             ]
           }
-        ]
+        ],
+        "simple-import-sort/imports": [
+          2,
+          {
+            // The default grouping, but with type imports first as a separate
+            // group, sorting that group like non-type imports are grouped.
+            "groups": [
+              ["^node:.*\\u0000$", "^@?\\w.*\\u0000$", "^[^.].*\\u0000$", "^\\..*\\u0000$"],
+              ["^\\u0000"],
+              ["^node:"],
+              ["^@?\\w"],
+              ["^"],
+              ["^\\."]
+            ]
+        }],
+        "simple-import-sort/exports": 2,
+        "import/first": 2,
+        "import/newline-after-import": 2,
+        "import/no-duplicates": 2
       }
     },
     {

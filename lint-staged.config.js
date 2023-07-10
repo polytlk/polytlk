@@ -8,7 +8,7 @@ module.exports = {
         files => `nx affected --target=lint --files=${files.join(',')} -- --files=${files.join(',')}`,
         files => `nx affected --target=format --files=${files.join(',')} -- --files=${files.join(',')}`
     ],
-    '{apps,libs,tools}/**/*.{toml}': [
+    '{apps,libs,tools}/**/*.toml': [
         files => `nx affected --target=format --files=${files.join(',')} -- --files=${files.join(',')}`
     ]
 };

@@ -4,5 +4,8 @@
     "python.linting.enabled": false,
     "python.linting.flake8Enabled": false,
     "python.linting.mypyEnabled": false,
-    "eslint.enable": true
+    "eslint.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }
