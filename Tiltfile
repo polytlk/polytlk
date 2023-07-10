@@ -72,7 +72,7 @@ host = []
 if LOCAL_MODE == 'expose_cluster':
   host = ['ngrok-tunnel']
 else:
-  host = ['react-dev-server', 'storybook', 'verdaccio']
+  host = ['react-dev-server', 'verdaccio']
 
 final_base = base + host + tyk
 
@@ -109,13 +109,6 @@ else:
     serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE),
     labels=['host_machine'],
     links=link('http://localhost:4200', 'frontend')
-  )
-
-  local_resource(
-    name='storybook',
-    serve_cmd='nx storybook web-client',
-    labels=['host_machine'],
-    links=link('http://localhost:4400', 'storybook')
   )
 
   local_resource(
