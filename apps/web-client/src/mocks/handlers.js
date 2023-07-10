@@ -1,7 +1,4 @@
-import { authHandlers } from "./handlers/auth";
-import { chineseHandlers } from "./handlers/chinese";
+import { authHandlers } from './handlers/auth';
+import { chineseHandlers } from './handlers/chinese';
 
-export const handlers = [
-  ...authHandlers,
-  ...chineseHandlers
-]
+export const handlers = [...authHandlers, ...chineseHandlers];

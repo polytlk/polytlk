@@ -1,4 +1,4 @@
-import type { ClientConfig } from './utils/config'
+import type { ClientConfig } from './utils/config';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -18,29 +18,28 @@ import './theme/variables.css';
 
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { inspect } from "@xstate/inspect";
-import { useEffect, useRef, useState } from 'react'
+import { inspect } from '@xstate/inspect';
+import { useEffect, useRef, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
 import AuthContext from './AuthContext';
 import DebugSidebar from './components/DebugSidebar';
 import ConfigContext from './ConfigContext';
-import { IframeContext } from './context'
+import { IframeContext } from './context';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
-import Config from './utils/config'
+import Config from './utils/config';
 
 setupIonicReact();
 
-
-
 const App: React.FC = () => {
-  const iframeRef = useRef<HTMLIFrameElement>(document.getElementById("xstate-inspector") as HTMLIFrameElement);
+  const iframeRef = useRef<HTMLIFrameElement>(
+    document.getElementById('xstate-inspector') as HTMLIFrameElement
+  );
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [config, setConfig] = useState<ClientConfig | null>(null);
-
 
   useEffect(() => {
     if (iframeRef.current) {
@@ -55,7 +54,7 @@ const App: React.FC = () => {
       const config = await Config.getInstance();
       setConfig(config.get());
       setIsLoading(false);
-    }
+    };
 
     fetchConfig();
   }, []);
@@ -72,7 +71,7 @@ const App: React.FC = () => {
             <IonReactRouter>
               <IonRouterOutlet>
                 <PrivateRoute exact path="/home" component={Home} />
-                <Route exact path='/login'>
+                <Route exact path="/login">
                   <LoginPage />
                 </Route>
                 <Route exact path="/">
@@ -85,8 +84,7 @@ const App: React.FC = () => {
         </IframeContext.Provider>
       </AuthContext.Provider>
     </ConfigContext.Provider>
-
-  )
+  );
 };
 
 export default App;

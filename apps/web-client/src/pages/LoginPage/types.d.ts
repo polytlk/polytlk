@@ -22,7 +22,6 @@ export interface CodeResponse {
   error_uri?: string;
 }
 
-
 export interface TokenResponse {
   /** The access token of a successful token response. */
   access_token: string;

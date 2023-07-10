@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'polytlk-client',
   webDir: '../../dist/apps/web-client',
   loggingBehavior: 'production',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
 };
 
-export default config
+export default config;
