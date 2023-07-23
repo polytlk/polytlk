@@ -11,6 +11,8 @@
   "devDependencies": {
     "@capacitor/ios": "../../node_modules/@capacitor/ios"
   },
+  "main": "./src/index",
+  "module": "./src/index",
   "capacitor": {
     "ios": {
       "src": "ios"
