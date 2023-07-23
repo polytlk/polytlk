@@ -1,5 +1,9 @@
+import type { PluginListenerHandle } from "@capacitor/core";
+
 export interface EchoPluginPlugin {
-    echo(options: { value: string }): Promise<{ value: string }>;
     renderLogin(buttonElem: HTMLElement): Promise<void>;
+    addListener(
+        eventName: "loginResult",
+        listenerFunc: (token: string) => void
+    ): PluginListenerHandle;
 }
-  

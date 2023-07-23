@@ -17,20 +17,10 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
   constructor() {
     super()
 
-    // Create new script element
     let script = document.createElement('script');
-    // Set its src attribute to the script URL
     script.src = "https://accounts.google.com/gsi/client";
-    // Set the async attribute to true
     script.async = true;
-    // Append the script element to the head
     document.head.appendChild(script);
-  }
-
-
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log(`ECHO from WEB -> ${options.value}`);
-    return options;
   }
 
   async renderLogin(buttonElem: HTMLElement ): Promise<void> {
@@ -41,8 +31,7 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
           if ('credential' in response) {
             const { credential } = response;
 
-            // TODO: call our backend
-            console.log("credential", credential)
+            this.notifyListeners("loginResult", credential)
           }
         },
       });
