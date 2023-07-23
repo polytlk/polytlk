@@ -29,6 +29,7 @@ readme = 'README.md'
   drf-spectacular = "^0.26.3"
   uvicorn = {extras = ["standard"], version = "^0.22.0"}
   whitenoise = "^6.5.0"
+  google-auth = "^2.22.0"
 
 [build-system]
 requires = ["poetry-core"]

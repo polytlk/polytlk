@@ -23,7 +23,7 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
     document.head.appendChild(script);
   }
 
-  async renderLogin(buttonElem: HTMLElement ): Promise<void> {
+  async renderLogin(buttonElem: HTMLElement, baseUrl: string): Promise<void> {
     if (google?.accounts?.id) {
       google.accounts.id.initialize({
         client_id: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
@@ -31,7 +31,22 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
           if ('credential' in response) {
             const { credential } = response;
 
-            this.notifyListeners("loginResult", credential)
+            const url = `${baseUrl}/api/auth/exchange/`;
+            const rawExchangeResponse = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                access_token: credential,
+              }),
+            });
+
+            const { token } = await rawExchangeResponse.json();
+
+            if (token) {
+              this.notifyListeners("loginResult", atob(token))
+            }       
           }
         },
       });
