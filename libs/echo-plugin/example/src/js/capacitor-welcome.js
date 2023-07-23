@@ -1,6 +1,7 @@
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Camera } from '@capacitor/camera';
 import { EchoPlugin } from 'echo-plugin'
+
+EchoPlugin.echo({ value: "echoPlugin loaded" })
 
 window.customElements.define(
   'capacitor-welcome',
@@ -77,18 +78,13 @@ window.customElements.define(
         <a href="https://capacitorjs.com" target="_blank" class="button">Read more</a>
         <h2>Tiny Demo</h2>
         <p>
-          This demo shows how to call Capacitor plugins. Say cheese!
-        </p>
-        <p>
-          <button class="button" id="take-photo">Take Photo</button>
-        </p>
-        <p>
         <p>
           Our example code
         </p>
         <p>
           <button class="button" id="take-echo">Echo</button>
         </p>
+        <button class="button" id="google-btn"></button>
       <p>
           <img id="image" style="max-width: 100%">
         </p>
@@ -100,25 +96,9 @@ window.customElements.define(
     connectedCallback() {
       const self = this;
 
-      self.shadowRoot.querySelector('#take-photo').addEventListener('click', async function (e) {
-        try {
-          const photo = await Camera.getPhoto({
-            resultType: 'uri',
-          });
-
-          const image = self.shadowRoot.querySelector('#image');
-          if (!image) {
-            return;
-          }
-
-          image.src = photo.webPath;
-        } catch (e) {
-          console.warn('User cancelled', e);
-        }
-      });
-
       self.shadowRoot.querySelector('#take-echo').addEventListener('click', async function (e) {
-        EchoPlugin.echo({value: "hi im an example"})
+        const googleBtn = self.shadowRoot.getElementById('google-btn')
+        EchoPlugin.renderLogin(googleBtn)
       });
     }
   }
