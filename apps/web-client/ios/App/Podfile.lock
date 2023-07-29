@@ -18,7 +18,7 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 4.0, >= 1.5)
   - GTMSessionFetcher/Core (3.1.1)
-  - PolytlkEchoPlugin (0.0.19):
+  - PolytlkEchoPlugin (0.0.21):
     - Capacitor
     - GoogleSignIn
 
@@ -26,7 +26,7 @@ DEPENDENCIES:
   - "Capacitor (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device`)"
-  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.19_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
+  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.21_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
 
 SPEC REPOS:
   trunk:
@@ -43,7 +43,7 @@ EXTERNAL SOURCES:
   CapacitorDevice:
     :path: "../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device"
   PolytlkEchoPlugin:
-    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.19_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
+    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.21_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
@@ -53,8 +53,8 @@ SPEC CHECKSUMS:
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
-  PolytlkEchoPlugin: a13958e4f84d2f1aed4b2d20402d8c7abac8533a
+  PolytlkEchoPlugin: 74d5639372bf9189f94dc8bef230bcbbcfc7ba9a
 
-PODFILE CHECKSUM: c00f29d6cf24753ac7d5d80cca59b74bfda3067e
+PODFILE CHECKSUM: 62af3da1c5ae1f08b0ae0fcf869c000f9458e0f6
 
 COCOAPODS: 1.12.1

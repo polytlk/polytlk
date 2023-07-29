@@ -9,11 +9,40 @@
 import UIKit
 import GoogleSignIn
 
-class LoginViewController: UIViewController {
+struct ResponseData: Codable {
+    let token: String
+}
 
+class LoginViewController: UIViewController {
     let googleSignInButton = GIDSignInButton()
     var signOutButton: UIButton!
     var greetingLabel: UILabel!
+
+    func tokenSignIn(idToken: String) {
+      guard let authData = try? JSONEncoder().encode(["access_token": idToken]) else {
+          return
+      }
+      let url = URL(string: "http://localhost:8080/api/auth/exchange/")!
+      var request = URLRequest(url: url)
+      request.httpMethod = "POST"
+      request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+      let task = URLSession.shared.uploadTask(with: request, from: authData) { data, response, error in
+        if let error = error {
+            print("Error: \(error)")
+        } else if let data = data {
+            do {
+                let decoder = JSONDecoder()
+                let responseData = try decoder.decode(ResponseData.self, from: data)
+                print("Decoded data: \(responseData)")
+            } catch {
+                print("Error: Unable to decode the JSON response")
+            }
+        }
+      }
+      task.resume()
+  }
+
 
     @IBAction func signIn(sender: Any) {
       GIDSignIn.sharedInstance.signIn(withPresenting: self) { signInResult, error in
@@ -27,8 +56,13 @@ class LoginViewController: UIViewController {
         print("Family name: \(user.profile!.familyName!)") // The user's family name
         print("Email: \(user.profile!.email)") // The user's email address
 
-
-        // If sign in succeeded, display the app's main content View.
+        
+        if let idToken = user.idToken?.tokenString {
+            print("IDToken: \(idToken)")
+            self.tokenSignIn(idToken: idToken)
+        } else {
+            print("idToken is nil")
+        }
       }
     }
 

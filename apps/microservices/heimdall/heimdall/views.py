@@ -19,7 +19,8 @@ ORG_ID = '5e9d9544a1dcd60001d0ed20'
 GATEWAY_HOST = 'gateway-svc-tyk-headless.tyk.svc.cluster.local'
 TYK_MANAGEMENT_API_KEY = 'CHANGEME'
 EDEN_API_ID = 'ZGVmYXVsdC9lZGVuLWFwaQ'
-CLIENT_ID = '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com'
+CLIENT_ID_WEB = '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com'
+CLIENT_ID_IOS = '540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com'
 
 KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'apply_policies': [],
@@ -54,12 +55,13 @@ class OAuthResponseView(APIView):
             return Response({'detail': 'No access token provided'}, status=HTTP_400_BAD_REQUEST)
 
         try:
-            # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, req_trans.Request(), CLIENT_ID)
+            idinfo = id_token.verify_oauth2_token(token, req_trans.Request())
         except ValueError:
             # Invalid token
             pass
-
+        
+        if idinfo['aud'] not in [CLIENT_ID_WEB, CLIENT_ID_IOS]:
+            raise ValueError('Could not verify audience.')
 
         # Now we know that the access token is valid, and we have the user's information
         # We can create a JWT that includes this information
