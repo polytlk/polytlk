@@ -45,7 +45,7 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
             const { token } = await rawExchangeResponse.json();
 
             if (token) {
-              this.notifyListeners("loginResult", atob(token))
+              this.notifyListeners("loginResult", { token })
             }       
           }
         },

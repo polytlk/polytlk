@@ -4,6 +4,6 @@ export interface EchoPluginPlugin {
     renderLogin(buttonElem: HTMLElement, baseUrl: string): Promise<void>;
     addListener(
         eventName: "loginResult",
-        listenerFunc: (token: string) => void
+        listenerFunc: (data: { token: string }) => void
     ): PluginListenerHandle;
 }

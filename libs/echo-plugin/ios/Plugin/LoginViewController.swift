@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleSignIn
+import Capacitor
 
 struct ResponseData: Codable {
     let token: String
@@ -17,6 +18,7 @@ class LoginViewController: UIViewController {
     let googleSignInButton = GIDSignInButton()
     var signOutButton: UIButton!
     var greetingLabel: UILabel!
+    var plugin: CAPPlugin!
 
     func tokenSignIn(idToken: String) {
       guard let authData = try? JSONEncoder().encode(["access_token": idToken]) else {
@@ -34,7 +36,13 @@ class LoginViewController: UIViewController {
             do {
                 let decoder = JSONDecoder()
                 let responseData = try decoder.decode(ResponseData.self, from: data)
-                print("Decoded data: \(responseData)")
+                
+                // Return to the previous view
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true, completion: nil)
+                    // Notify listeners with the token
+                    self.plugin.notifyListeners("loginResult", data: ["token": responseData.token])
+                }
             } catch {
                 print("Error: Unable to decode the JSON response")
             }
@@ -58,7 +66,6 @@ class LoginViewController: UIViewController {
 
         
         if let idToken = user.idToken?.tokenString {
-            print("IDToken: \(idToken)")
             self.tokenSignIn(idToken: idToken)
         } else {
             print("idToken is nil")

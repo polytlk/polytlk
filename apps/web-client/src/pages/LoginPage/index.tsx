@@ -16,9 +16,10 @@ const LoginContainer: FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    EchoPlugin.addListener('loginResult', (token: string) => {
-      console.log('data from loginResult listener', token);
-      const keyData = JSON.parse(token);
+    EchoPlugin.addListener('loginResult', (data: { token: string }) => {
+      console.log('data from loginResult listener', data.token);
+      const keyData = JSON.parse(atob(data.token));
+      console.log('parsedData from loginResult listener', keyData);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setToken(keyData.id);
       history.push('/home');
