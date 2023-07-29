@@ -24,18 +24,23 @@ const LoginContainer: FC = () => {
       history.push('/home');
     });
 
-    const interval = setInterval(() => {
-      if (typeof window.google !== 'undefined' && buttonRef.current != null) {
-        // Clear the interval so it doesn't keep running once the variable is found
-        clearInterval(interval);
+    if (config.platform === 'web') {
+      const interval = setInterval(() => {
+        if (typeof window.google !== 'undefined' && buttonRef.current != null) {
+          // Clear the interval so it doesn't keep running once the variable is found
+          clearInterval(interval);
 
-        // If google exists and the ref is currently referencing a button
-        EchoPlugin.renderLogin(buttonRef.current, config.baseUrl); // Pass it to renderLogin
-      }
-    }, 1000); // Check every second
+          // If google exists and the ref is currently referencing a button
+          EchoPlugin.renderLogin(buttonRef.current, config.baseUrl); // Pass it to renderLogin
+        }
+      }, 1000); // Check every second
 
-    // Cleanup function to clear the interval if the component is unmounted
-    return () => clearInterval(interval);
+      // Cleanup function to clear the interval if the component is unmounted
+      return () => clearInterval(interval);
+    } else if (config.platform === 'ios') {
+      //@ts-expect-error ios doesnt need args
+      EchoPlugin.renderLogin();
+    }
   }, []); // Empty array makes useEffect run once on component mount
 
   return <LoginPage buttonRef={buttonRef} />;

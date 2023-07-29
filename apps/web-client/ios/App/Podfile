@@ -12,7 +12,7 @@ def capacitor_pods
   pod 'Capacitor', :path => '../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios'
   pod 'CapacitorDevice', :path => '../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device'
-  pod 'PolytlkEchoPlugin', :path => '../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.1_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin'
+  pod 'PolytlkEchoPlugin', :path => '../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.14_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin'
 end
 
 target 'App' do

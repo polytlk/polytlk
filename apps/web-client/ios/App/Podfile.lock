@@ -4,14 +4,14 @@ PODS:
   - CapacitorCordova (5.0.3)
   - CapacitorDevice (5.0.4):
     - Capacitor
-  - PolytlkEchoPlugin (0.0.1):
+  - PolytlkEchoPlugin (0.0.14):
     - Capacitor
 
 DEPENDENCIES:
   - "Capacitor (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device`)"
-  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.1_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
+  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.14_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -21,14 +21,14 @@ EXTERNAL SOURCES:
   CapacitorDevice:
     :path: "../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device"
   PolytlkEchoPlugin:
-    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.1_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
+    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.14_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
 
 SPEC CHECKSUMS:
   Capacitor: 304a960e431f9e6f78556554ca71c41c1b2b9680
   CapacitorCordova: def732a63679698df6fb392bbe6d269a0b61e937
   CapacitorDevice: eb4b5e3b42ac35d2527f20aad296b59e0785dc8d
-  PolytlkEchoPlugin: 83c1873ee1fb2d248ecf9e22a6d1a33ae6e63e9d
+  PolytlkEchoPlugin: 00618c7ffdc9b9a70ca5547b777a2626533fdaa7
 
-PODFILE CHECKSUM: 842e20f1746bbe61fd67b01d4bf6cd26dc5e7c53
+PODFILE CHECKSUM: 1a3b2bb1037e3fecd0e535bced1e8da46c83fd2b
 
 COCOAPODS: 1.12.1
