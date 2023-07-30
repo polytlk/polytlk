@@ -12,8 +12,11 @@ type PrivateRouteProps = {
 const PrivateRoute: FunctionComponent<
   PrivateRouteProps & Record<string, unknown>
 > = ({ component: Component, ...rest }) => {
-  const { token } = useContext(AuthContext);
-  console.log({ value: `PrivateRoute -> token -> ${token}` });
+  const { token, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <Route {...rest}>

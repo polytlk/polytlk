@@ -22,7 +22,7 @@ import { inspect } from '@xstate/inspect';
 import { useEffect, useRef, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import AuthContext from './AuthContext';
+import { AuthProvider } from './AuthContext';
 import DebugSidebar from './components/DebugSidebar';
 import ConfigContext from './ConfigContext';
 import { IframeContext } from './context';
@@ -38,7 +38,7 @@ const App: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     document.getElementById('xstate-inspector') as HTMLIFrameElement | null
   );
-  const [token, setToken] = useState('');
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [config, setConfig] = useState<ClientConfig | null>(null);
 
@@ -66,7 +66,7 @@ const App: React.FC = () => {
 
   return (
     <ConfigContext.Provider value={config}>
-      <AuthContext.Provider value={{ token, setToken }}>
+      <AuthProvider>
         <IframeContext.Provider value={iframeRef}>
           <IonApp>
             <IonReactRouter>
@@ -83,7 +83,7 @@ const App: React.FC = () => {
             </IonReactRouter>
           </IonApp>
         </IframeContext.Provider>
-      </AuthContext.Provider>
+      </AuthProvider>
     </ConfigContext.Provider>
   );
 };

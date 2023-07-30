@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 import time
 
 import jwt
@@ -25,8 +26,8 @@ CLIENT_ID_IOS = '540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleuserco
 KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'apply_policies': [],
     'org_id': ORG_ID,
-    'expires': 0,
     'allowance': 0,
+    "expires": -1,
     'per': 0,
     'quota_max': 0,
     'rate': 0,
@@ -63,6 +64,10 @@ class OAuthResponseView(APIView):
         if idinfo['aud'] not in [CLIENT_ID_WEB, CLIENT_ID_IOS]:
             raise ValueError('Could not verify audience.')
 
+        exp = math.floor(time.time() + EXPIRATION_TIME)
+
+        logger.info('idinfo: {0}'.format(idinfo))
+
         # Now we know that the access token is valid, and we have the user's information
         # We can create a JWT that includes this information
         payload = {
@@ -70,7 +75,7 @@ class OAuthResponseView(APIView):
             'sub': idinfo['sub'],
             'email': idinfo['email'],
             # Expiration time. This is in Unix timestamp format. This token will expire in 1 hour.
-            'exp': time.time() + EXPIRATION_TIME,
+            'exp': exp,
         }
 
         secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
@@ -95,7 +100,11 @@ class OAuthResponseView(APIView):
             ],
         }
 
+        KEY_REQUEST_TEMPLATE['expires'] = exp
+
         logger.info('url: ' + url)
+
+        logger.info('KEY_REQUEST_TEMPLATE: {0}'.format(KEY_REQUEST_TEMPLATE))
 
         raw_key_response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
 

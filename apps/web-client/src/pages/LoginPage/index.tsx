@@ -1,10 +1,11 @@
 import type { FC } from 'react';
 
 import { EchoPlugin } from '@polytlk/echo-plugin';
+import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { useContext, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import AuthContext from '../../AuthContext';
+import AuthContext, { getTokenData, KEY } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
 import { LoginPage } from './LoginPage';
 
@@ -18,10 +19,12 @@ const LoginContainer: FC = () => {
   useEffect(() => {
     EchoPlugin.addListener('loginResult', (data: { token: string }) => {
       console.log('data from loginResult listener', data.token);
-      const keyData = JSON.parse(atob(data.token));
-      console.log('parsedData from loginResult listener', keyData);
+      SecureStoragePlugin.set({ key: KEY, value: data.token }).then((success) =>
+        console.log(success)
+      );
+      const { id } = getTokenData(data.token);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setToken(keyData.id);
+      setToken(id);
       history.push('/home');
     });
 
