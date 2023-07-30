@@ -6,6 +6,11 @@ const config: CapacitorConfig = {
   webDir: '../../dist/apps/web-client',
   loggingBehavior: 'production',
   bundledWebRuntime: false,
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
+  },
 };
 
 export default config;

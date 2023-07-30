@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
 
+import { CapacitorHttp } from '@capacitor/core';
 import {
   IonButton,
   IonCol,
@@ -15,6 +16,7 @@ import {
 import { useMachine } from '@xstate/react';
 import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { assign } from 'xstate';
 
 import AuthContext, { KEY } from '../AuthContext';
@@ -52,6 +54,7 @@ const InterpretBar: FC<{
   const { token } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!;
+  const history = useHistory();
 
   const [state, send] = useMachine(machine, {
     devTools: true,
@@ -60,31 +63,31 @@ const InterpretBar: FC<{
     },
     actions: {
       submitChinese: (context) => {
-        // Fetch logic goes here, this is a mock example
-        fetch(`${config.baseUrl}/api/chinese/interpretation`, {
-          method: 'POST',
+        console.log('token', token);
+        console.log('context.text', context.text);
+        const options = {
+          url: `${config.baseUrl}/api/chinese/interpretation`,
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ user_input: context.text }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              // Check if response went okay
-              if (response.status === 401) {
-                SecureStoragePlugin.remove({ key: KEY }).then((success) =>
-                  console.log(success)
-                );
-              } else {
-                throw new Error('Network response was not ok.');
-              }
-            }
-
-            return response.json();
-          })
-          .then((data) => send({ type: 'TASK_RECEIVED', taskId: data.task_id }))
-          .catch((error) => console.error('Error:', error));
+          data: { user_input: context.text },
+        };
+        CapacitorHttp.post(options).then((response) => {
+          console.log('response in capacitorhttp', response);
+          if (response.status !== 401) {
+            send({ type: 'TASK_RECEIVED', taskId: response.data.task_id });
+          } else {
+            SecureStoragePlugin.remove({ key: KEY })
+              .then((success) => {
+                console.log('remove authToken', success);
+                history.push('/login');
+              })
+              .catch((error) => {
+                console.log('remove authToken failed', error);
+              });
+          }
+        });
       },
       setLoading: assign({ loading: true }),
       clearError: assign({ inputError: '', inputColor: 'light' }),
