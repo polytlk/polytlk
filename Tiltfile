@@ -69,7 +69,7 @@ else:
 host = []
 
 if LOCAL_MODE == 'expose_cluster':
-  host = ['ngrok-tunnel']
+  host = ['ngrok-tunnel', 'verdaccio']
 else:
   host = ['react-dev-server', 'verdaccio']
 
@@ -100,6 +100,24 @@ for arg in language:
 
 config.set_enabled_resources(resources)
 
+local_resource(
+  name='verdaccio',
+  serve_cmd='nx local-registry',
+  labels=['host_machine'],
+  links=link('http://localhost:4873', 'registry')
+)
+
+cmd_button(name='publish-btn',
+          argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+          text='local publish',
+          location=location.NAV,
+          icon_name='waving_hand',
+          inputs=[
+              text_input('ver'),
+              text_input('tag'),
+          ]
+)
+
 if LOCAL_MODE == 'expose_cluster':
   local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
 else:
@@ -110,23 +128,6 @@ else:
     links=link('http://localhost:4200/', 'frontend')
   )
 
-  local_resource(
-    name='verdaccio',
-    serve_cmd='nx local-registry',
-    labels=['host_machine'],
-    links=link('http://localhost:4873', 'registry')
-  )
-
-  cmd_button(name='publish-btn',
-            argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
-            text='local publish',
-            location=location.NAV,
-            icon_name='waving_hand',
-            inputs=[
-                text_input('ver'),
-                text_input('tag'),
-            ]
-  )
 
 # do not load non front end dependencies if mode is msw
 if not LOCAL_MODE == 'msw':

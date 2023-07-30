@@ -20,6 +20,9 @@ devDependencies:
   '@polytlk/echo-plugin':
     specifier: ../../node_modules/@polytlk/echo-plugin
     version: link:../../node_modules/@polytlk/echo-plugin
+  capacitor-secure-storage-plugin:
+    specifier: ../../node_modules/capacitor-secure-storage-plugin
+    version: link:../../node_modules/capacitor-secure-storage-plugin
 
 packages:
 
