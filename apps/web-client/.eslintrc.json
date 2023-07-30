@@ -1,11 +1,6 @@
 {
-  "extends": [
-    "plugin:@nx/react",
-    "../../.eslintrc.json"
-  ],
-  "ignorePatterns": [
-    "!**/*"
-  ],
+  "extends": ["plugin:@nx/react", "../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
   "overrides": [
     {
       "extends": [
@@ -17,14 +12,12 @@
         "ecmaVersion": 2020,
         "project": [
           "apps/web-client/tsconfig.app.json",
-          "apps/web-client/tsconfig.spec.json"
+          "apps/web-client/tsconfig.spec.json",
+          "apps/web-client/tsconfig.storybook.json"
         ],
         "sourceType": "module"
       },
-      "files": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-      ],
+      "files": ["src/**/*.ts", "src/**/*.tsx"],
       "rules": {
         "no-eval": 2,
         "no-implied-eval": 2,
@@ -49,33 +42,15 @@
             "allowNullableObject": false
           }
         ],
-        // Interfaces encourage OO, types encourage FP.
         "@typescript-eslint/consistent-type-definitions": [2, "type"],
-        // Require unknown type annotation in catch blocks.
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-implicit-any-catch.md
         "@typescript-eslint/no-implicit-any-catch": 2,
-        // Don't need this given consistent-type-assertions bans type assertions entirely.
         "total-functions/no-unsafe-type-assertion": 0,
-        // All methods on the `object` top type should be forbidden, they're an OOism.
-        // TODO no-base-to-string catches `toString` at least, but `toLocaleString` and the rest should all be banned too.
         "@typescript-eslint/no-base-to-string": 2,
-        // If someone happens to disable both consistent-type-assertions and no-unsafe-type-assertion, this rule will help show them that their
-        // type assertion is unnecessary in at least one case (calls to `reduce`).
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/prefer-reduce-type-parameter.md
         "@typescript-eslint/prefer-reduce-type-parameter": 2,
-        // Force array predicates to return something that could be either truthy or falsy.
-        // TODO ideally this would be even stricter and require an actual boolean return type.
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-unnecessary-condition.md
-        // See also https://github.com/typescript-eslint/typescript-eslint/issues/1038
-        // See also https://github.com/microsoft/TypeScript/issues/19456
         "@typescript-eslint/no-unnecessary-condition": 2,
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/switch-exhaustiveness-check.md
         "@typescript-eslint/switch-exhaustiveness-check": 2,
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/require-array-sort-compare.md
         "@typescript-eslint/require-array-sort-compare": 2,
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/non-nullable-type-assertion-style.md
         "@typescript-eslint/non-nullable-type-assertion-style": 2,
-        // See https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/method-signature-style.md
         "@typescript-eslint/method-signature-style": 2
       }
     }
