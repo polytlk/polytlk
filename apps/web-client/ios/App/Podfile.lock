@@ -1,47 +1,70 @@
 PODS:
-  - ByteowlsCapacitorOauth2 (4.0.2):
-    - Capacitor
-    - OAuthSwift (= 2.2.0)
+  - AppAuth (1.6.2):
+    - AppAuth/Core (= 1.6.2)
+    - AppAuth/ExternalUserAgent (= 1.6.2)
+  - AppAuth/Core (1.6.2)
+  - AppAuth/ExternalUserAgent (1.6.2):
+    - AppAuth/Core
   - Capacitor (5.0.3):
     - CapacitorCordova
   - CapacitorCordova (5.0.3)
   - CapacitorDevice (5.0.4):
     - Capacitor
-  - OAuthSwift (2.2.0)
-  - PolytlkEchoPlugin (0.0.10):
+  - CapacitorSecureStoragePlugin (0.9.0):
     - Capacitor
+    - SwiftKeychainWrapper
+  - GoogleSignIn (7.0.0):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (< 3.0, >= 1.3)
+    - GTMSessionFetcher/Core (< 4.0, >= 1.1)
+  - GTMAppAuth (2.0.0):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 4.0, >= 1.5)
+  - GTMSessionFetcher/Core (3.1.1)
+  - PolytlkEchoPlugin (0.0.30):
+    - Capacitor
+    - GoogleSignIn
+  - SwiftKeychainWrapper (4.0.1)
 
 DEPENDENCIES:
-  - "ByteowlsCapacitorOauth2 (from `../../../../node_modules/.pnpm/@byteowls+capacitor-oauth2@4.0.2_@capacitor+core@5.0.3/node_modules/@byteowls/capacitor-oauth2`)"
   - "Capacitor (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device`)"
-  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.10_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
+  - "CapacitorSecureStoragePlugin (from `../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.0.3/node_modules/capacitor-secure-storage-plugin`)"
+  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.30_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
 
 SPEC REPOS:
   trunk:
-    - OAuthSwift
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
+    - SwiftKeychainWrapper
 
 EXTERNAL SOURCES:
-  ByteowlsCapacitorOauth2:
-    :path: "../../../../node_modules/.pnpm/@byteowls+capacitor-oauth2@4.0.2_@capacitor+core@5.0.3/node_modules/@byteowls/capacitor-oauth2"
   Capacitor:
     :path: "../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios"
   CapacitorCordova:
     :path: "../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios"
   CapacitorDevice:
     :path: "../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device"
+  CapacitorSecureStoragePlugin:
+    :path: "../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.0.3/node_modules/capacitor-secure-storage-plugin"
   PolytlkEchoPlugin:
-    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.10_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
+    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.30_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
 
 SPEC CHECKSUMS:
-  ByteowlsCapacitorOauth2: 86f9a61aa413119226b12aabc5d03f185e9e1d28
+  AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   Capacitor: 304a960e431f9e6f78556554ca71c41c1b2b9680
   CapacitorCordova: def732a63679698df6fb392bbe6d269a0b61e937
   CapacitorDevice: eb4b5e3b42ac35d2527f20aad296b59e0785dc8d
-  OAuthSwift: 75efbb5bd9a4b2b71a37bd7e986bf3f55ddd54c6
-  PolytlkEchoPlugin: 0971fdc04becedb22589d54d960dc39312b2707c
+  CapacitorSecureStoragePlugin: e91d7df060f2495a1acff9583641a6953e3aacba
+  GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
+  GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
+  GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
+  PolytlkEchoPlugin: 6c92465b0e6f4035d3f4e786996b4a11cf04d437
+  SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: 4b190205d92af491a35d48a2b8b147cc789bdbd2
+PODFILE CHECKSUM: b6f9731269c9bdd9efb9f8270a20294839434e0f
 
 COCOAPODS: 1.12.1

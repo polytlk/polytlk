@@ -13,10 +13,11 @@ import {
   IonSelectOption,
 } from '@ionic/react';
 import { useMachine } from '@xstate/react';
+import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { useContext, useEffect } from 'react';
 import { assign } from 'xstate';
 
-import AuthContext from '../AuthContext';
+import AuthContext, { KEY } from '../AuthContext';
 import ConfigContext from '../ConfigContext';
 import { machine } from './machine';
 
@@ -68,7 +69,20 @@ const InterpretBar: FC<{
           },
           body: JSON.stringify({ user_input: context.text }),
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              // Check if response went okay
+              if (response.status === 401) {
+                SecureStoragePlugin.remove({ key: KEY }).then((success) =>
+                  console.log(success)
+                );
+              } else {
+                throw new Error('Network response was not ok.');
+              }
+            }
+
+            return response.json();
+          })
           .then((data) => send({ type: 'TASK_RECEIVED', taskId: data.task_id }))
           .catch((error) => console.error('Error:', error));
       },

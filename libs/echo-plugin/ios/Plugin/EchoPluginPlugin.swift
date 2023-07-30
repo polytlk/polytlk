@@ -9,10 +9,10 @@ import Capacitor
 public class EchoPluginPlugin: CAPPlugin {
     private let implementation = EchoPlugin()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+    @objc func renderLogin(_ call: CAPPluginCall) {
+        let baseUrl = call.getString("baseUrl") ?? ""
+
+        implementation.renderLogin(from: self, baseUrl: baseUrl)
+        call.resolve()
     }
 }

@@ -24,7 +24,7 @@ def create_app() -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=['http://localhost:4200'],
+        allow_origins=['http://localhost:4200', 'capacitor://localhost'],
         allow_credentials=False,
         allow_methods=['GET', 'POST'],
         allow_headers=['*'],

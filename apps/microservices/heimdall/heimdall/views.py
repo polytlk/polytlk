@@ -1,29 +1,33 @@
 import json
 import logging
+import math
 import time
 
 import jwt
 import requests
 from django.conf import settings
 from drf_spectacular.openapi import AutoSchema
+from google.auth.transport import requests as req_trans
+from google.oauth2 import id_token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.serializers import CharField, Serializer
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-VALIDATION_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={0}'
 EXPIRATION_TIME = 3600
 ORG_ID = '5e9d9544a1dcd60001d0ed20'
 GATEWAY_HOST = 'gateway-svc-tyk-headless.tyk.svc.cluster.local'
 TYK_MANAGEMENT_API_KEY = 'CHANGEME'
 EDEN_API_ID = 'ZGVmYXVsdC9lZGVuLWFwaQ'
+CLIENT_ID_WEB = '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com'
+CLIENT_ID_IOS = '540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com'
 
 KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'apply_policies': [],
     'org_id': ORG_ID,
-    'expires': 0,
     'allowance': 0,
+    "expires": -1,
     'per': 0,
     'quota_max': 0,
     'rate': 0,
@@ -45,27 +49,33 @@ class OAuthResponseView(APIView):
     schema = AutoSchema()
 
     def post(self, request, format=None):
-        access_token = request.data.get('access_token', None)
+        token = request.data.get('access_token', None)
+        idinfo = None
 
-        if not access_token:
+        if not token:
             return Response({'detail': 'No access token provided'}, status=HTTP_400_BAD_REQUEST)
 
-        # Validate the access token with Google
-        raw_response = requests.get(VALIDATION_URL.format(access_token))
+        try:
+            idinfo = id_token.verify_oauth2_token(token, req_trans.Request())
+        except ValueError:
+            # Invalid token
+            pass
+        
+        if idinfo['aud'] not in [CLIENT_ID_WEB, CLIENT_ID_IOS]:
+            raise ValueError('Could not verify audience.')
 
-        if raw_response.status_code != HTTP_200_OK:
-            return Response({'detail': 'Invalid access token'}, status=HTTP_400_BAD_REQUEST)
+        exp = math.floor(time.time() + EXPIRATION_TIME)
 
-        user_info = raw_response.json()
+        logger.info('idinfo: {0}'.format(idinfo))
 
         # Now we know that the access token is valid, and we have the user's information
         # We can create a JWT that includes this information
         payload = {
             # The subject of the token -> Google user ID
-            'sub': user_info['sub'],
-            'email': user_info['email'],
+            'sub': idinfo['sub'],
+            'email': idinfo['email'],
             # Expiration time. This is in Unix timestamp format. This token will expire in 1 hour.
-            'exp': time.time() + EXPIRATION_TIME,
+            'exp': exp,
         }
 
         secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
@@ -90,7 +100,11 @@ class OAuthResponseView(APIView):
             ],
         }
 
+        KEY_REQUEST_TEMPLATE['expires'] = exp
+
         logger.info('url: ' + url)
+
+        logger.info('KEY_REQUEST_TEMPLATE: {0}'.format(KEY_REQUEST_TEMPLATE))
 
         raw_key_response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
 

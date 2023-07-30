@@ -1,7 +1,6 @@
-import type { FC } from 'react';
+import type { FC, RefObject } from 'react';
 
 import {
-  IonButton,
   IonContent,
   IonHeader,
   IonPage,
@@ -10,10 +9,10 @@ import {
 } from '@ionic/react';
 
 type LoginPageProps = {
-  newGoogleLogin: () => void;
+  buttonRef: RefObject<HTMLButtonElement>; // Add a prop type for the ref
 };
 
-export const LoginPage: FC<LoginPageProps> = ({ newGoogleLogin }) => (
+export const LoginPage: FC<LoginPageProps> = ({ buttonRef }) => (
   <IonPage>
     <IonHeader>
       <IonToolbar>
@@ -21,9 +20,7 @@ export const LoginPage: FC<LoginPageProps> = ({ newGoogleLogin }) => (
       </IonToolbar>
     </IonHeader>
     <IonContent className="ion-padding">
-      <IonButton expand="full" onClick={newGoogleLogin}>
-        Login with Google
-      </IonButton>
+      <button ref={buttonRef} />
     </IonContent>
   </IonPage>
 );

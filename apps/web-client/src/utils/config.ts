@@ -9,6 +9,7 @@ type baseUrl =
 
 export type ClientConfig = {
   baseUrl: baseUrl;
+  platform: 'web' | 'ios' | 'android';
   env: Env;
   oAuth2AuthOpts: {
     scope: string;
@@ -60,18 +61,21 @@ class Config {
       case 'development':
         this.data = {
           ...baseConfig,
+          platform,
           env,
         };
         break;
       case 'simulated_ios':
         this.data = {
           ...baseConfig,
+          platform,
           env,
         };
         break;
       case 'real_dev_ios':
         this.data = {
           ...baseConfig,
+          platform,
           env,
           baseUrl: 'https://polytlk.ngrok.io',
         };
