@@ -15,5 +15,19 @@ import '@ionic/react/css/display.css';
 import '../src/theme/variables.css';
 
 import { setupIonicReact } from '@ionic/react';
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 setupIonicReact();
+
+const preview = {
+  parameters: {
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+      },
+      defaultViewport: 'iphone12promax',
+    },
+  },
+};
+
+export default preview;

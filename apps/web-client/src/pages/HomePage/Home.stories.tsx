@@ -1,22 +1,15 @@
-import type { Meta } from '@storybook/react';
-
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import Home from './Home';
 
-const Story: Meta<typeof Home> = {
+const meta: Meta<typeof Home> = {
   component: Home,
   title: 'Home',
-  parameters: {
-    viewport: {
-      viewports: INITIAL_VIEWPORTS,
-      defaultViewport: 'iphone12promax',
-    },
-  },
 };
-export default Story;
+export default meta;
+type Story = StoryObj<typeof Home>;
 
-export const Primary = {
+export const Primary: Story = {
   args: {
     data: null,
     language: 'zh',
