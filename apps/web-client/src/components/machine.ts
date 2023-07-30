@@ -20,7 +20,7 @@ export const machine = createMachine<MachineContext, MachineEvents>({
           {
             target: 'loading',
             cond: 'isChinese',
-            actions: ['submitChinese', 'setLoading'],
+            actions: ['setLoading'],
           },
           { target: 'idle', actions: 'setError' },
         ],
@@ -33,6 +33,21 @@ export const machine = createMachine<MachineContext, MachineEvents>({
       },
     },
     loading: {
+      invoke: {
+        id: 'submitChinese',
+        src: 'submitChinese',
+        onDone: {
+          target: 'completed',
+          actions: ['setTaskId', 'clearError'],
+        },
+        onError: {
+          target: 'idle',
+          actions: assign({
+            inputError: 'Something went wrong',
+            inputColor: 'danger',
+          }),
+        },
+      },
       on: {
         TASK_RECEIVED: {
           target: 'completed',
