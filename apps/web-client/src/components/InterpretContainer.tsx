@@ -62,33 +62,6 @@ const InterpretBar: FC<{
       isChinese: (context) => context.language === 'zh',
     },
     actions: {
-      submitChinese: (context) => {
-        console.log('token', token);
-        console.log('context.text', context.text);
-        const options = {
-          url: `${config.baseUrl}/api/chinese/interpretation`,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          data: { user_input: context.text },
-        };
-        CapacitorHttp.post(options).then((response) => {
-          console.log('response in capacitorhttp', response);
-          if (response.status !== 401) {
-            send({ type: 'TASK_RECEIVED', taskId: response.data.task_id });
-          } else {
-            SecureStoragePlugin.remove({ key: KEY })
-              .then((success) => {
-                console.log('remove authToken', success);
-                history.push('/login');
-              })
-              .catch((error) => {
-                console.log('remove authToken failed', error);
-              });
-          }
-        });
-      },
       setLoading: assign({ loading: true }),
       clearError: assign({ inputError: '', inputColor: 'light' }),
       setTaskId: assign((_, event) => {
@@ -102,6 +75,25 @@ const InterpretBar: FC<{
         inputColor: 'danger',
       }),
       resetLoading: assign({ loading: false }),
+    },
+    services: {
+      submitChinese: (context) => async () => {
+        const response = await CapacitorHttp.post({
+          url: `${config.baseUrl}/api/chinese/interpretation`,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          data: { user_input: context.text },
+        });
+
+        if (response.status !== 401) {
+          send({ type: 'TASK_RECEIVED', taskId: response.data.task_id });
+        } else {
+          await SecureStoragePlugin.remove({ key: KEY });
+          history.push('/login');
+        }
+      },
     },
   });
 
