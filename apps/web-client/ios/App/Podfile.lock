@@ -21,7 +21,7 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 4.0, >= 1.5)
   - GTMSessionFetcher/Core (3.1.1)
-  - PolytlkEchoPlugin (0.0.26):
+  - PolytlkEchoPlugin (0.0.30):
     - Capacitor
     - GoogleSignIn
   - SwiftKeychainWrapper (4.0.1)
@@ -31,7 +31,7 @@ DEPENDENCIES:
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.4_@capacitor+core@5.0.3/node_modules/@capacitor/device`)"
   - "CapacitorSecureStoragePlugin (from `../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.0.3/node_modules/capacitor-secure-storage-plugin`)"
-  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.26_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
+  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.30_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin`)"
 
 SPEC REPOS:
   trunk:
@@ -51,7 +51,7 @@ EXTERNAL SOURCES:
   CapacitorSecureStoragePlugin:
     :path: "../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.0.3/node_modules/capacitor-secure-storage-plugin"
   PolytlkEchoPlugin:
-    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.26_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
+    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.0.30_@capacitor+core@5.0.3/node_modules/@polytlk/echo-plugin"
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
@@ -62,9 +62,9 @@ SPEC CHECKSUMS:
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
-  PolytlkEchoPlugin: d8d221edad7c5e2e4b170a5de4b55d4783635798
+  PolytlkEchoPlugin: 6c92465b0e6f4035d3f4e786996b4a11cf04d437
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: 0f534c52ea09659ba8358dca68b1e92d486b6170
+PODFILE CHECKSUM: b6f9731269c9bdd9efb9f8270a20294839434e0f
 
 COCOAPODS: 1.12.1

@@ -2,12 +2,12 @@ import Foundation
 import Capacitor
 
 @objc public class EchoPlugin: NSObject {
-    @objc public func renderLogin(from plugin: CAPPlugin) {
-        DispatchQueue.main.async { [weak self] in
+    @objc public func renderLogin(from plugin: CAPPlugin, baseUrl: String) {
+        DispatchQueue.main.async {
             let loginViewController = LoginViewController()
 
-            // Set the plugin
             loginViewController.plugin = plugin
+            loginViewController.baseUrl = baseUrl
             
             guard let viewController = plugin.bridge?.viewController else {
                 print("ViewController is nil")

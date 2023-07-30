@@ -23,7 +23,7 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
     document.head.appendChild(script);
   }
 
-  async renderLogin(buttonElem: HTMLElement, baseUrl: string): Promise<void> {
+  async renderLogin({ baseUrl, buttonElem }: { buttonElem: HTMLElement, baseUrl: string }): Promise<void> {
     if (google?.accounts?.id) {
       google.accounts.id.initialize({
         client_id: '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
@@ -46,7 +46,7 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
 
             if (token) {
               this.notifyListeners("loginResult", { token })
-            }       
+            }
           }
         },
       });

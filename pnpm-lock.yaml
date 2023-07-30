@@ -18,8 +18,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0(react-dom@18.2.0)(react-router-dom@5.3.3)(react-router@5.3.4)(react@18.2.0)
   '@polytlk/echo-plugin':
-    specifier: ^0.0.26
-    version: 0.0.26(@capacitor/core@5.0.3)
+    specifier: ^0.0.30
+    version: 0.0.30(@capacitor/core@5.0.3)
   '@xstate/react':
     specifier: ^3.2.2
     version: 3.2.2(@types/react@18.0.28)(react@18.2.0)(xstate@4.38.0)
@@ -3541,8 +3541,8 @@ packages:
       webpack: 5.88.0
     dev: true
 
-  /@polytlk/echo-plugin@0.0.26(@capacitor/core@5.0.3):
-    resolution: {integrity: sha512-1KJlesEFJFA6B355KXB0JerqRN98xH9CjGtUzZKqfragUKV3ivCc/sqYEAl1hEtPn7yqyjhkJ/05AOL0j8lR2w==}
+  /@polytlk/echo-plugin@0.0.30(@capacitor/core@5.0.3):
+    resolution: {integrity: sha512-8uFsRl474pizDwQ+AfA5mIz+OPQYIDL0BNpXDkseWJLZXy+eUUX2Tsx9mnNNzUw4upIH6Nt6lj9RLIkKQ6zXHw==}
     peerDependencies:
       '@capacitor/core': 5.0.3
     dependencies:

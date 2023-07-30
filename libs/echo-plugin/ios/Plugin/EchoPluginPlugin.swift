@@ -10,7 +10,9 @@ public class EchoPluginPlugin: CAPPlugin {
     private let implementation = EchoPlugin()
 
     @objc func renderLogin(_ call: CAPPluginCall) {
-        implementation.renderLogin(from: self)
+        let baseUrl = call.getString("baseUrl") ?? ""
+
+        implementation.renderLogin(from: self, baseUrl: baseUrl)
         call.resolve()
     }
 }

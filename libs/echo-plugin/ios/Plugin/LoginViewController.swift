@@ -19,12 +19,18 @@ class LoginViewController: UIViewController {
     var signOutButton: UIButton!
     var greetingLabel: UILabel!
     var plugin: CAPPlugin!
+    var baseUrl: String!
 
     func tokenSignIn(idToken: String) {
       guard let authData = try? JSONEncoder().encode(["access_token": idToken]) else {
           return
       }
-      let url = URL(string: "http://localhost:8080/api/auth/exchange/")!
+
+      guard let url = URL(string: baseUrl + "/api/auth/exchange/") else {
+        print("Invalid URL")
+        return
+      }
+
       var request = URLRequest(url: url)
       request.httpMethod = "POST"
       request.setValue("application/json", forHTTPHeaderField: "Content-Type")

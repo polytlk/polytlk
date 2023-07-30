@@ -18,10 +18,7 @@ const LoginContainer: FC = () => {
 
   useEffect(() => {
     EchoPlugin.addListener('loginResult', (data: { token: string }) => {
-      console.log('data from loginResult listener', data.token);
-      SecureStoragePlugin.set({ key: KEY, value: data.token }).then((success) =>
-        console.log(success)
-      );
+      SecureStoragePlugin.set({ key: KEY, value: data.token });
       const { id } = getTokenData(data.token);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setToken(id);
@@ -35,15 +32,19 @@ const LoginContainer: FC = () => {
           clearInterval(interval);
 
           // If google exists and the ref is currently referencing a button
-          EchoPlugin.renderLogin(buttonRef.current, config.baseUrl); // Pass it to renderLogin
+          EchoPlugin.renderLogin({
+            baseUrl: config.baseUrl,
+            buttonElem: buttonRef.current,
+          }); // Pass it to renderLogin
         }
       }, 1000); // Check every second
 
       // Cleanup function to clear the interval if the component is unmounted
       return () => clearInterval(interval);
     } else if (config.platform === 'ios') {
-      //@ts-expect-error ios doesnt need args
-      EchoPlugin.renderLogin();
+      EchoPlugin.renderLogin({
+        baseUrl: config.baseUrl,
+      });
     }
   }, []); // Empty array makes useEffect run once on component mount
 
