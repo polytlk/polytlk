@@ -1,3 +1,5 @@
+import type { LanguageDataProps } from '../../components/LanguageData';
+
 import {
   IonButton,
   IonCol,
@@ -8,27 +10,20 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
-  IonListHeader,
   IonLoading,
   IonMenuButton,
   IonPage,
   IonRow,
   IonSelect,
   IonSelectOption,
-  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
 
-export type LanguageData = {
-  words: [string, string, string][];
-  meaning: string;
-  dialogue: [string, string, string][];
-};
+import { LanguageDataComponent } from '../../components/LanguageData';
 
 type HomeProps = {
-  data: LanguageData | null;
+  data: LanguageDataProps | null;
   inputError: string;
   inputColor: string;
   loading: boolean;
@@ -76,31 +71,11 @@ const Home: React.FC<HomeProps> = ({
           </IonRow>
           <IonRow className="ion-align-items-center" style={{ margin: '2em' }}>
             {data !== null ? (
-              <IonList>
-                <IonListHeader>Words used in the text:</IonListHeader>
-                {data.words.map(([word, phonetic, meaning], index) => (
-                  <IonItem key={index}>
-                    <IonLabel>
-                      - {word} ({phonetic}) - {meaning}
-                    </IonLabel>
-                  </IonItem>
-                ))}
-                <IonListHeader>Overall meaning of the text:</IonListHeader>
-                <IonItem>
-                  <IonText>{data.meaning}</IonText>
-                </IonItem>
-                <IonListHeader>Example dialogue:</IonListHeader>
-                {data.dialogue.map(
-                  ([dialogue, phonetic, translation], index) => (
-                    <IonItem key={index}>
-                      <IonLabel>
-                        Person {index === 0 ? 'A' : 'B'}: {dialogue} ({phonetic}
-                        ) | "{translation}"
-                      </IonLabel>
-                    </IonItem>
-                  )
-                )}
-              </IonList>
+              <LanguageDataComponent
+                words={data.words}
+                dialogue={data.dialogue}
+                meaning={data.meaning}
+              />
             ) : (
               <>
                 <IonCol size="3"></IonCol>
