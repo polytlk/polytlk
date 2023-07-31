@@ -7,20 +7,21 @@ import {
 } from '@ionic/react';
 import React from 'react';
 
-type LanguageDataProps = {
-  data: {
-    words: [string, string, string][];
-    meaning: string;
-    dialogue: [string, string, string][];
-  };
+export type LanguageDataProps = {
+  words: [string, string, string][];
+  meaning: string;
+  dialogue: [string, string, string][];
 };
 
-const LanguageDataComponent: React.FC<LanguageDataProps> = (props) => {
-  const { data } = props;
+export const LanguageDataComponent: React.FC<LanguageDataProps> = ({
+  words,
+  meaning,
+  dialogue,
+}) => {
   return (
     <IonList>
       <IonListHeader>Words used in the text:</IonListHeader>
-      {data.words.map(([word, phonetic, meaning], index) => (
+      {words.map(([word, phonetic, meaning], index) => (
         <IonItem key={index}>
           <IonLabel>
             - {word} ({phonetic}) - {meaning}
@@ -29,10 +30,10 @@ const LanguageDataComponent: React.FC<LanguageDataProps> = (props) => {
       ))}
       <IonListHeader>Overall meaning of the text:</IonListHeader>
       <IonItem>
-        <IonText>{data.meaning}</IonText>
+        <IonText>{meaning}</IonText>
       </IonItem>
       <IonListHeader>Example dialogue:</IonListHeader>
-      {data.dialogue.map(([dialogue, phonetic, translation], index) => (
+      {dialogue.map(([dialogue, phonetic, translation], index) => (
         <IonItem key={index}>
           <IonLabel>
             Person {index === 0 ? 'A' : 'B'}: {dialogue} ({phonetic}) | "
@@ -43,5 +44,3 @@ const LanguageDataComponent: React.FC<LanguageDataProps> = (props) => {
     </IonList>
   );
 };
-
-export default LanguageDataComponent;

@@ -1,60 +1,40 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
+import type { LanguageData } from './Home';
 
 import { CapacitorHttp } from '@capacitor/core';
-import {
-  IonButton,
-  IonCol,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonLoading,
-  IonRow,
-  IonSelect,
-  IonSelectOption,
-} from '@ionic/react';
 import { useMachine } from '@xstate/react';
 import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { assign } from 'xstate';
 
-import AuthContext, { KEY } from '../AuthContext';
-import ConfigContext from '../ConfigContext';
+import AuthContext, { KEY } from '../../AuthContext';
+import ConfigContext from '../../ConfigContext';
+import Home from './Home';
 import { machine } from './machine';
 
-const LanguageSelector: FC<{
-  language: string;
-  onLanguageChange: (language: string) => void;
-}> = ({ language, onLanguageChange }) => (
-  <IonItem>
-    <IonLabel>Language</IonLabel>
-    <IonSelect
-      value={language}
-      placeholder="Select One"
-      onIonChange={(e) => onLanguageChange(e.detail.value + '')}
-    >
-      <IonSelectOption value="zh">
-        <span role="img" aria-label="chinese flag">
-          🇨🇳
-        </span>
-      </IonSelectOption>
-      <IonSelectOption value="kr">
-        <span role="img" aria-label="korean flag">
-          🇰🇷
-        </span>
-      </IonSelectOption>
-    </IonSelect>
-  </IonItem>
-);
-
-const InterpretBar: FC<{
-  onTaskResult: (res: string) => void;
-}> = ({ onTaskResult }) => {
+const HomeContainer: FC = () => {
+  const [taskResult, setTaskResult] = useState<string>('');
+  const [data, setData] = useState<LanguageData | null>(null);
   const { token } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!;
   const history = useHistory();
+
+  useEffect(() => {
+    try {
+      if (taskResult !== '') {
+        const parsedData = JSON.parse(taskResult);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setData(parsedData);
+      } else {
+        setData(null);
+      }
+    } catch (error: unknown) {
+      console.error('Failed to parse taskResult:', error);
+    }
+  }, [taskResult]);
 
   const [state, send] = useMachine(machine, {
     devTools: true,
@@ -109,7 +89,8 @@ const InterpretBar: FC<{
         const result = event.data
           ? JSON.parse(event.data).ari_data
           : 'ari could not be generated :(';
-        onTaskResult(result);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setTaskResult(result);
         send('NEW_TASK');
         eventSource.close();
       };
@@ -118,54 +99,19 @@ const InterpretBar: FC<{
         eventSource.close();
       };
     }
-  }, [state.context.taskId, onTaskResult, config.baseUrl, send, token]);
-
-  const handleSubmit = () => {
-    send('SUBMIT');
-  };
+  }, [state.context.taskId, setTaskResult, config.baseUrl, send, token]);
 
   return (
-    <>
-      {state.context.inputError !== '' && (
-        <IonRow>
-          <p>{state.context.inputError}</p>
-        </IonRow>
-      )}
-      <IonRow>
-        <IonCol size="2">
-          <LanguageSelector
-            language={state.context.language}
-            onLanguageChange={(language) =>
-              send({ type: 'UPDATE_LANGUAGE', language })
-            }
-          />
-        </IonCol>
-        <IonCol>
-          <IonItem color={state.context.inputColor}>
-            <IonInput
-              value={state.context.text}
-              placeholder="Enter Text"
-              onIonChange={(e) => {
-                send({
-                  type: 'UPDATE_TEXT',
-                  text: e.detail.value + '',
-                } as const);
-              }}
-              clearInput
-            />
-          </IonItem>
-        </IonCol>
-        <IonCol size="1">
-          <IonButton onClick={handleSubmit}>Submit</IonButton>
-        </IonCol>
-      </IonRow>
-      <IonLoading
-        message={'Loading...'}
-        isOpen={state.context.loading}
-        backdropDismiss={true}
-      />
-    </>
+    <Home
+      data={data}
+      inputError={state.context.inputError}
+      inputColor={state.context.inputColor}
+      language={state.context.language}
+      loading={state.context.loading}
+      text={state.context.text}
+      send={send}
+    />
   );
 };
 
-export default InterpretBar;
+export default HomeContainer;

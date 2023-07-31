@@ -26,7 +26,7 @@ import { AuthProvider } from './AuthContext';
 import DebugSidebar from './components/DebugSidebar';
 import ConfigContext from './ConfigContext';
 import { IframeContext } from './context';
-import Home from './pages/Home';
+import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
 import Config from './utils/config';
