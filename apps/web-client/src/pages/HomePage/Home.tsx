@@ -32,6 +32,8 @@ type HomeProps = {
   send: any;
 };
 
+export type LanguageData = LanguageDataProps;
+
 const Home: React.FC<HomeProps> = ({
   data,
   inputError,
