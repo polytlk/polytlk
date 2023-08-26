@@ -29,8 +29,8 @@
 			"path": "k8s"
 		},
 		{
-			"name": "gke",
-			"path": "apps/gke-cluster"
+			"name": "tf",
+			"path": "apps/terraform"
 		},
 		{
 			"name": "root",

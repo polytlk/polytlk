@@ -1,0 +1,41 @@
+{
+  "name": "terraform-gke-cluster",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/terraform/gke-cluster/src",
+  "targets": {
+    "initialize": {
+      "executor": "@loft-orbital/terraform:init",
+      "outputs": [
+        "{projectRoot}/src/.terraform",
+        "{projectRoot}/src/.terraform.lock.hcl"
+      ]
+    },
+    "plan": {
+      "executor": "@loft-orbital/terraform:plan",
+      "options": {
+        "out": "tfplan"
+      },
+      "outputs": ["{projectRoot}/src/tfplan"],
+      "dependsOn": ["initialize"]
+    },
+    "lint": {
+      "executor": "@loft-orbital/terraform:fmt",
+      "options": {
+        "check": true
+      }
+    },
+    "validate": {
+      "executor": "@loft-orbital/terraform:validate",
+      "dependsOn": ["initialize"]
+    },
+    "apply": {
+      "executor": "@loft-orbital/terraform:apply",
+      "options": {
+        "planFile": "tfplan"
+      },
+      "dependsOn": ["plan"]
+    }
+  },
+  "tags": []
+}
