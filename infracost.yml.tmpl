@@ -1,0 +1,9 @@
+version: 0.1
+projects:
+{{- $envs := list "ply-dev" }}
+{{- range $project := matchPaths "apps/terraform/:app/src" }}
+    {{- range $env := $envs}}
+    - path: {{ $project._path }}
+      name: {{ $project.app }}-{{ $env }}
+    {{- end }}
+{{- end }}

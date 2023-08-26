@@ -84,7 +84,9 @@
     "includedScripts": []
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "infracost:template": "infracost generate config --repo-path . --template-path infracost.yml.tmpl --out-file infracost.yml",
+    "infracost:breakdown": "infracost breakdown --config-file infracost.yml"
   },
   "private": true
 }

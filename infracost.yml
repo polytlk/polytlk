@@ -1,0 +1,6 @@
+version: 0.1
+projects:
+    - path: apps/terraform/gke-cluster/src
+      name: gke-cluster-ply-dev
+    - path: apps/terraform/tfstate-bucket/src
+      name: tfstate-bucket-ply-dev
