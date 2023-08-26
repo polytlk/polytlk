@@ -1,5 +1,5 @@
 {
-  "name": "terraform-gke-cluster",
+  "name": "gke-cluster",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/terraform/gke-cluster/src",

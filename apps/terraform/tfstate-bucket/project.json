@@ -1,5 +1,5 @@
 {
-  "name": "terraform-tfstate-bucket",
+  "name": "tfstate-bucket",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/terraform/tfstate-bucket/src",
