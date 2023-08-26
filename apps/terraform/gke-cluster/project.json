@@ -5,7 +5,11 @@
   "sourceRoot": "apps/terraform/gke-cluster/src",
   "targets": {
     "initialize": {
-      "executor": "@loft-orbital/terraform:init",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "terraform init -backend-config=backend-${TF_VAR_project_id}.hcl",
+        "cwd": "apps/terraform/gke-cluster/src"
+      },
       "outputs": [
         "{projectRoot}/src/.terraform",
         "{projectRoot}/src/.terraform.lock.hcl"
