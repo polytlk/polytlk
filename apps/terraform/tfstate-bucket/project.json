@@ -39,6 +39,13 @@
         "planFile": "tfplan"
       },
       "dependsOn": ["plan"]
+    },
+    "tfsec": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tfsec --config-file tfsec.yml",
+        "cwd": "apps/terraform/tfstate-bucket"
+      }
     }
   },
   "tags": []
