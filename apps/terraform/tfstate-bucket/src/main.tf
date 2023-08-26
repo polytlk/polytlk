@@ -45,7 +45,7 @@ resource "google_project_iam_member" "default" {
 }
 
 resource "google_storage_bucket" "default" {
-  name          = "${random_id.bucket_prefix.hex}-bucket-tfstate"
+  name          = "${var.project_id}-bucket-tfstate"
   force_destroy = false
   location      = "US"
   storage_class = "STANDARD"
