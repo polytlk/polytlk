@@ -46,6 +46,13 @@
         "command": "tfsec --config-file tfsec.yml",
         "cwd": "apps/terraform/tfstate-bucket"
       }
+    },
+    "terrascan": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "terrascan scan -i terraform  -t gcp --severity low -v",
+        "cwd": "apps/terraform/tfstate-bucket/src"
+      }
     }
   },
   "tags": []
