@@ -1,7 +1,7 @@
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall
 resource "google_compute_firewall" "iap-bastion" {
   name    = "iap-bastion"
-  network = google_compute_network.main.name
+  network = data.google_compute_network.cluster_network.name
 
   allow {
     protocol = "tcp"
@@ -15,7 +15,7 @@ resource "google_compute_firewall" "iap-bastion" {
 
 resource "google_compute_firewall" "allow-ssh" {
   name    = "allow-ssh"
-  network = google_compute_network.main.name
+  network = data.google_compute_network.cluster_network.name
 
   allow {
     protocol = "tcp"

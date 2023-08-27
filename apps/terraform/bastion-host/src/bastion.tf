@@ -2,11 +2,14 @@ resource "google_project_service" "iap" {
   service = "iap.googleapis.com"
 }
 
-resource "google_project_service" "networkmanagement" {
-  service = "networkmanagement.googleapis.com"
-
-  disable_dependent_services = true
+data "google_compute_network" "cluster_network" {
+  name = "main"
 }
+
+data "google_compute_subnetwork" "private" {
+  name = "private"
+}
+
 
 resource "google_service_account" "bastion_sa" {
   account_id   = "bastion-service-account"
@@ -40,9 +43,9 @@ resource "google_compute_instance" "bastion" {
     auto_delete  = true
   }
   network_interface {
-    network = google_compute_network.main.name
+    network = data.google_compute_network.cluster_network.name
 
-    subnetwork = google_compute_subnetwork.private.name
+    subnetwork = data.google_compute_subnetwork.private.name
   }
   metadata = {
     enable-oslogin     = "True"

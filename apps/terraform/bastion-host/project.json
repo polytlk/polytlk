@@ -1,14 +1,14 @@
 {
-  "name": "gke-cluster",
+  "name": "bastion-host",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "apps/terraform/gke-cluster/src",
+  "sourceRoot": "apps/terraform/bastion-host/src",
   "targets": {
     "initialize": {
       "executor": "nx:run-commands",
       "options": {
         "command": "terraform init -backend-config=backend-${TF_VAR_project_id}.hcl",
-        "cwd": "apps/terraform/gke-cluster/src"
+        "cwd": "apps/terraform/bastion-host/src"
       },
       "outputs": [
         "{projectRoot}/src/.terraform",
@@ -44,14 +44,38 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "tfsec --config-file tfsec.yml",
-        "cwd": "apps/terraform/gke-cluster"
+        "cwd": "apps/terraform/bastion-host"
       }
     },
     "terrascan": {
       "executor": "nx:run-commands",
       "options": {
         "command": "terrascan scan -i terraform  -t gcp --severity low -v",
-        "cwd": "apps/terraform/gke-cluster/src"
+        "cwd": "apps/terraform/bastion-host/src"
+      }
+    },
+    "get-creds": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gcloud container clusters get-credentials primary-cluster --zone us-central1-a --project ${TF_VAR_project_id}"
+      }
+    },
+    "ssh": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gcloud compute ssh bastion-host --tunnel-through-iap --zone us-central1-a --project ${TF_VAR_project_id} --ssh-flag='-4 -L8888:localhost:8888 -N -q -f'"
+      }
+    },
+    "kubectl": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "HTTPS_PROXY=localhost:8888 kubectl"
+      }
+    },
+    "kill": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "lsof -i tcp:8888 | awk 'NR>1 {print $2}' | xargs kill -9"
       }
     }
   },
