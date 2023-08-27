@@ -2,5 +2,7 @@ version: 0.1
 projects:
     - path: apps/terraform/gke-cluster/src
       name: gke-cluster-ply-dev
+      usage_file: apps/terraform/gke-cluster/src/infracost-usage.yml
     - path: apps/terraform/tfstate-bucket/src
       name: tfstate-bucket-ply-dev
+      usage_file: apps/terraform/tfstate-bucket/src/infracost-usage.yml

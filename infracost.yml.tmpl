@@ -5,5 +5,6 @@ projects:
     {{- range $env := $envs}}
     - path: {{ $project._path }}
       name: {{ $project.app }}-{{ $env }}
+      usage_file: {{ $project._path }}/infracost-usage.yml
     {{- end }}
 {{- end }}

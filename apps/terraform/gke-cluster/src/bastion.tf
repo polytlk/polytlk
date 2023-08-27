@@ -20,22 +20,24 @@ resource "google_project_iam_member" "bastion_sa_gke_engine_viewer" {
   member  = "serviceAccount:${google_service_account.bastion_sa.email}"
 }
 
-resource "google_compute_instance_template" "bastion-template" {
-  name                 = "bastion-template"
-  description          = "This template is used to create bastion instances."
+resource "google_compute_instance" "bastion" {
+  name                 = "bastion-host"
   tags                 = ["bastion"]
-  instance_description = "Instance used for bastion"
   machine_type         = "f1-micro"
+  zone = "us-central1-a"
+
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
     preemptible         = false
   }
   // Create a new boot disk from an image
-  disk {
-    source_image = "debian-cloud/debian-11"
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+    
     auto_delete  = true
-    boot         = true
   }
   network_interface {
     network = google_compute_network.main.name
@@ -62,17 +64,11 @@ resource "google_compute_instance_template" "bastion-template" {
 
 }
 
-resource "google_compute_instance_from_template" "bastion" {
-  name = "bastion"
-  zone = "us-central1-a"
-
-  source_instance_template = google_compute_instance_template.bastion-template.self_link_unique
-}
 
 resource "google_iap_tunnel_instance_iam_member" "member" {
   project  = var.project_id
   zone     = "us-central1-a"
-  instance = google_compute_instance_from_template.bastion.name
+  instance = google_compute_instance.bastion.name
   role     = "roles/iap.tunnelResourceAccessor"
   member   = "user:derrick@polytlk.io"
 
@@ -84,7 +80,7 @@ resource "google_iap_tunnel_instance_iam_member" "member" {
 resource "google_compute_instance_iam_member" "member" {
   project       = var.project_id
   zone          = "us-central1-a"
-  instance_name = google_compute_instance_from_template.bastion.name
+  instance_name = google_compute_instance.bastion.name
   role          = "roles/compute.osLogin"
   member        = "group:devops@polytlk.io"
 
