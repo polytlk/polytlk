@@ -1,5 +1,8 @@
 version: 0.1
 projects:
+    - path: apps/terraform/bastion-host/src
+      name: bastion-host-ply-dev
+      usage_file: apps/terraform/bastion-host/src/infracost-usage.yml
     - path: apps/terraform/gke-cluster/src
       name: gke-cluster-ply-dev
       usage_file: apps/terraform/gke-cluster/src/infracost-usage.yml
