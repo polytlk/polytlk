@@ -51,6 +51,10 @@ resource "google_container_cluster" "primary" {
 
   network_policy {
     provider = "CALICO"
-    enabled = true
+    enabled  = true
+  }
+
+  resource_labels = {
+    "env" = var.project_id
   }
 }

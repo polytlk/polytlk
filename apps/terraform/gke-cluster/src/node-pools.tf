@@ -31,6 +31,8 @@ resource "google_container_node_pool" "general" {
     metadata = {
       disable-legacy-endpoints = true
     }
+
+    image_type = "COS_CONTAINERD"
   }
 }
 
@@ -70,5 +72,7 @@ resource "google_container_node_pool" "spot" {
     metadata = {
       disable-legacy-endpoints = true
     }
+
+    image_type = "COS_CONTAINERD"
   }
 }

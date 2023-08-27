@@ -14,4 +14,9 @@ resource "google_compute_subnetwork" "private" {
     range_name    = "k8s-service-range"
     ip_cidr_range = "10.52.0.0/20"
   }
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
 }
