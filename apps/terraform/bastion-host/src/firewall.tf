@@ -10,7 +10,7 @@ resource "google_compute_firewall" "iap-bastion" {
 
   target_tags   = ["bastion"]
   # https://cloud.google.com/iap/docs/using-tcp-forwarding
-  source_ranges = ["35.235.240.0/20"] # tfsec:ignore:google-compute-no-public-ingress
+  source_ranges = ["35.235.240.0/20"]
 }
 
 resource "google_compute_firewall" "allow-ssh" {
