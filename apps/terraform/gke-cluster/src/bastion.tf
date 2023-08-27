@@ -54,12 +54,13 @@ resource "google_compute_instance" "bastion" {
     scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
-  # MANUALLY RUN THIS ONCE AFTER CREATING BASTION
-  # gcloud container clusters get-credentials primary-cluster --region us-central1-a
+  # https://cloud.google.com/kubernetes-engine/docs/tutorials/private-cluster-bastion
   metadata_startup_script = <<SCRIPT
     #! /bin/bash
-    apt-get update
-    apt-get install -y kubectl google-cloud-sdk-gke-gcloud-auth-plugin
+    apt-get update 
+    apt-get install -y tinyproxy
+    echo "Allow localhost" >> /etc/tinyproxy/tinyproxy.conf
+    service tinyproxy restart
     SCRIPT
 
 }

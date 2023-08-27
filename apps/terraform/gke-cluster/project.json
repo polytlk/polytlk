@@ -54,16 +54,24 @@
         "cwd": "apps/terraform/gke-cluster/src"
       }
     },
-    "ssh-bastion": {
+    "get-creds": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "gcloud compute ssh --zone 'us-central1-a' 'bastion' --tunnel-through-iap --project '${TF_VAR_project_id}'"
-      },
-      "outputs": [
-        "{projectRoot}/src/.terraform",
-        "{projectRoot}/src/.terraform.lock.hcl"
-      ]
+        "command": "gcloud container clusters get-credentials primary-cluster --zone us-central1-a --project ${TF_VAR_project_id}"
+      }
     },
+    "iap-bastion": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gcloud compute ssh bastion-host --tunnel-through-iap --zone us-central1-a --project ${TF_VAR_project_id} --ssh-flag='-4 -L8888:localhost:8888 -N -q -f'"
+      }
+    },
+    "kubectl": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "HTTPS_PROXY=localhost:8888 kubectl"
+      }
+    }
   },
   "tags": []
 }
