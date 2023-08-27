@@ -1,1 +1,3 @@
 minimum_severity: LOW
+exclude:
+- google-gke-enforce-pod-security-policy

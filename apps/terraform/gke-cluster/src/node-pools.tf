@@ -32,45 +32,8 @@ resource "google_container_node_pool" "general" {
       disable-legacy-endpoints = true
     }
 
-    image_type = "COS_CONTAINERD"
-  }
-}
-
-resource "google_container_node_pool" "spot" {
-  name    = "spot"
-  cluster = google_container_cluster.primary.id
-
-  management {
-    auto_repair  = true
-    auto_upgrade = true
-  }
-
-  autoscaling {
-    min_node_count = 0
-    max_node_count = 10
-  }
-
-  node_config {
-    preemptible  = true
-    machine_type = "e2-small"
-
-    labels = {
-      team = "devops"
-    }
-
-    taint {
-      key    = "instance_type"
-      value  = "spot"
-      effect = "NO_SCHEDULE"
-    }
-
-    service_account = google_service_account.kubernetes.email
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
-
-    metadata = {
-      disable-legacy-endpoints = true
+    workload_metadata_config {
+      mode = "GKE_METADATA"
     }
 
     image_type = "COS_CONTAINERD"
