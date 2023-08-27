@@ -1,0 +1,45 @@
+{
+  "name": "gha-runners",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/terraform/gha-runners/src",
+  "targets": {
+    "initialize": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "terraform init -backend-config=backend-${TF_VAR_project_id}.hcl",
+        "cwd": "apps/terraform/gha-runners/src"
+      },
+      "outputs": [
+        "{projectRoot}/src/.terraform",
+        "{projectRoot}/src/.terraform.lock.hcl"
+      ]
+    },
+    "plan": {
+      "executor": "@loft-orbital/terraform:plan",
+      "options": {
+        "out": "tfplan"
+      },
+      "outputs": ["{projectRoot}/src/tfplan"],
+      "dependsOn": ["initialize"]
+    },
+    "lint": {
+      "executor": "@loft-orbital/terraform:fmt",
+      "options": {
+        "check": true
+      }
+    },
+    "validate": {
+      "executor": "@loft-orbital/terraform:validate",
+      "dependsOn": ["initialize"]
+    },
+    "apply": {
+      "executor": "@loft-orbital/terraform:apply",
+      "options": {
+        "planFile": "tfplan"
+      },
+      "dependsOn": ["plan"]
+    }
+  },
+  "tags": []
+}
