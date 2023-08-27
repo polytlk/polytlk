@@ -1,9 +1,5 @@
-data "google_compute_network" "cluster_network" {
-  name = "main"
-}
-
-data "google_compute_subnetwork" "private" {
-  name = "private"
+resource "google_project_service" "compute" {
+  service = "compute.googleapis.com"
 }
 
 resource "google_compute_instance" "gha-runner" {
@@ -45,4 +41,17 @@ resource "google_compute_instance" "gha-runner" {
     enable-oslogin-2fa     = "True"
     block-project-ssh-keys = true
   }
+
+  # curl -fsSL https://fnm.vercel.app/install | bash
+  # fnm install 20
+  # nohup ./run.sh &
+  metadata_startup_script = <<SCRIPT
+    #! /bin/bash
+    apt-get update 
+    apt-get install -y unzip
+    SCRIPT
+
+  depends_on = [
+    google_project_service.compute
+  ]
 }

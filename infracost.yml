@@ -1,11 +1,17 @@
 version: 0.1
 projects:
     - path: apps/terraform/bastion-host/src
-      name: bastion-host-ply-dev
-      usage_file: apps/terraform/bastion-host/src/infracost-usage.yml
+      name: ply-dev-bastion-host
+      usage_file: apps/terraform/bastion-host/infracost-ply-dev-usage.yml
+    - path: apps/terraform/gha-runners/src
+      name: ply-cicd-gha-runners
+      usage_file: apps/terraform/gha-runners/infracost-ply-cicd-usage.yml
     - path: apps/terraform/gke-cluster/src
-      name: gke-cluster-ply-dev
-      usage_file: apps/terraform/gke-cluster/src/infracost-usage.yml
+      name: ply-dev-gke-cluster
+      usage_file: apps/terraform/gke-cluster/infracost-ply-dev-usage.yml
     - path: apps/terraform/tfstate-bucket/src
-      name: tfstate-bucket-ply-dev
-      usage_file: apps/terraform/tfstate-bucket/src/infracost-usage.yml
+      name: ply-dev-tfstate-bucket
+      usage_file: apps/terraform/tfstate-bucket/infracost-ply-dev-usage.yml
+    - path: apps/terraform/tfstate-bucket/src
+      name: ply-cicd-tfstate-bucket
+      usage_file: apps/terraform/tfstate-bucket/infracost-ply-cicd-usage.yml

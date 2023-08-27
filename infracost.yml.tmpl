@@ -1,10 +1,14 @@
 version: 0.1
 projects:
-{{- $envs := list "ply-dev" }}
 {{- range $project := matchPaths "apps/terraform/:app/src" }}
-    {{- range $env := $envs}}
+    {{- if pathExists $project._path "backend-ply-dev.hcl" }}
     - path: {{ $project._path }}
-      name: {{ $project.app }}-{{ $env }}
-      usage_file: {{ $project._path }}/infracost-usage.yml
+      name: ply-dev-{{ $project.app }}
+      usage_file: {{ $project._dir }}/infracost-ply-dev-usage.yml
+    {{- end }}
+    {{- if pathExists $project._path "backend-ply-cicd.hcl" }}
+    - path: {{ $project._path }}
+      name: ply-cicd-{{ $project.app }}
+      usage_file: {{ $project._dir }}/infracost-ply-cicd-usage.yml
     {{- end }}
 {{- end }}

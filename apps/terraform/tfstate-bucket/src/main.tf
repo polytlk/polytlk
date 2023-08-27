@@ -6,12 +6,17 @@ resource "google_project_service" "cloudkms" {
   service = "cloudkms.googleapis.com"
 }
 
+resource "google_project_service" "storage" {
+  service = "storage.googleapis.com"
+}
+
 resource "google_kms_key_ring" "terraform_state" {
   name     = "${random_id.bucket_prefix.hex}-bucket-tfstate"
   location = "us"
 
   depends_on = [
-    google_project_service.cloudkms
+    google_project_service.cloudkms,
+    google_project_service.storage
   ]
 }
 
@@ -26,6 +31,7 @@ resource "google_kms_crypto_key" "terraform_state_bucket" {
 }
 
 # Enable the Cloud Storage service account to encrypt/decrypt Cloud KMS keys
+# https://cloud.google.com/storage/docs/getting-service-agent
 data "google_project" "project" {
 }
 
