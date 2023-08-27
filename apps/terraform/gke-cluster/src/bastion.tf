@@ -52,11 +52,12 @@ resource "google_compute_instance_template" "bastion-template" {
     scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
 
+  # MANUALLY RUN THIS ONCE AFTER CREATING BASTION
+  # gcloud container clusters get-credentials primary-cluster --region us-central1-a
   metadata_startup_script = <<SCRIPT
     #! /bin/bash
     apt-get update
     apt-get install -y kubectl google-cloud-sdk-gke-gcloud-auth-plugin
-    gcloud container clusters get-credentials primary-cluster --region us-central1-a
     SCRIPT
 
 }
@@ -85,7 +86,7 @@ resource "google_compute_instance_iam_member" "member" {
   zone          = "us-central1-a"
   instance_name = google_compute_instance_from_template.bastion.name
   role          = "roles/compute.osLogin"
-  member        = "user:derrick@polytlk.io"
+  member        = "group:devops@polytlk.io"
 
   depends_on = [
     google_project_service.iap

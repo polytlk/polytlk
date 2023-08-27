@@ -57,7 +57,7 @@
     "ssh-bastion": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "gcloud compute ssh bastion --project=${TF_VAR_project_id} --zone=us-central1-a"
+        "command": "gcloud compute ssh --zone 'us-central1-a' 'bastion' --tunnel-through-iap --project '${TF_VAR_project_id}'"
       },
       "outputs": [
         "{projectRoot}/src/.terraform",

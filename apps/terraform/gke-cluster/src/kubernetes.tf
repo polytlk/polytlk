@@ -22,6 +22,9 @@ resource "google_container_cluster" "primary" {
     horizontal_pod_autoscaling {
       disabled = false
     }
+    network_policy_config {
+      disabled = false
+    }
   }
 
   release_channel {
@@ -44,5 +47,10 @@ resource "google_container_cluster" "primary" {
   }
 
   master_authorized_networks_config {
+  }
+
+  network_policy {
+    provider = "CALICO"
+    enabled = true
   }
 }

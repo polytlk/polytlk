@@ -27,6 +27,10 @@ resource "google_container_node_pool" "general" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    metadata = {
+      disable-legacy-endpoints = true
+    }
   }
 }
 
@@ -62,5 +66,9 @@ resource "google_container_node_pool" "spot" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    metadata = {
+      disable-legacy-endpoints = true
+    }
   }
 }
