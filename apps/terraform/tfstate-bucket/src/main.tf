@@ -45,10 +45,12 @@ resource "google_project_iam_member" "default" {
 }
 
 resource "google_storage_bucket" "default" {
-  name          = "${var.project_id}-bucket-tfstate"
-  force_destroy = false
-  location      = "US"
-  storage_class = "STANDARD"
+  name                        = "${var.project_id}-bucket-tfstate"
+  force_destroy               = false
+  location                    = "US"
+  storage_class               = "STANDARD"
+  public_access_prevention    = "enforced"
+  uniform_bucket_level_access = true
   versioning {
     enabled = true
   }

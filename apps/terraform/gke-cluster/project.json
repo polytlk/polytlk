@@ -53,7 +53,17 @@
         "command": "terrascan scan -i terraform  -t gcp --severity low -v",
         "cwd": "apps/terraform/gke-cluster/src"
       }
-    }
+    },
+    "ssh-bastion": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gcloud compute ssh bastion --project=${TF_VAR_project_id} --zone=us-central1-a"
+      },
+      "outputs": [
+        "{projectRoot}/src/.terraform",
+        "{projectRoot}/src/.terraform.lock.hcl"
+      ]
+    },
   },
   "tags": []
 }
