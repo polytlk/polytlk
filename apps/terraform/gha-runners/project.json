@@ -39,6 +39,27 @@
         "planFile": "tfplan"
       },
       "dependsOn": ["plan"]
+    },
+    "packer:init": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "packer init .",
+        "cwd": "apps/terraform/gha-runners/vm"
+      }
+    },
+    "packer:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "packer build .",
+        "cwd": "apps/terraform/gha-runners/vm"
+      }
+    },
+    "packer:fmt": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "packer fmt .",
+        "cwd": "apps/terraform/gha-runners/vm"
+      }
     }
   },
   "tags": []

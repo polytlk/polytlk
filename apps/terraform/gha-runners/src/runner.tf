@@ -6,9 +6,9 @@ resource "google_compute_instance" "gha-runner" {
   name         = "gha-runner"
   tags         = ["gha-runner"]
   machine_type = "f1-micro"
-  zone         = "us-central1-a"
+  zone         = var.runner_zone
 
-  allow_stopping_for_update = true
+  allow_stopping_for_update = false
 
   scheduling {
     automatic_restart   = false
@@ -17,7 +17,7 @@ resource "google_compute_instance" "gha-runner" {
   }
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = var.image_name
     }
 
     auto_delete = true
@@ -40,15 +40,33 @@ resource "google_compute_instance" "gha-runner" {
     enable-oslogin         = "True"
     enable-oslogin-2fa     = "True"
     block-project-ssh-keys = true
+    shutdown-script        = "export RUNNER_ALLOW_RUNASROOT='1' && cd actions-runner && ./cleanup.sh"
   }
 
-  # curl -fsSL https://fnm.vercel.app/install | bash
-  # fnm install 20
-  # nohup ./run.sh &
   metadata_startup_script = <<SCRIPT
     #! /bin/bash
-    apt-get update 
-    apt-get install -y unzip
+    cd actions-runner
+
+    OWNER="dethereum"
+    REPO="polytlk"
+    WORKER_NAME="worker-$(date +%s)-$RANDOM"
+    export RUNNER_ALLOW_RUNASROOT="1"
+
+    AUTH_TOKEN=$(curl -s -X POST -H "authorization: token ${var.pat_token}" "https://api.github.com/repos/$${OWNER}/$${REPO}/actions/runners/registration-token" | jq -r .token)
+
+    echo "#!/bin/bash" > /actions-runner/cleanup.sh
+    echo "echo 'REMOVING RUNNER $${WORKER_NAME}'" >> /actions-runner/cleanup.sh
+    echo "./config.sh remove --token $${AUTH_TOKEN}" >> /actions-runner/cleanup.sh
+    chmod +x /actions-runner/cleanup.sh
+
+    ./config.sh \
+      --url "https://github.com/$${OWNER}/$${REPO}" \
+      --token "$${AUTH_TOKEN}" \
+      --name "$${WORKER_NAME}" \
+      --unattended \
+      --work _work
+
+    ./run.sh
     SCRIPT
 
   depends_on = [
