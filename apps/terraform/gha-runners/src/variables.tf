@@ -17,3 +17,10 @@ variable "runner_zone" {
   description = "The zone in us-central1 for the runner"
   type        = string
 }
+
+variable "target_size" {
+  description = "The amount of instances needed for GHA runners"
+  type        = number
+  default     = 0
+}
+

@@ -2,25 +2,21 @@ resource "google_project_service" "compute" {
   service = "compute.googleapis.com"
 }
 
-resource "google_compute_instance" "gha-runner" {
-  name         = "gha-runner"
+resource "google_compute_instance_template" "gha_runner_template" {
+  name         = "gha-runner-template"
   tags         = ["gha-runner"]
   machine_type = "g1-small"
-  zone         = var.runner_zone
-
-  allow_stopping_for_update = false
 
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
     preemptible         = false
   }
-  boot_disk {
-    initialize_params {
-      image = var.image_name
-    }
 
-    auto_delete = true
+  disk {
+    source_image = var.image_name
+    auto_delete  = true
+
   }
 
   network_interface {
@@ -35,7 +31,6 @@ resource "google_compute_instance" "gha-runner" {
   shielded_instance_config {
     enable_integrity_monitoring = true
   }
-
   metadata = {
     enable-oslogin         = "True"
     enable-oslogin-2fa     = "True"
