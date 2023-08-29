@@ -5,7 +5,7 @@ resource "google_project_service" "compute" {
 resource "google_compute_instance" "gha-runner" {
   name         = "gha-runner"
   tags         = ["gha-runner"]
-  machine_type = "f1-micro"
+  machine_type = "g1-small"
   zone         = var.runner_zone
 
   allow_stopping_for_update = false
@@ -44,7 +44,9 @@ resource "google_compute_instance" "gha-runner" {
   }
 
   metadata_startup_script = <<SCRIPT
-    #! /bin/bash
+    export PATH="/.local/share/fnm:$PATH"
+    eval "$(fnm env)"
+
     cd actions-runner
 
     OWNER="dethereum"
