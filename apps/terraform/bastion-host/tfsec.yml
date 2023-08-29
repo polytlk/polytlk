@@ -1,0 +1,4 @@
+minimum_severity: LOW
+exclude:
+- google-compute-vm-disk-encryption-customer-key
+- google-compute-no-public-ingress

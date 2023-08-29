@@ -61,6 +61,9 @@ devDependencies:
   '@capacitor/ios':
     specifier: ^5.0.3
     version: 5.0.3(@capacitor/core@5.0.3)
+  '@loft-orbital/terraform':
+    specifier: ^0.1.5
+    version: 0.1.5(@nrwl/devkit@16.5.5)(tslib@2.5.0)
   '@nx/devkit':
     specifier: ^16.5.0
     version: 16.5.0(nx@16.3.0)
@@ -2479,6 +2482,16 @@ packages:
 
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
+    dev: true
+
+  /@loft-orbital/terraform@0.1.5(@nrwl/devkit@16.5.5)(tslib@2.5.0):
+    resolution: {integrity: sha512-HnjfV4Xy/wMnmeiVguiPeNQflBrVUWLcHdtgtlehQ2trzfF1kp+uVPDKq0yiSVoz+NaGMDXEl4pYeXUCKkadOw==}
+    peerDependencies:
+      '@nrwl/devkit': '>= 12.7.0'
+      tslib: 2.5.0
+    dependencies:
+      '@nrwl/devkit': 16.5.5(nx@16.3.0)
+      tslib: 2.5.0
     dev: true
 
   /@mdx-js/react@2.3.0(react@18.2.0):

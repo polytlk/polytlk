@@ -23,6 +23,7 @@
     "@capacitor/android": "^5.0.3",
     "@capacitor/cli": "^5.0.3",
     "@capacitor/ios": "^5.0.3",
+    "@loft-orbital/terraform": "^0.1.5",
     "@nx/devkit": "^16.5.0",
     "@nx/eslint-plugin": "16.4.0",
     "@nx/express": "^16.4.3",
@@ -83,7 +84,9 @@
     "includedScripts": []
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "infracost:template": "infracost generate config --repo-path . --template-path infracost.yml.tmpl --out-file infracost.yml",
+    "infracost:breakdown": "infracost breakdown --config-file infracost.yml"
   },
   "private": true
 }

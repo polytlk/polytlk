@@ -1,74 +1,32 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "polytlk",
+  "namedInputs": {
+    "tfSource": ["{projectRoot}/src/*.tf"],
+    "tfWD": ["{projectRoot}/src/.terraform"],
+    "tfPlan": ["{projectRoot}/src/tfplan"]
+  },
+  "targetDefaults": {
+    "initialize": {
+      "inputs": ["tfSource"]
+    },
+    "lint": {
+      "inputs": ["tfSource"]
+    },
+    "validate": {
+      "inputs": ["tfSource", "tfWD"]
+    },
+    "plan": {
+      "inputs": ["tfSource", "tfWD"]
+    },
+    "apply": {
+      "inputs": ["tfSource", "tfWD", "tfPlan"]
+    }
+  },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e",
-          "build-storybook"
-        ]
+        "cacheableOperations": ["initialize", "plan", "apply"]
       }
     }
-  },
-  "targetDefaults": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    },
-    "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
-    },
-    "e2e": {
-      "inputs": ["default", "^production"]
-    },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
-    },
-    "build-storybook": {
-      "inputs": [
-        "default",
-        "^production",
-        "{projectRoot}/.storybook/**/*",
-        "{projectRoot}/tsconfig.storybook.json"
-      ]
-    }
-  },
-  "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": [
-      "default",
-      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/.storybook/**/*",
-      "!{projectRoot}/tsconfig.storybook.json"
-    ],
-    "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
-  },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "babel": true
-      }
-    },
-    "@nrwl/next": {
-      "application": {
-        "style": "css",
-        "linter": "eslint"
-      }
-    },
-    "@nx/react": {
-      "application": {
-        "babel": true
-      }
-    }
-  },
-  "plugins": ["@nxlv/python"]
+  }
 }

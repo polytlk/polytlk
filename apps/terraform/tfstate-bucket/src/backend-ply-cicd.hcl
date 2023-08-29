@@ -1,0 +1,1 @@
+bucket = "ply-cicd-bucket-tfstate"
