@@ -1,13 +1,15 @@
 """Has core LLM logic for polytlk application."""
 from typing import Any
 
-from openai import ChatCompletion
+from openai import OpenAI
 
 from socrates.openai.functions import functions
 from socrates.tracing import tracer  # noqa: I001
 
+client = OpenAI()
+
 TEMP = 0.2  # controls randomness from chatgpt
-MODEL = 'gpt-3.5-turbo-0613'
+MODEL = 'gpt-4o-mini'
 
 
 def gen_raw_ari(prompt: str, user_input: str) -> str:
@@ -24,7 +26,7 @@ def gen_raw_ari(prompt: str, user_input: str) -> str:
         TypeError: If the response content is not a string.
     """
     with tracer.start_as_current_span('INTERPRET: Raw Interpret') as span:
-        response = ChatCompletion.create(
+        response = client.chat.completions.create(
             model=MODEL,
             messages=[
                 {'role': 'system', 'content': prompt},
@@ -57,7 +59,7 @@ def gen_ari_data(interpretation: str) -> Any:
 
     """
     with tracer.start_as_current_span('INTERPRET: ARI Data') as span:
-        response = ChatCompletion.create(
+        response = client.chat.completions.create(
             model=MODEL,
             messages=[
                 {'role': 'user', 'content': interpretation},
