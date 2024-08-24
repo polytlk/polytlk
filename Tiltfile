@@ -148,6 +148,7 @@ if not LOCAL_MODE == 'msw':
   helm_remote('opentelemetry-collector',
               repo_name='open-telemetry',
               repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
+              version='0.78.2',
               values=['otel-collector-config.yaml']
   )
 

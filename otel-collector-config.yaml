@@ -17,7 +17,7 @@ config:
         http:
           cors:
             allowed_origins:
-              - "*"
+            - "*"
   processors:
     batch:
       send_batch_max_size: 1000
@@ -27,7 +27,7 @@ config:
     otlp/honey:
       endpoint: "api.honeycomb.io:443"
       headers:
-        "x-honeycomb-team": "r6zImUMboyO0oUhU6r6VWA"
+        "x-honeycomb-team": "PKVsleMMnreKfWfsb69dwo"
     logging:
       verbosity: normal # can be normal, basic, or detailed
   service:
