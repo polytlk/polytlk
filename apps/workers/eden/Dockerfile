@@ -6,6 +6,7 @@ ENV \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONFAULTHANDLER=1 \
+    RUSTFLAGS="-A invalid_reference_casting" \
     PATH="/root/.cargo/bin:${PATH}"
 
 SHELL ["/bin/bash", "-c"]

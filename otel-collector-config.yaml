@@ -1,4 +1,6 @@
 mode: deployment
+image:
+  repository: "otel/opentelemetry-collector-k8s"
 ports:
   otlp-http:
     servicePort: 80
@@ -17,7 +19,7 @@ config:
         http:
           cors:
             allowed_origins:
-              - "*"
+            - "*"
   processors:
     batch:
       send_batch_max_size: 1000
