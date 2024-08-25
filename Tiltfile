@@ -55,8 +55,7 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'tyk-helm',
-  'tyk-operator',
+  'tyk-operator-controller-manager',
 ]
 
 tyk = []
@@ -64,7 +63,7 @@ tyk = []
 if USE_TYK_PRO:
     tyk = ['tyk-pro', 'mongo', 'tyk-copy-op-conf']
 else:
-    tyk = ['tyk-headless']
+    tyk = ['gateway-tyk-headless']
 
 host = []
 
@@ -158,4 +157,5 @@ if not LOCAL_MODE == 'msw':
               values=['redis.yaml']
   )
 
-  include('./k8s/tyk/Tiltfile')
+  # include('./k8s/tyk/Tiltfile')
+  include('./envs/local/Tiltfile')
