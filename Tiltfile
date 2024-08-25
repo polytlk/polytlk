@@ -1,5 +1,4 @@
 load('ext://uibutton', 'cmd_button', 'location', 'text_input')
-load('ext://helm_remote', 'helm_remote')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 
@@ -131,13 +130,5 @@ if not LOCAL_MODE == 'msw':
   include('./apps/microservices/eden/Tiltfile')
   include('./apps/microservices/olivia/Tiltfile')
   include('./apps/microservices/heimdall/Tiltfile')
-
   include('./apps/workers/eden/Tiltfile')
-
-  helm_remote('redis',
-              repo_name='bitnami',
-              repo_url='https://charts.bitnami.com/bitnami',
-              values=['redis.yaml']
-  )
-
   include('./envs/local/Tiltfile')
