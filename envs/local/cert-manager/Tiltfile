@@ -1,0 +1,4 @@
+def helmfile(file):
+  return local("helmfile -f %s apply" % file)
+
+helmfile("./helmfile.yaml")

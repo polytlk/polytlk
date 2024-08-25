@@ -55,7 +55,7 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'tyk-operator-controller-manager',
+  'tyk-operator'
 ]
 
 tyk = []
@@ -63,7 +63,7 @@ tyk = []
 if USE_TYK_PRO:
     tyk = ['tyk-pro', 'mongo', 'tyk-copy-op-conf']
 else:
-    tyk = ['gateway-tyk-headless']
+    tyk = ['tyk-gateway']
 
 host = []
 
@@ -144,18 +144,10 @@ if not LOCAL_MODE == 'msw':
 
   include('./apps/workers/eden/Tiltfile')
 
-  helm_remote('opentelemetry-collector',
-              repo_name='open-telemetry',
-              repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
-              version='0.78.2',
-              values=['otel-collector-config.yaml']
-  )
-
   helm_remote('redis',
               repo_name='bitnami',
               repo_url='https://charts.bitnami.com/bitnami',
               values=['redis.yaml']
   )
 
-  # include('./k8s/tyk/Tiltfile')
   include('./envs/local/Tiltfile')
