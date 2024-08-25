@@ -22,11 +22,7 @@ elif len(language) > 1:
 ############ SETUP LOCAL MODES IN THIS BLOCK ###################################
 dotenv()
 print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
-USE_TYK_PRO = os.environ.get('USE_TYK_PRO', 'False') == 'True'
-if USE_TYK_PRO:
-  print(color.blue('TYK MODE: ') + '\t' + 'Self Managed'.upper())
-else:
-  print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
+print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
 
 LOCAL_MODE = os.environ.get('LOCAL_MODE', 'default').lower()
 if LOCAL_MODE not in ['msw', 'expose_cluster']:
@@ -55,15 +51,9 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'tyk-operator'
+  'tyk-operator',
+  'tyk-gateway'
 ]
-
-tyk = []
-
-if USE_TYK_PRO:
-    tyk = ['tyk-pro', 'mongo', 'tyk-copy-op-conf']
-else:
-    tyk = ['tyk-gateway']
 
 host = []
 
@@ -72,7 +62,7 @@ if LOCAL_MODE == 'expose_cluster':
 else:
   host = ['react-dev-server', 'storybook', 'verdaccio']
 
-final_base = base + host + tyk
+final_base = base + host
 
 # run a group like
 # tilt up -- chinese
