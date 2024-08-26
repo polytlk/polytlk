@@ -86,10 +86,10 @@
       "options": {
         "engine": "docker",
         "context": "./apps/microservices/eden",
-        "push": false,
         "load": true,
+        "platforms": ["linux/amd64"],
         "metadata": {
-          "images": ["eden", "ewr.vultrcr.com/polytlk/eden"],
+          "images": ["ewr.vultrcr.com/polytlk/eden"],
           "tags": [
             "type=schedule",
             "type=ref,event=branch",

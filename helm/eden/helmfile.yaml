@@ -1,0 +1,16 @@
+releases:
+- name: eden-deployment
+  namespace: eden
+  chart: ../charts/deployment
+  installed: true
+  values:
+  - deployment/values.yaml
+- name: eden-apis
+  namespace: eden
+  chart: ../charts/api
+  installed: true
+  values:
+  - api/values.yaml
+  needs:
+  - eden-deployment
+
