@@ -11,5 +11,5 @@ resource "vultr_database" "redis_instance" {
     database_engine_version = "7"
     region = "ewr"
     plan = "vultr-dbaas-hobbyist-rp-intel-1-11-1"
-    label = "${terraform.workspace}-redis"
+    label = "${local.environment}-redis"
 }
