@@ -37,16 +37,6 @@
       "executor": "@nxlv/python:remove",
       "options": {}
     },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
-      "options": {
-        "outputPath": "apps/socrates/dist",
-        "publish": true,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
     "install": {
       "executor": "@nxlv/python:install",
       "options": {
@@ -59,7 +49,9 @@
     },
     "lint": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"],
+      "outputs": [
+        "{workspaceRoot}/reports/apps/microservices/socrates/pylint.txt"
+      ],
       "options": {
         "command": "./apps/microservices/socrates/scripts/check.sh -f {args.files} -c lint"
       }
@@ -89,6 +81,26 @@
       "options": {
         "silent": false,
         "args": ""
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "context": "./apps/microservices/socrates",
+        "push": false,
+        "load": true,
+        "metadata": {
+          "images": ["socrates", "ewr.vultrcr.com/polytlk/socrates"],
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-",
+            "latest"
+          ]
+        }
       }
     }
   },

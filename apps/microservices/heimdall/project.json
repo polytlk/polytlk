@@ -23,16 +23,6 @@
       "executor": "@nxlv/python:remove",
       "options": {}
     },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
-      "options": {
-        "outputPath": "apps/microservices/heimdall/dist",
-        "publish": false,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
     "install": {
       "executor": "@nxlv/python:install",
       "options": {
@@ -45,7 +35,9 @@
     },
     "lint": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/reports/apps/microservices/heimdall/pylint.txt"],
+      "outputs": [
+        "{workspaceRoot}/reports/apps/microservices/heimdall/pylint.txt"
+      ],
       "options": {
         "command": "./apps/microservices/heimdall/scripts/check.sh -f {args.files} -c lint"
       }
@@ -87,6 +79,26 @@
       "options": {
         "command": "poetry run python manage.py startapp",
         "cwd": "apps/microservices/heimdall"
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "context": "./apps/microservices/heimdall",
+        "push": false,
+        "load": true,
+        "metadata": {
+          "images": ["heimdall", "ewr.vultrcr.com/polytlk/heimdall"],
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-",
+            "latest"
+          ]
+        }
       }
     }
   },

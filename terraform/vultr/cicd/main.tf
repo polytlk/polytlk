@@ -1,5 +1,5 @@
 resource "vultr_container_registry" "vcr" {
-  name = "polytlkcontainerregistry"
+  name = "polytlk"
   region = "ewr"
   plan = "start_up"
   public = false

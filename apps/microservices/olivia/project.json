@@ -37,16 +37,6 @@
       "executor": "@nxlv/python:remove",
       "options": {}
     },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
-      "options": {
-        "outputPath": "apps/microservices/olivia/dist",
-        "publish": true,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
     "install": {
       "executor": "@nxlv/python:install",
       "options": {
@@ -59,7 +49,9 @@
     },
     "lint": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/reports/apps/microservices/olivia/pylint.txt"],
+      "outputs": [
+        "{workspaceRoot}/reports/apps/microservices/olivia/pylint.txt"
+      ],
       "options": {
         "command": "./apps/microservices/olivia/scripts/check.sh -f {args.files} -c lint"
       }
@@ -89,6 +81,26 @@
       "options": {
         "silent": false,
         "args": ""
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "context": "./apps/microservices/olivia",
+        "push": false,
+        "load": true,
+        "metadata": {
+          "images": ["olivia", "ewr.vultrcr.com/polytlk/olivia"],
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-",
+            "latest"
+          ]
+        }
       }
     }
   },
