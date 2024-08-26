@@ -31,5 +31,6 @@ ENV PATH="/code/venv/bin:$PATH"
 
 COPY --from=build /code/venv /code/venv
 COPY ./eden /code/eden/
+COPY ./scripts/entrypoint.sh /code
 
-CMD ["uvicorn", "eden.main:app", "--host", "0.0.0.0", "--port", "7079"]
+ENTRYPOINT ["/code/entrypoint.sh"]
