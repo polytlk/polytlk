@@ -1,0 +1,99 @@
+nameOverride: ""
+fullnameOverride: ""
+secrets:
+  APISecret: CHANGEME
+  useSecretName: ""
+  secrets.OrgID: "5e9d9544a1dcd60001d0ed20"
+
+redis:
+  addrs:
+  - vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752
+  masterName: default
+  pass: "AVNS_jkwFYGZUVFCQhVmdUMw"
+  useSSL: true
+  storage:
+    database: 0
+
+backend: ""
+gateway:
+  hostName: tyk-gw.local
+  tls: false
+  kind: Deployment
+  replicaCount: 1
+  containerPort: 8080
+  image:
+    repository: docker.tyk.io/tyk-gateway/tyk-gateway
+    tag: v5.0.0
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 8080
+    externalTrafficPolicy: Local
+    annotations: {}
+  control:
+    enabled: false
+    containerPort: 9696
+    port: 9696
+    type: ClusterIP
+    annotations: {}
+  ingress:
+    enabled: false
+  resources: {}
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 2000
+  nodeSelector: {}
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  affinity: {}
+  extraEnvs:
+  # - name: TYK_GW_ENABLEHASHEDKEYSLISTING
+  #   value: "true"
+  # - name: TYK_GW_ENABLEKEYLOGGING
+  #   value: "true"
+  # - name: TYK_GW_ALLOWMASTERKEYS
+  #   value: "true"
+  # - name: TYK_GW_PROXYENABLEHTTP2
+  #   value: "true"
+  - name: TYK_GW_ENABLEJSVM
+    value: "true"
+  - name: TYK_GW_LOGLEVEL
+    value: "debug"
+  - name: TYK_GW_POLICIES_POLICYSOURCE
+    value: "file"
+  - name: TYK_GW_POLICIES_POLICYRECORDNAME
+    value: "./policies/policies.json"
+  ## extraVolumes A list of volumes to be added to the pod
+  extraVolumes:
+  - name: policy-config
+    configMap:
+      name: policy-config
+  - name: sse-auth-pre-middleware
+    configMap:
+      name: sse-auth-pre-middleware-tbmcf478cg
+
+  ## extraVolumeMounts A list of volume mounts to be added to the pod
+  extraVolumeMounts:
+  - name: policy-config
+    mountPath: "/opt/tyk-gateway/policies"
+    readOnly: true
+  - name: sse-auth-pre-middleware
+    mountPath: "/opt/tyk-gateway/middleware"
+    readOnly: true
+  mounts: []
+pump:
+  enabled: false
+  resources: {}
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 2000
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  mounts: []
+
+rbac: false
+

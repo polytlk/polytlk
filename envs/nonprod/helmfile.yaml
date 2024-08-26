@@ -1,0 +1,3 @@
+helmfiles:
+- path: cert-manager/helmfile.yaml
+- path: tyk/helmfile.yaml
