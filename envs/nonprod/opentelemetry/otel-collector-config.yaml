@@ -1,0 +1,39 @@
+mode: deployment
+ports:
+  otlp-http:
+    servicePort: 80
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+config:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          cors:
+            allowed_origins:
+            - "*"
+  processors:
+    batch:
+      send_batch_max_size: 1000
+      send_batch_size: 100
+      timeout: 10s
+  exporters:
+    otlp/honey:
+      endpoint: "api.honeycomb.io:443"
+      headers:
+        "x-honeycomb-team": "hcaik_01j67tfc8egdz73t6xjdx8e5yg0mqc1qt38qarfrmj80m3rf5f55mtyg96"
+    logging:
+      verbosity: normal # can be normal, basic, or detailed
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [logging, otlp/honey]
+      metrics: null
