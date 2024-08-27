@@ -1,0 +1,7 @@
+releases:
+- name: socrates-deployment
+  namespace: socrates
+  chart: ../charts/deployment
+  installed: true
+  values:
+  - deployment/values.yaml

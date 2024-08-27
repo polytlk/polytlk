@@ -88,10 +88,10 @@
       "options": {
         "engine": "docker",
         "context": "./apps/microservices/socrates",
-        "push": false,
         "load": true,
+        "platforms": ["linux/amd64"],
         "metadata": {
-          "images": ["socrates", "ewr.vultrcr.com/polytlk/socrates"],
+          "images": ["ewr.vultrcr.com/polytlk/socrates"],
           "tags": [
             "type=schedule",
             "type=ref,event=branch",
