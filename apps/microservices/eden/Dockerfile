@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye as build
+FROM python:3.11-slim-bullseye AS build
 
 WORKDIR /code
 
@@ -22,7 +22,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
  && python -m ensurepip --upgrade \
  && pip install -r /code/requirements.txt
 
-FROM python:3.11-slim-bullseye as final
+FROM python:3.11-slim-bullseye AS final
 
 WORKDIR /code
 

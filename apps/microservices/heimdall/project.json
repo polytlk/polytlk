@@ -86,10 +86,10 @@
       "options": {
         "engine": "docker",
         "context": "./apps/microservices/heimdall",
-        "push": false,
         "load": true,
+        "platforms": ["linux/amd64"],
         "metadata": {
-          "images": ["heimdall", "ewr.vultrcr.com/polytlk/heimdall"],
+          "images": ["ewr.vultrcr.com/polytlk/heimdall"],
           "tags": [
             "type=schedule",
             "type=ref,event=branch",
