@@ -1,15 +1,19 @@
 replicaCount: 1
 image:
-  repository: "ewr.vultrcr.com/polytlk/heimdall"
+  repository: "ewr.vultrcr.com/polytlk/eden-worker"
   tag: "latest"
 env:
-- name: DJANGO_SECRET
-  value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"
+- name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+  value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
+- name: CELERY_BROKER_URL
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
+- name: CELERY_RESULT_BACKEND
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
 - name: ENVIRONMENT
   value: "dev"
 imagePullSecrets: []
-nameOverride: "heimdall"
-fullnameOverride: "heimdall"
+nameOverride: "eden-worker"
+fullnameOverride: "eden-worker"
 serviceAccount:
   create: true
   automount: true
@@ -20,10 +24,6 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
 securityContext: {}
-service:
-  enabled: true
-  type: ClusterIP
-  port: 8000
 resources: {}
 # We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little
@@ -35,18 +35,6 @@ resources: {}
 # requests:
 #   cpu: 100m
 #   memory: 128Mi
-# livenessProbe:
-#   httpGet:
-#     path: /healthz
-#     port: http
-#   initialDelaySeconds: 5
-#   periodSeconds: 10
-# readinessProbe:
-#   httpGet:
-#     path: /readiness
-#     port: http
-#   initialDelaySeconds: 5
-#   periodSeconds: 10
 autoscaling:
   enabled: false
 # Additional volumes on the output Deployment definition.

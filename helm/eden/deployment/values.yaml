@@ -26,6 +26,7 @@ podLabels: {}
 podSecurityContext: {}
 securityContext: {}
 service:
+  enabled: true
   type: ClusterIP
   port: 7079
 resources: {}

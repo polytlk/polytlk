@@ -1,0 +1,7 @@
+releases:
+- name: eden-worker-deployment
+  namespace: eden
+  chart: ../charts/deployment
+  installed: true
+  values:
+  - deployment/values.yaml

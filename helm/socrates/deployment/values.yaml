@@ -1,7 +1,6 @@
 replicaCount: 1
 image:
   repository: "ewr.vultrcr.com/polytlk/socrates"
-  pullPolicy: Always
   tag: "latest"
 env:
 - name: OPENAI_API_KEY
@@ -24,6 +23,7 @@ podLabels: {}
 podSecurityContext: {}
 securityContext: {}
 service:
+  enabled: true
   type: ClusterIP
   port: 8079
 resources: {}
