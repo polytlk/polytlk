@@ -7,10 +7,12 @@ metadata:
     {{- include "deployment.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if .Values.service.enabled }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
       protocol: TCP
+  {{- end }}
   selector:
     {{- include "deployment.selectorLabels" . | nindent 4 }}
 {{- end }}
