@@ -122,17 +122,49 @@ class OAuthResponseView(APIView):
 
             with tracer.start_as_current_span('post_tyk') as post_tyk_span:
 
+                # Make the POST request
                 raw_key_response = requests.post(
                     url,
                     headers=headers,
                     data=json.dumps(KEY_REQUEST_TEMPLATE),
                 )
 
-                key_info = raw_key_response.json()
+                # Check for HTTP errors
+                raw_key_response.raise_for_status()
 
-                post_tyk_span.set_attribute('ply.tyk_key', key_info['key'])
-                post_tyk_span.set_attribute('ply.tyk_key_status', key_info['status'])
-                post_tyk_span.set_attribute('ply.tyk_key_action', key_info['action'])
-                post_tyk_span.set_attribute('ply.tyk_key_hash', key_info['key_hash'])
+                try:
+                    # Parse the JSON response
+                    key_info = raw_key_response.json()
 
-                return Response({'token': key_info['key']})
+                    # Get a stringified version of the keys and values of the object
+                    kvs = ', '.join([f"{key}: {value}" for key, value in key_info.items()])
+                    post_tyk_span.set_attribute('ply.raw_response.kvs', kvs)
+
+                    # Log or print the keys and values for debugging (optional)
+                    print(f"Keys and values present in response: {kvs}")
+                    
+                    # Check if required keys are in the response
+                    required_keys = ['key', 'status', 'action', 'key_hash']
+                    for key in required_keys:
+                        if key not in key_info:
+                            raise KeyError(f"Missing key in response: {key}")
+
+                    # Set attributes if keys are present
+                    post_tyk_span.set_attribute('ply.tyk_key', key_info['key'])
+                    post_tyk_span.set_attribute('ply.tyk_key_status', key_info['status'])
+                    post_tyk_span.set_attribute('ply.tyk_key_action', key_info['action'])
+                    post_tyk_span.set_attribute('ply.tyk_key_hash', key_info['key_hash'])
+
+                    return Response({'token': key_info['key']})
+
+                except KeyError as err:
+                    return Response(
+                        {'error': 'KeyError', 'message': str(err)},
+                        status=HTTP_400_BAD_REQUEST,
+                    )
+
+                except json.JSONDecodeError as err:
+                    return Response(
+                        {'error': 'Invalid JSON response', 'message': str(err)},
+                        status=HTTP_400_BAD_REQUEST,
+                    )
