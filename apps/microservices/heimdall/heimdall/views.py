@@ -14,11 +14,11 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
+from heimdall.settings import GATEWAY_HOST
 from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
 ORG_ID = '5e9d9544a1dcd60001d0ed20'
-GATEWAY_HOST = 'gateway-svc-tyk-headless.tyk.svc.cluster.local'
 TYK_MANAGEMENT_API_KEY = 'CHANGEME'
 EDEN_API_ID = 'ZGVmYXVsdC9lZGVuLWFwaQ'
 CLIENT_ID_WEB = '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com'

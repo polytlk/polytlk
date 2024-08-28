@@ -1,7 +1,7 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/heimdall"
   pullPolicy: "Always"
-  tag: "latest"
+  tag: "sha-00c9053"
 env:
 - name: DJANGO_SECRET
   value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"
@@ -9,5 +9,7 @@ env:
   value: "heimdall-service"
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
+- name: GATEWAY_HOST
+  value: "gateway-tyk-headless.tyk.svc.cluster.local"
 - name: ENVIRONMENT
   value: "development"
