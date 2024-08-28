@@ -88,3 +88,5 @@ tfplan
 terraform.rc
 
 .infracost
+**/db.sqlite3
+staticfiles/
