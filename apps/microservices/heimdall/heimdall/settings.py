@@ -22,12 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET')
+SECRET_KEY = os.getenv('DJANGO_SECRET')
+
+environment = os.getenv('ENVIRONMENT')
+
+# Check if the environment variable is set
+if environment not in {'production', 'dev', 'local'}:
+    raise ValueError("Invalid ENVIRONMENT variable. Must be 'production', 'dev', or 'local'.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = environment == 'local'
 
-ALLOWED_HOSTS = ('heimdall-svc.default.svc', 'localhost')
+ALLOWED_HOSTS = ('heimdall-svc.heimdall.svc', 'localhost')
 
 
 # Application definition
@@ -145,5 +151,5 @@ if DEBUG:
     # will output to your console
     logging.basicConfig(
         level=logging.DEBUG,
-        format='%(asctime)s %(levelname)s %(message)s',
+        format='%(asctime)s %(levelname)s %(message)s',  # noqa: WPS323
     )

@@ -1,0 +1,61 @@
+---
+# Source: deployment/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: heimdall-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: heimdall-svc
+    app.kubernetes.io/instance: heimdall-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: heimdall-svc
+    app.kubernetes.io/instance: heimdall-deployment
+---
+# Source: deployment/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heimdall-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: heimdall-svc
+    app.kubernetes.io/instance: heimdall-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: heimdall-svc
+      app.kubernetes.io/instance: heimdall-deployment
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: deployment-0.1.0
+        app.kubernetes.io/name: heimdall-svc
+        app.kubernetes.io/instance: heimdall-deployment
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      securityContext:
+        {}
+      containers:
+        - name: heimdall-svc
+          securityContext:
+            {}
+          image: "heimdall-svc-img:latest"
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          env:
+            - name: DJANGO_SECRET
+              value: django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-
+            - name: ENVIRONMENT
+              value: dev
+

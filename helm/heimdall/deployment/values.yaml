@@ -1,21 +1,12 @@
 replicaCount: 1
-image:
-  repository: "ewr.vultrcr.com/polytlk/heimdall"
-  tag: "latest"
 env:
 - name: DJANGO_SECRET
   value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"
 - name: ENVIRONMENT
   value: "dev"
 imagePullSecrets: []
-nameOverride: "heimdall"
-fullnameOverride: "heimdall"
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
+nameOverride: "heimdall-svc"
+fullnameOverride: "heimdall-svc"
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}

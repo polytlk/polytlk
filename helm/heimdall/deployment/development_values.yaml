@@ -1,0 +1,4 @@
+image:
+  repository: "ewr.vultrcr.com/polytlk/heimdall"
+  pullPolicy: "Always"
+  tag: "latest"
