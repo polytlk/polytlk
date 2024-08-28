@@ -24,14 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET')
 
-environment = os.getenv('ENVIRONMENT')
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+SERVICE_NAME: str = os.getenv('SERVICE_NAME', 'heimdall-service')
+OTEL_TRACES_ENDPOINT: str = os.getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
 
 # Check if the environment variable is set
-if environment not in {'production', 'dev', 'local'}:
+if ENVIRONMENT not in {'production', 'dev', 'local'}:
     raise ValueError("Invalid ENVIRONMENT variable. Must be 'production', 'dev', or 'local'.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = environment == 'local'
+DEBUG = ENVIRONMENT == 'local'
 
 ALLOWED_HOSTS = ('heimdall-svc.heimdall.svc', 'localhost')
 

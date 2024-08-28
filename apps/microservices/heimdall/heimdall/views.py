@@ -11,9 +11,10 @@ from google.auth.transport import requests as req_trans
 from google.oauth2 import id_token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.serializers import CharField, Serializer
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+
+from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
 ORG_ID = '5e9d9544a1dcd60001d0ed20'
@@ -27,7 +28,7 @@ KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'apply_policies': [],
     'org_id': ORG_ID,
     'allowance': 0,
-    "expires": -1,
+    'expires': -1,
     'per': 0,
     'quota_max': 0,
     'rate': 0,
@@ -36,6 +37,7 @@ KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
 }
 
 logger = logging.getLogger(__name__)
+
 
 def extract_signature(jwt_token):
     parts = jwt_token.split('.')
@@ -49,67 +51,88 @@ class OAuthResponseView(APIView):
     schema = AutoSchema()
 
     def post(self, request, format=None):
-        token = request.data.get('access_token', None)
-        idinfo = None
+        with tracer.start_as_current_span('root') as root_span:
+            token = request.data.get('access_token', None)
+            idinfo = None
 
-        if not token:
-            return Response({'detail': 'No access token provided'}, status=HTTP_400_BAD_REQUEST)
+            if not token:
+                root_span.set_attribute('access_token_state', 'missing')
+                return Response({'detail': 'No access token provided'}, status=HTTP_400_BAD_REQUEST)
 
-        try:
-            idinfo = id_token.verify_oauth2_token(token, req_trans.Request())
-        except ValueError:
-            # Invalid token
-            pass
-        
-        if idinfo['aud'] not in [CLIENT_ID_WEB, CLIENT_ID_IOS]:
-            raise ValueError('Could not verify audience.')
+            with tracer.start_as_current_span('oauth') as oauth_span:
+                try:
+                    idinfo = id_token.verify_oauth2_token(token, req_trans.Request())
+                except ValueError:
+                    oauth_span.set_attribute('access_token_state', 'invalid')
+                    root_span.set_attribute('access_token_state', 'invalid')
 
-        exp = math.floor(time.time() + EXPIRATION_TIME)
+                oauth_span.set_attribute('idinfo.aud', idinfo['aud'])
+                oauth_span.set_attribute('idinfo.iss', idinfo['iss'])
+                oauth_span.set_attribute('idinfo.hd', idinfo['hd'])
+                oauth_span.set_attribute('idinfo.sub', idinfo['sub'])
+                oauth_span.set_attribute('idinfo.email', idinfo['email'])
+                oauth_span.set_attribute('idinfo.email_verified', idinfo['email_verified'])
 
-        logger.info('idinfo: {0}'.format(idinfo))
+                if idinfo['aud'] not in {CLIENT_ID_WEB, CLIENT_ID_IOS}:
+                    oauth_span.set_attribute('access_token_state', 'external')
+                    root_span.set_attribute('access_token_state', 'external')
+                    raise ValueError('Could not verify audience.')
 
-        # Now we know that the access token is valid, and we have the user's information
-        # We can create a JWT that includes this information
-        payload = {
-            # The subject of the token -> Google user ID
-            'sub': idinfo['sub'],
-            'email': idinfo['email'],
-            # Expiration time. This is in Unix timestamp format. This token will expire in 1 hour.
-            'exp': exp,
-        }
+                oauth_span.set_attribute('access_token_state', 'valid')
+                root_span.set_attribute('access_token_state', 'valid')
 
-        secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
+            with tracer.start_as_current_span('prepare_tyk') as prepare_tyk_span:
+                exp = math.floor(time.time() + EXPIRATION_TIME)
 
-        token = jwt.encode(payload, secret, algorithm='HS256')
-        signiture = extract_signature(token)
+                # Now we know that the access token is valid, and we have the user's information
+                # We can create a JWT that includes this information
+                payload = {
+                    # The subject of the token -> Google user ID
+                    'sub': idinfo['sub'],
+                    'email': idinfo['email'],
+                    # Expiration time. This is in Unix timestamp format.
+                    # This token will expire in 1 hour.
+                    'exp': exp,
+                }
 
-        url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
-        headers = {
-            'Content-Type': 'application/json',
-            # 'Authorization': 'Bearer {0}'.format(access_token),
-            'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,
-        }
+                secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
 
-        KEY_REQUEST_TEMPLATE['meta_data'] = {'jwt': token}
+                token = jwt.encode(payload, secret, algorithm='HS256')
+                signiture = extract_signature(token)
 
-        KEY_REQUEST_TEMPLATE['access_rights'][EDEN_API_ID] = {
-            'api_name': 'eden-api',
-            'api_id': EDEN_API_ID,
-            'versions': [
-                'Default',
-            ],
-        }
+                prepare_tyk_span.set_attribute('tyk_key_signiture', signiture)
 
-        KEY_REQUEST_TEMPLATE['expires'] = exp
+                url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
+                headers = {
+                    'Content-Type': 'application/json',
+                    'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,
+                }
 
-        logger.info('url: ' + url)
+                KEY_REQUEST_TEMPLATE['meta_data'] = {'jwt': token}
 
-        logger.info('KEY_REQUEST_TEMPLATE: {0}'.format(KEY_REQUEST_TEMPLATE))
+                KEY_REQUEST_TEMPLATE['access_rights'][EDEN_API_ID] = {
+                    'api_name': 'eden-api',
+                    'api_id': EDEN_API_ID,
+                    'versions': [
+                        'Default',
+                    ],
+                }
 
-        raw_key_response = requests.post(url, headers=headers, data=json.dumps(KEY_REQUEST_TEMPLATE))
+                KEY_REQUEST_TEMPLATE['expires'] = exp
 
-        key_info = raw_key_response.json()
-        
-        logger.info('createkeyintykres: ' + raw_key_response.text)
+            with tracer.start_as_current_span('post_tyk') as post_tyk_span:
 
-        return Response({'token': key_info['key']})
+                raw_key_response = requests.post(
+                    url,
+                    headers=headers,
+                    data=json.dumps(KEY_REQUEST_TEMPLATE),
+                )
+
+                key_info = raw_key_response.json()
+
+                post_tyk_span.set_attribute('tyk_key', key_info['key'])
+                post_tyk_span.set_attribute('tyk_key_status', key_info['status'])
+                post_tyk_span.set_attribute('tyk_key_action', key_info['action'])
+                post_tyk_span.set_attribute('tyk_key_hash', key_info['key_hash'])
+
+                return Response({'token': key_info['key']})
