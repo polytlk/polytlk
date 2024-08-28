@@ -3,6 +3,8 @@ image:
 env:
 - name: DJANGO_SECRET
   value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"
+- name: SERVICE_NAME
+  value: "heimdall-service"
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
 - name: ENVIRONMENT
