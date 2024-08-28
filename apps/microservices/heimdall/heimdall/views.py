@@ -51,35 +51,35 @@ class OAuthResponseView(APIView):
     schema = AutoSchema()
 
     def post(self, request, format=None):
-        with tracer.start_as_current_span('root') as root_span:
+        with tracer.start_as_current_span('LOGIN FLOW') as root_span:
             token = request.data.get('access_token', None)
             idinfo = None
 
             if not token:
-                root_span.set_attribute('access_token_state', 'missing')
+                root_span.set_attribute('ply.access_token_state', 'missing')
                 return Response({'detail': 'No access token provided'}, status=HTTP_400_BAD_REQUEST)
 
-            with tracer.start_as_current_span('oauth') as oauth_span:
+            with tracer.start_as_current_span('oauth verify') as oauth_span:
                 try:
                     idinfo = id_token.verify_oauth2_token(token, req_trans.Request())
                 except ValueError:
-                    oauth_span.set_attribute('access_token_state', 'invalid')
-                    root_span.set_attribute('access_token_state', 'invalid')
+                    oauth_span.set_attribute('ply.access_token_state', 'invalid')
+                    root_span.set_attribute('ply.access_token_state', 'invalid')
 
-                oauth_span.set_attribute('idinfo.aud', idinfo['aud'])
-                oauth_span.set_attribute('idinfo.iss', idinfo['iss'])
-                oauth_span.set_attribute('idinfo.hd', idinfo['hd'])
-                oauth_span.set_attribute('idinfo.sub', idinfo['sub'])
-                oauth_span.set_attribute('idinfo.email', idinfo['email'])
-                oauth_span.set_attribute('idinfo.email_verified', idinfo['email_verified'])
+                oauth_span.set_attribute('ply.idinfo.aud', idinfo['aud'])
+                oauth_span.set_attribute('ply.idinfo.iss', idinfo['iss'])
+                oauth_span.set_attribute('ply.idinfo.hd', idinfo['hd'])
+                oauth_span.set_attribute('ply.idinfo.sub', idinfo['sub'])
+                oauth_span.set_attribute('ply.idinfo.email', idinfo['email'])
+                oauth_span.set_attribute('ply.idinfo.email_verified', idinfo['email_verified'])
 
                 if idinfo['aud'] not in {CLIENT_ID_WEB, CLIENT_ID_IOS}:
-                    oauth_span.set_attribute('access_token_state', 'external')
-                    root_span.set_attribute('access_token_state', 'external')
+                    oauth_span.set_attribute('ply.access_token_state', 'external')
+                    root_span.set_attribute('ply.access_token_state', 'external')
                     raise ValueError('Could not verify audience.')
 
-                oauth_span.set_attribute('access_token_state', 'valid')
-                root_span.set_attribute('access_token_state', 'valid')
+                oauth_span.set_attribute('ply.access_token_state', 'valid')
+                root_span.set_attribute('ply.access_token_state', 'valid')
 
             with tracer.start_as_current_span('prepare_tyk') as prepare_tyk_span:
                 exp = math.floor(time.time() + EXPIRATION_TIME)
@@ -100,7 +100,7 @@ class OAuthResponseView(APIView):
                 token = jwt.encode(payload, secret, algorithm='HS256')
                 signiture = extract_signature(token)
 
-                prepare_tyk_span.set_attribute('tyk_key_signiture', signiture)
+                prepare_tyk_span.set_attribute('ply.tyk_key_signiture', signiture)
 
                 url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
                 headers = {
@@ -130,9 +130,9 @@ class OAuthResponseView(APIView):
 
                 key_info = raw_key_response.json()
 
-                post_tyk_span.set_attribute('tyk_key', key_info['key'])
-                post_tyk_span.set_attribute('tyk_key_status', key_info['status'])
-                post_tyk_span.set_attribute('tyk_key_action', key_info['action'])
-                post_tyk_span.set_attribute('tyk_key_hash', key_info['key_hash'])
+                post_tyk_span.set_attribute('ply.tyk_key', key_info['key'])
+                post_tyk_span.set_attribute('ply.tyk_key_status', key_info['status'])
+                post_tyk_span.set_attribute('ply.tyk_key_action', key_info['action'])
+                post_tyk_span.set_attribute('ply.tyk_key_hash', key_info['key_hash'])
 
                 return Response({'token': key_info['key']})
