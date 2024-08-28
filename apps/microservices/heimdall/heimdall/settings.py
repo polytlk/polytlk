@@ -29,8 +29,8 @@ SERVICE_NAME: str = os.getenv('SERVICE_NAME', 'heimdall-service')
 OTEL_TRACES_ENDPOINT: str = os.getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
 
 # Check if the environment variable is set
-if ENVIRONMENT not in {'production', 'dev', 'local'}:
-    raise ValueError("Invalid ENVIRONMENT variable. Must be 'production', 'dev', or 'local'.")
+if ENVIRONMENT not in {'production', 'development', 'local'}:
+    raise ValueError('Invalid ENVIRONMENT. Must be production, development, or local.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT == 'local'
