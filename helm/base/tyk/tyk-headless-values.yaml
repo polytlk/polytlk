@@ -48,23 +48,16 @@ gateway:
     effect: NoSchedule
   affinity: {}
   extraEnvs:
-  # - name: TYK_GW_ENABLEHASHEDKEYSLISTING
-  #   value: "true"
-  # - name: TYK_GW_ENABLEKEYLOGGING
-  #   value: "true"
-  # - name: TYK_GW_ALLOWMASTERKEYS
-  #   value: "true"
-  # - name: TYK_GW_PROXYENABLEHTTP2
-  #   value: "true"
   - name: TYK_GW_ENABLEJSVM
     value: "true"
   - name: TYK_GW_LOGLEVEL
     value: "debug"
   - name: TYK_GW_POLICIES_POLICYSOURCE
     value: "file"
+  - name: TYK_GW_POLICIES_POLICYPATH
+    value: ""
   - name: TYK_GW_POLICIES_POLICYRECORDNAME
-    value: "./policies/policies.json"
-  ## extraVolumes A list of volumes to be added to the pod
+    value: /mnt/tyk-gateway/policies/policies.json
   extraVolumes:
   - name: policy-config
     configMap:
@@ -72,28 +65,11 @@ gateway:
   - name: sse-auth-pre-middleware
     configMap:
       name: sse-auth-pre-middleware-tbmcf478cg
-
-  ## extraVolumeMounts A list of volume mounts to be added to the pod
   extraVolumeMounts:
   - name: policy-config
-    mountPath: "/opt/tyk-gateway/policies"
+    mountPath: "/mnt/tyk-gateway/policies"
     readOnly: true
   - name: sse-auth-pre-middleware
-    mountPath: "/opt/tyk-gateway/middleware"
+    mountPath: "/mnt/tyk-gateway/middleware"
     readOnly: true
   mounts: []
-pump:
-  enabled: false
-  resources: {}
-  securityContext:
-    runAsUser: 1000
-    fsGroup: 2000
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  extraVolumes: []
-  extraVolumeMounts: []
-  mounts: []
-
-rbac: false
-
