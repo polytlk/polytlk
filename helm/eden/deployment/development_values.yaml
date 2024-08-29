@@ -1,0 +1,12 @@
+image:
+  repository: "ewr.vultrcr.com/polytlk/eden"
+  tag: "latest"
+env:
+- name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+  value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
+- name: CELERY_BROKER_URL
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
+- name: CELERY_RESULT_BACKEND
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
+- name: ENVIRONMENT
+  value: "development"

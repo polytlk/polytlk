@@ -1,14 +1,22 @@
+environments:
+  default: {}
+  development: {}
+---
 releases:
 - name: eden-deployment
   namespace: eden
   chart: ../charts/deployment
   installed: true
+  labels:
+    type: deployment
   values:
   - deployment/values.yaml
 - name: eden-apis
   namespace: eden
   chart: ../charts/api
   installed: true
+  labels:
+    type: api
   values:
   - api/values.yaml
   needs:

@@ -1,8 +1,5 @@
 # Default values for eden-chart.
 replicaCount: 1
-image:
-  repository: "ewr.vultrcr.com/polytlk/eden"
-  tag: "latest"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"

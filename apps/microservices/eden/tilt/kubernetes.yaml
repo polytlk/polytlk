@@ -1,0 +1,77 @@
+---
+# Source: deployment/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: eden-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: eden-svc
+    app.kubernetes.io/instance: eden-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 7079
+      targetPort: 7079
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: eden-svc
+    app.kubernetes.io/instance: eden-deployment
+---
+# Source: deployment/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eden-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: eden-svc
+    app.kubernetes.io/instance: eden-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: eden-svc
+      app.kubernetes.io/instance: eden-deployment
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: deployment-0.1.0
+        app.kubernetes.io/name: eden-svc
+        app.kubernetes.io/instance: eden-deployment
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      securityContext:
+        {}
+      containers:
+        - name: eden-svc
+          securityContext:
+            {}
+          image: "ewr.vultrcr.com/polytlk/eden:latest"
+          ports:
+            - containerPort: 7079
+              protocol: TCP
+          env:
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: http://opentelemetry-collector.default.svc.cluster.local/v1/traces
+            - name: CELERY_BROKER_URL
+              value: rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752
+            - name: CELERY_RESULT_BACKEND
+              value: rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752
+            - name: ENVIRONMENT
+              value: dev
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+

@@ -28,7 +28,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT')
 SERVICE_NAME: str = os.getenv('SERVICE_NAME', 'heimdall-service')
 OTEL_TRACES_ENDPOINT: str = os.getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
 GATEWAY_HOST: str = os.getenv('GATEWAY_HOST')
-EDEN_API_ID = str = os.getenv('EDEN_API_ID')
+EDEN_API_ID: str = os.getenv('EDEN_API_ID')
 
 # Check if the environment variable is set
 if ENVIRONMENT not in {'production', 'development', 'local'}:
