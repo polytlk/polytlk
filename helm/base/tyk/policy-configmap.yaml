@@ -6,15 +6,15 @@ metadata:
 data:
   policies.json: |
     {
-      "ZGVmYXVsdC9qd3QtcG9saWN5": {
+      "default": {
         "rate": 1000,
         "per": 1,
         "quota_max": 100,
         "quota_renewal_rate": 60,
         "access_rights": {
-          "ZGVmYXVsdC9lZGVuLWFwaQ": {
+          "ZWRlbi9lZGVuLWFwaQ": {
             "api_name": "eden-api",
-            "api_id": "ZGVmYXVsdC9lZGVuLWFwaQ",
+            "api_id": "ZWRlbi9lZGVuLWFwaQ",
             "versions": [
               "Default"
             ]

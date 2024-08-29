@@ -12,9 +12,9 @@ data:
         "quota_max": 100,
         "quota_renewal_rate": 60,
         "access_rights": {
-          "ZGVmYXVsdC9lZGVuLWFwaQ": {
+          "ZWRlbi9lZGVuLWFwaQ": {
             "api_name": "eden-api",
-            "api_id": "ZGVmYXVsdC9lZGVuLWFwaQ",
+            "api_id": "ZWRlbi9lZGVuLWFwaQ",
             "versions": [
               "Default"
             ]

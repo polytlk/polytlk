@@ -9,5 +9,7 @@ env:
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
 - name: GATEWAY_HOST
   value: "gateway-svc-tyk-headless.tyk.svc.cluster.local"
+- name: EDEN_API_ID
+  value: "ZWRlbi9lZGVuLWFwaQ"
 - name: ENVIRONMENT
   value: "local"
