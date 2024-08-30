@@ -88,7 +88,7 @@
       "options": {
         "engine": "docker",
         "context": "./apps/microservices/socrates",
-        "load": true,
+        "push": true,
         "platforms": ["linux/amd64"],
         "metadata": {
           "images": ["ewr.vultrcr.com/polytlk/socrates"],

@@ -31,7 +31,6 @@ jobs:
           registry: https://ewr.vultrcr.com/polytlk
           username: 96d895d4-f075-42fa-b566-a8e22ba9007b
           password: ${{ secrets.VULTR_DOCKER_PASSWORD }}
-          dd: ${{ inputs.service_name }}
 
       - name: Docker build
         run: pnpm nx run ${{ inputs.service_name }}:container
