@@ -86,7 +86,7 @@
       "options": {
         "engine": "docker",
         "context": "./apps/workers/eden",
-        "load": true,
+        "push": true,
         "platforms": ["linux/amd64"],
         "metadata": {
           "images": ["ewr.vultrcr.com/polytlk/eden-worker"],

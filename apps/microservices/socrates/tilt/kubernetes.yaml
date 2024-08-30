@@ -3,10 +3,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: socrates
+  name: socrates-svc
   labels:
     helm.sh/chart: deployment-0.1.0
-    app.kubernetes.io/name: socrates
+    app.kubernetes.io/name: socrates-svc
     app.kubernetes.io/instance: socrates-deployment
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -16,37 +16,37 @@ spec:
       targetPort: 8079
       protocol: TCP
   selector:
-    app.kubernetes.io/name: socrates
+    app.kubernetes.io/name: socrates-svc
     app.kubernetes.io/instance: socrates-deployment
 ---
 # Source: deployment/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: socrates
+  name: socrates-svc
   labels:
     helm.sh/chart: deployment-0.1.0
-    app.kubernetes.io/name: socrates
+    app.kubernetes.io/name: socrates-svc
     app.kubernetes.io/instance: socrates-deployment
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: socrates
+      app.kubernetes.io/name: socrates-svc
       app.kubernetes.io/instance: socrates-deployment
   template:
     metadata:
       labels:
         helm.sh/chart: deployment-0.1.0
-        app.kubernetes.io/name: socrates
+        app.kubernetes.io/name: socrates-svc
         app.kubernetes.io/instance: socrates-deployment
         app.kubernetes.io/managed-by: Helm
     spec:
       securityContext:
         {}
       containers:
-        - name: socrates
+        - name: socrates-svc
           securityContext:
             {}
           image: "socrates-svc-img:latest"

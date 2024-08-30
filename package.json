@@ -7,7 +7,6 @@
     "@capacitor/device": "^5.0.4",
     "@ionic/react": "^7.0.0",
     "@ionic/react-router": "^7.0.0",
-    "@polytlk/echo-plugin": "^0.0.30",
     "@xstate/react": "^3.2.2",
     "capacitor-secure-storage-plugin": "^0.9.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
