@@ -1,0 +1,9 @@
+environments:
+  default: {}
+  development: {}
+---
+helmfiles:
+- path: eden/helmfile.yaml
+- path: eden-worker/helmfile.yaml
+- path: heimdall/helmfile.yaml
+- path: socrates/helmfile.yaml

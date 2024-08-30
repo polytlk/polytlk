@@ -1,3 +1,7 @@
+environments:
+  default: {}
+  development: {}
+---
 repositories:
 - name: jetstack
   url: https://charts.jetstack.io

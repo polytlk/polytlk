@@ -1,23 +1,7 @@
 replicaCount: 1
-image:
-  repository: "ewr.vultrcr.com/polytlk/socrates"
-  tag: "latest"
-env:
-- name: OPENAI_API_KEY
-  value: "sk-svcacct-2GwbN26du2TEyZV2g0KhB675kkCRoE_bPw6mi6Yh88f0O_HQ3lhekoJrs7C0zufcr3TT3BlbkFJd-PcoO7N0bF6FfMTXrGjTsjxgTpKVPvSE8lsjdHwOoBEu9wVXDOZx0o8BBrdyAnkbswA"
-- name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-  value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
-- name: ENVIRONMENT
-  value: "dev"
 imagePullSecrets: []
 nameOverride: "socrates"
 fullnameOverride: "socrates"
-serviceAccount:
-  create: true
-  automount: true
-  annotations: {}
-  name: ""
-
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
@@ -37,18 +21,6 @@ resources: {}
 # requests:
 #   cpu: 100m
 #   memory: 128Mi
-livenessProbe:
-  httpGet:
-    path: /healthz
-    port: http
-  initialDelaySeconds: 5
-  periodSeconds: 10
-readinessProbe:
-  httpGet:
-    path: /readiness
-    port: http
-  initialDelaySeconds: 5
-  periodSeconds: 10
 autoscaling:
   enabled: false
 # Additional volumes on the output Deployment definition.

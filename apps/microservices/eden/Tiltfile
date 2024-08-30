@@ -1,6 +1,10 @@
+load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
 
-k8s_yaml('kubernetes.yaml')
+NAMESPACE = 'eden'
+namespace_create(NAMESPACE)
+
+k8s_yaml(namespace_inject(read_file('./tilt/kubernetes.yaml'), NAMESPACE))
 k8s_resource('eden-svc', labels=["chinese"])
 
 nerdctl_build('eden-svc-img', '.',     

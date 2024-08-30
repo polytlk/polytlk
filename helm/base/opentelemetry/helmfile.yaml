@@ -1,3 +1,7 @@
+environments:
+  default: {}
+  development: {}
+---
 repositories:
 - name: open-telemetry
   url: https://open-telemetry.github.io/opentelemetry-helm-charts
@@ -7,4 +11,4 @@ releases:
   chart: open-telemetry/opentelemetry-collector
   version: 0.78.2
   values:
-  - otel-collector-config.yaml
+  - otel-collector-{{ .Environment.Name }}-config.yaml

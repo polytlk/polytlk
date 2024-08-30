@@ -1,6 +1,7 @@
 load('ext://uibutton', 'cmd_button', 'location', 'text_input')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
+load('ext://helm_remote', 'helm_remote')
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -126,9 +127,16 @@ else:
 
 # do not load non front end dependencies if mode is msw
 if not LOCAL_MODE == 'msw':
+  # we only need redis chart for local dev
+  helm_remote('redis',
+              repo_name='bitnami',
+              repo_url='https://charts.bitnami.com/bitnami',
+              set=['auth.enabled=false']
+  )
+
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')
   include('./apps/microservices/olivia/Tiltfile')
   include('./apps/microservices/heimdall/Tiltfile')
   include('./apps/workers/eden/Tiltfile')
-  include('./envs/local/Tiltfile')
+  include('./helm/base/Tiltfile')

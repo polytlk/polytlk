@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/eden"
-  tag: "latest"
+  tag: "sha-0ccbc04"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
@@ -10,3 +10,15 @@ env:
   value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
 - name: ENVIRONMENT
   value: "development"
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 7079
+  initialDelaySeconds: 5
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /readiness
+    port: 7079
+  initialDelaySeconds: 5
+  periodSeconds: 10
