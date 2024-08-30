@@ -1,0 +1,10 @@
+version: v0.167.1
+dependencies:
+- name: tyk-headless
+  repository: https://helm.tyk.io/public/helm/charts/
+  version: 0.15.0
+- name: tyk-operator
+  repository: https://helm.tyk.io/public/helm/charts/
+  version: 0.18.0
+digest: sha256:51ebad3687a86352a85a803bf7c97c9434b906420fc383e9a751d88e0170fdbb
+generated: "2024-08-26T15:38:35.230578-04:00"

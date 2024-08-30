@@ -37,16 +37,6 @@
       "executor": "@nxlv/python:remove",
       "options": {}
     },
-    "build": {
-      "executor": "@nxlv/python:build",
-      "outputs": ["{projectRoot}/dist"],
-      "options": {
-        "outputPath": "apps/workers/eden/dist",
-        "publish": true,
-        "lockedVersions": true,
-        "bundleLocalDependencies": true
-      }
-    },
     "install": {
       "executor": "@nxlv/python:install",
       "options": {
@@ -89,6 +79,26 @@
       "options": {
         "silent": false,
         "args": ""
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "options": {
+        "engine": "docker",
+        "context": "./apps/workers/eden",
+        "load": true,
+        "platforms": ["linux/amd64"],
+        "metadata": {
+          "images": ["ewr.vultrcr.com/polytlk/eden-worker"],
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-",
+            "latest"
+          ]
+        }
       }
     }
   },

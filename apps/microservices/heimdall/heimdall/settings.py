@@ -22,12 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET')
+SECRET_KEY = os.getenv('DJANGO_SECRET')
+
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+SERVICE_NAME: str = os.getenv('SERVICE_NAME', 'heimdall-service')
+OTEL_TRACES_ENDPOINT: str = os.getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
+GATEWAY_HOST: str = os.getenv('GATEWAY_HOST')
+EDEN_API_ID: str = os.getenv('EDEN_API_ID')
+
+# Check if the environment variable is set
+if ENVIRONMENT not in {'production', 'development', 'local'}:
+    raise ValueError('Invalid ENVIRONMENT. Must be production, development, or local.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENVIRONMENT == 'local'
 
-ALLOWED_HOSTS = ('heimdall-svc.default.svc', 'localhost')
+ALLOWED_HOSTS = ('heimdall-svc.heimdall.svc', 'localhost')
 
 
 # Application definition
@@ -134,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -145,5 +156,5 @@ if DEBUG:
     # will output to your console
     logging.basicConfig(
         level=logging.DEBUG,
-        format='%(asctime)s %(levelname)s %(message)s',
+        format='%(asctime)s %(levelname)s %(message)s',  # noqa: WPS323
     )

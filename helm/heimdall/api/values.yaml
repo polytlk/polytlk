@@ -1,0 +1,22 @@
+apiDefinitions:
+- name: heimdall-api
+  use_keyless: true
+  protocol: http
+  active: true
+  proxy:
+    target_url: http://heimdall-svc.heimdall.svc:8000
+    listen_path: '/api/auth/'
+    strip_listen_path: true
+  CORS:
+    enable: true
+    allowed_origins:
+    - http://localhost:4200
+    allowed_methods:
+    - GET
+    - POST
+    - OPTIONS
+    allowed_headers: []
+    exposed_headers: []
+    allow_credentials: false
+    max_age: 24
+    options_passthrough: false

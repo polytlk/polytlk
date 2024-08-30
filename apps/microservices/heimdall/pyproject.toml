@@ -17,19 +17,26 @@ authors = [ ]
 license = 'Proprietary'
 readme = 'README.md'
 
-  [[tool.poetry.packages]]
-  include = "heimdall"
+[tool.isort]
+known_third_party = ["heimdall."]
 
-  [tool.poetry.dependencies]
-  python = ">=3.11,<4.0"
-  django = "^4.2.3"
-  djangorestframework = "^3.14.0"
-  requests = "^2.31.0"
-  pyjwt = "^2.7.0"
-  drf-spectacular = "^0.26.3"
-  uvicorn = {extras = ["standard"], version = "^0.22.0"}
-  whitenoise = "^6.5.0"
-  google-auth = "^2.22.0"
+[[tool.poetry.packages]]
+include = "heimdall"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+django = "^4.2.3"
+djangorestframework = "^3.14.0"
+requests = "^2.31.0"
+pyjwt = "^2.7.0"
+drf-spectacular = "^0.26.3"
+uvicorn = {extras = ["standard"], version = "^0.22.0"}
+whitenoise = "^6.5.0"
+google-auth = "^2.22.0"
+opentelemetry-api = "1.26.0"
+opentelemetry-sdk = "1.26.0"
+opentelemetry-exporter-otlp-proto-http = "1.26.0"
+opentelemetry-instrumentation-django = {version = "0.47b0", extras = ["asgi"]}
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,7 +1,7 @@
 load('ext://uibutton', 'cmd_button', 'location', 'text_input')
-load('ext://helm_remote', 'helm_remote')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
+load('ext://helm_remote', 'helm_remote')
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -22,11 +22,7 @@ elif len(language) > 1:
 ############ SETUP LOCAL MODES IN THIS BLOCK ###################################
 dotenv()
 print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
-USE_TYK_PRO = os.environ.get('USE_TYK_PRO', 'False') == 'True'
-if USE_TYK_PRO:
-  print(color.blue('TYK MODE: ') + '\t' + 'Self Managed'.upper())
-else:
-  print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
+print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
 
 LOCAL_MODE = os.environ.get('LOCAL_MODE', 'default').lower()
 if LOCAL_MODE not in ['msw', 'expose_cluster']:
@@ -55,16 +51,9 @@ base = [
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
-  'tyk-helm',
   'tyk-operator',
+  'tyk-gateway'
 ]
-
-tyk = []
-
-if USE_TYK_PRO:
-    tyk = ['tyk-pro', 'mongo', 'tyk-copy-op-conf']
-else:
-    tyk = ['tyk-headless']
 
 host = []
 
@@ -73,7 +62,7 @@ if LOCAL_MODE == 'expose_cluster':
 else:
   host = ['react-dev-server', 'storybook', 'verdaccio']
 
-final_base = base + host + tyk
+final_base = base + host
 
 # run a group like
 # tilt up -- chinese
@@ -138,24 +127,16 @@ else:
 
 # do not load non front end dependencies if mode is msw
 if not LOCAL_MODE == 'msw':
+  # we only need redis chart for local dev
+  helm_remote('redis',
+              repo_name='bitnami',
+              repo_url='https://charts.bitnami.com/bitnami',
+              set=['auth.enabled=false']
+  )
+
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')
   include('./apps/microservices/olivia/Tiltfile')
   include('./apps/microservices/heimdall/Tiltfile')
-
   include('./apps/workers/eden/Tiltfile')
-
-  helm_remote('opentelemetry-collector',
-              repo_name='open-telemetry',
-              repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
-              version='0.78.2',
-              values=['otel-collector-config.yaml']
-  )
-
-  helm_remote('redis',
-              repo_name='bitnami',
-              repo_url='https://charts.bitnami.com/bitnami',
-              values=['redis.yaml']
-  )
-
-  include('./k8s/tyk/Tiltfile')
+  include('./helm/base/Tiltfile')

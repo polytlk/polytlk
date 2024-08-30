@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye as build
+FROM python:3.11-slim-bullseye AS build
 
 WORKDIR /code
 
@@ -38,7 +38,7 @@ RUN source /code/venv/bin/activate && python -m eden.model.load
 # Move the 'hanlp' model to a new location
 RUN mkdir /code/.hanlp && mv /root/.hanlp/* /code/.hanlp
 
-FROM python:3.11-slim-bullseye as final
+FROM python:3.11-slim-bullseye AS final
 
 WORKDIR /code
 
@@ -64,9 +64,10 @@ COPY --from=build /code/venv /code/venv
 USER root
 
 COPY ./eden /code/eden/
+COPY ./scripts/entrypoint.sh /code
 RUN chown -R celeryuser:celeryuser /code/eden
 
 # Switch to celeryuser
 USER celeryuser
 
-CMD ["watchfiles", "--filter", "python", "celery -A eden.main.celery worker --concurrency 1 --loglevel=info"]
+ENTRYPOINT ["/code/entrypoint.sh"]

@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye as build
+FROM python:3.11-slim-bullseye AS build
 
 WORKDIR /code
 
@@ -22,7 +22,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
  && python -m ensurepip --upgrade \
  && pip install -r /code/requirements.txt
 
-FROM python:3.11-slim-bullseye as final
+FROM python:3.11-slim-bullseye AS final
 
 WORKDIR /code
 
@@ -31,5 +31,6 @@ ENV PATH="/code/venv/bin:$PATH"
 
 COPY --from=build /code/venv /code/venv
 COPY ./eden /code/eden/
+COPY ./scripts/entrypoint.sh /code
 
-CMD ["uvicorn", "eden.main:app", "--host", "0.0.0.0", "--port", "7079", "--reload"]
+ENTRYPOINT ["/code/entrypoint.sh"]

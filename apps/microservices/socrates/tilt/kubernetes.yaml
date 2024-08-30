@@ -1,0 +1,63 @@
+---
+# Source: deployment/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: socrates
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: socrates
+    app.kubernetes.io/instance: socrates-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8079
+      targetPort: 8079
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: socrates
+    app.kubernetes.io/instance: socrates-deployment
+---
+# Source: deployment/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socrates
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: socrates
+    app.kubernetes.io/instance: socrates-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: socrates
+      app.kubernetes.io/instance: socrates-deployment
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: deployment-0.1.0
+        app.kubernetes.io/name: socrates
+        app.kubernetes.io/instance: socrates-deployment
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      securityContext:
+        {}
+      containers:
+        - name: socrates
+          securityContext:
+            {}
+          image: "socrates-svc-img:latest"
+          ports:
+            - containerPort: 8079
+              protocol: TCP
+          env:
+            - name: OPENAI_API_KEY
+              value: sk-svcacct-2GwbN26du2TEyZV2g0KhB675kkCRoE_bPw6mi6Yh88f0O_HQ3lhekoJrs7C0zufcr3TT3BlbkFJd-PcoO7N0bF6FfMTXrGjTsjxgTpKVPvSE8lsjdHwOoBEu9wVXDOZx0o8BBrdyAnkbswA
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: http://opentelemetry-collector.default.svc.cluster.local/v1/traces
+            - name: ENVIRONMENT
+              value: local
+

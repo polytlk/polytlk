@@ -1,0 +1,58 @@
+environments:
+  default: {}
+  development: {}
+---
+repositories:
+- name: tyk-helm
+  url: https://helm.tyk.io/public/helm/charts/
+
+releases:
+- name: tyk-headless
+  namespace: tyk
+  chart: tyk-helm/tyk-headless
+  version: 0.15.0
+  installed: true
+  values:
+  - tyk-headless-values.yaml
+  hooks:
+  - events: ["presync"]
+    showlogs: true
+    command: "kubectl"
+    args:
+    - "apply"
+    - "-f"
+    - "./policy-configmap.yaml"
+    - "-f"
+    - "./sse-auth-pre-middleware.yaml"
+  - events: ["postuninstall"]
+    showlogs: true
+    command: "kubectl"
+    args:
+    - "delete"
+    - "-f"
+    - "./policy-configmap.yaml"
+    - "-f"
+    - "./sse-auth-pre-middleware.yaml"
+
+- name: tyk-operator
+  namespace: tyk
+  chart: tyk-helm/tyk-operator
+  version: 0.18.0
+  installed: true
+  needs:
+  - tyk-headless
+  hooks:
+  - events: ["presync"]
+    showlogs: false
+    command: "kubectl"
+    args:
+    - "apply"
+    - "-f"
+    - "./tyk-operator-conf.yaml"
+  - events: ["postuninstall"]
+    showlogs: true
+    command: "kubectl"
+    args:
+    - "delete"
+    - "-f"
+    - "./tyk-operator-conf.yaml"
