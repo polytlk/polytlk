@@ -1,34 +1,39 @@
-# This is a basic workflow that is manually triggered
-
-name: Manual workflow
+name: Build Service Image
 on:
-  workflow_dispatch: {}
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+  workflow_dispatch:
+    inputs:
+      service_name:
+        type: choice
+        description: "Name of the service to build"
+        required: true
+        options: 
+        - eden
+        - eden-worker
+        - heimdall
+        - socrates
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
         with:
           version: 9.9.0
           run_install: true
+
       - name: Docker Login
         uses: docker/login-action@v3.3.0
         with:
-          # Server address of Docker registry. If not set then will default to Docker Hub
           registry: https://ewr.vultrcr.com/polytlk
-          # Username used to log against the Docker registry
           username: 96d895d4-f075-42fa-b566-a8e22ba9007b
-          # Password or personal access token used to log against the Docker registry
           password: ${{ secrets.VULTR_DOCKER_PASSWORD }}
-      - name: docker build
-        run: pnpm nx run eden-worker:container
+          dd: ${{ inputs.service_name }}
+
+      - name: Docker build
+        run: pnpm nx run ${{ inputs.service_name }}:container
         env:
           INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
