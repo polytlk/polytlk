@@ -86,6 +86,7 @@
       "options": {
         "engine": "docker",
         "context": "./apps/workers/eden",
+        "push": true,
         "load": true,
         "platforms": ["linux/amd64"],
         "metadata": {
