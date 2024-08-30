@@ -24,6 +24,8 @@ from .views import OAuthResponseView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('exchange/', OAuthResponseView.as_view()),
+    path('healthz/', Liveness.as_view()),
+    path('readiness/', Readiness.as_view()),
 ]
 
 urlpatterns.extend([

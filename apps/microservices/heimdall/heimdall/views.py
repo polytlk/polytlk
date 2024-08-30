@@ -1,5 +1,4 @@
 import json
-import logging
 import math
 import time
 
@@ -14,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from heimdall.settings import GATEWAY_HOST, EDEN_API_ID
+from heimdall.settings import EDEN_API_ID, GATEWAY_HOST
 from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
@@ -35,14 +34,35 @@ KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'jwt_data': {},
 }
 
-logger = logging.getLogger(__name__)
-
-
 def extract_signature(jwt_token):
     parts = jwt_token.split('.')
     if len(parts) != 3:
         raise ValueError('Invalid JWT token')
     return parts[2]
+
+
+class Liveness(APIView):
+    permission_classes = [AllowAny]
+    schema = AutoSchema()
+
+    def get(self, request, *args, **kwargs):
+        return Response('ok')
+
+
+class Readiness(APIView):
+    permission_classes = [AllowAny]
+    schema = AutoSchema()
+
+    def get(self, request, *args, **kwargs):
+        try:
+            pass
+        except Exception as e:
+            return Response(
+                'down',
+                status=HTTP_400_BAD_REQUEST,
+            )
+        return Response('ok')
+
 
 
 class OAuthResponseView(APIView):
