@@ -14,6 +14,7 @@ releases:
   installed: true
   values:
   - tyk-headless-values.yaml
+  - tyk-redis-{{ .Environment.Name }}-values.yaml
   hooks:
   - events: ["presync"]
     showlogs: true

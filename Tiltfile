@@ -134,9 +134,12 @@ if not LOCAL_MODE == 'msw':
               set=['auth.enabled=false']
   )
 
+  include('./helm/base/cert-manager/Tiltfile')
+  include('./helm/base/opentelemetry/Tiltfile')
+  include('./helm/base/tyk/Tiltfile')
+
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')
   include('./apps/microservices/olivia/Tiltfile')
   include('./apps/microservices/heimdall/Tiltfile')
   include('./apps/workers/eden/Tiltfile')
-  include('./helm/base/Tiltfile')

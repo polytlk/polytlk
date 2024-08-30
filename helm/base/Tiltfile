@@ -1,3 +1,0 @@
-include('./cert-manager/Tiltfile')
-include('./opentelemetry/Tiltfile')
-include('./tyk/Tiltfile')

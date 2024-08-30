@@ -66,4 +66,24 @@ spec:
               value: ZWRlbi9lZGVuLWFwaQ
             - name: ENVIRONMENT
               value: local
+            - name: ALLOWED_HOSTS
+              value: heimdall-svc.heimdall.svc,localhost
+          livenessProbe:
+            httpGet:
+              httpHeaders:
+              - name: Host
+                value: heimdall-svc.heimdall.svc
+              path: healthz/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              httpHeaders:
+              - name: Host
+                value: heimdall-svc.heimdall.svc
+              path: readiness/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 

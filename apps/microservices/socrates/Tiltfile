@@ -7,7 +7,13 @@ namespace_create(NAMESPACE)
 
 k8s_yaml(secret_yaml_generic('api-key-secret', from_env_file='./.env'))
 k8s_yaml(namespace_inject(read_file('./tilt/kubernetes.yaml'), NAMESPACE))
-k8s_resource('socrates-svc', labels=["openai"])
+
+k8s_resource(
+    'socrates-svc',
+    labels=["openai"],
+    # UNCOMMENT to expose individual testing
+    # port_forwards=8079
+)
 
 nerdctl_build('socrates-svc-img', '.',     
     live_update=[
