@@ -1,7 +1,7 @@
 replicaCount: 1
 imagePullSecrets: []
-nameOverride: "socrates"
-fullnameOverride: "socrates"
+nameOverride: "socrates-svc"
+fullnameOverride: "socrates-svc"
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
