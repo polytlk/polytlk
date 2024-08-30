@@ -88,8 +88,7 @@
       "options": {
         "engine": "docker",
         "context": "./apps/microservices/olivia",
-        "push": false,
-        "load": true,
+        "push": true,
         "metadata": {
           "images": ["olivia", "ewr.vultrcr.com/polytlk/olivia"],
           "tags": [
