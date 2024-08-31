@@ -100,6 +100,12 @@
           ]
         }
       }
+    },
+    "template": {
+      "executor": "nx:run-commands",
+      "options": {
+          "command": "./apps/microservices/heimdall/scripts/template.sh"
+        }
     }
   },
   "tags": []
