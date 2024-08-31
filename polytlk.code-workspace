@@ -45,6 +45,9 @@
 			"vs-kubernetes.outputFormat": "yaml",
 			"checkForMinikubeUpgrade": false,
 			"imageBuildTool": "Docker"
+		},
+		"files.associations": {
+			"*.gotmpl": "helm"
 		}
 	}
 }
