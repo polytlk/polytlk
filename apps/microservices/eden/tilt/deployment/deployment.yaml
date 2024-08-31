@@ -1,24 +1,4 @@
 ---
-# Source: deployment/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: eden-svc
-  labels:
-    helm.sh/chart: deployment-0.1.0
-    app.kubernetes.io/name: eden-svc
-    app.kubernetes.io/instance: eden-deployment
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 7079
-      targetPort: 7079
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: eden-svc
-    app.kubernetes.io/instance: eden-deployment
----
 # Source: deployment/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -62,4 +42,3 @@ spec:
               value: redis://redis-master.default.svc.cluster.local:6379/0
             - name: ENVIRONMENT
               value: local
-
