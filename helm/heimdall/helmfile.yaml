@@ -1,6 +1,20 @@
+templates:
+  baseenv:
+    values:
+      - env: &baseenv [{name: ALLOWED_HOSTS, value: "heimdall-svc.heimdall.svc,localhost"}, {name:  DJANGO_SECRET, value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"}, {name: SERVICE_NAME, value: "heimdall-service"}, {name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"}, {name: GATEWAY_HOST, value: "gateway-svc-tyk-headless.tyk.svc.cluster.local"}, {name: EDEN_API_ID, value: "ZWRlbi9lZGVuLWFwaQ"}]
+  defaultenv:
+    values:
+      - env: &defaultenv [{name: ENVIRONMENT, value: "local"}]
+  developmentenv:
+    values:
+      - env: &developmentenv [{name: ENVIRONMENT, value: "development"}]
 environments:
-  default: {}
-  development: {}
+  default:
+    values:
+    - env: [*baseenv, *defaultenv]
+  development:
+    values:
+    - env: [*baseenv, *developmentenv]
 ---
 releases:
   - name: heimdall-deployment
@@ -12,10 +26,14 @@ releases:
     values:
       - deployment/values.yaml
       - deployment/{{ .Environment.Name }}_values.yaml
-    {{ $hosts := requiredEnv "HEIMDALL_ALLOWED_HOSTS" }}
     {{ if eq .Environment.Name "default" | not }}
-    {{ $header_list := split "," $hosts }}
-    {{ $header := index $header_list "_0" }}
+      {{ range $_,$i := .Values.env }}
+      {{ range $__,$envTuple := $i }}
+      {{ $envName := $envTuple | get "name" }}
+      {{ $envValue := $envTuple | get "value"}}
+        {{ if eq $envName "ALLOWED_HOSTS"}}
+        {{ $header_list := split "," $envValue }}
+        {{ $header := index $header_list "_0" }}
       - livenessProbe:
           httpGet:
             path: /healthz
@@ -34,24 +52,19 @@ releases:
                 value: {{ $header }}
           initialDelaySeconds: 5
           periodSeconds: 10
+        {{ end }}
+      {{ end }}
+      {{ end }}
     {{ end }}
       - env:
-          # * load base environment variables here *
-          {{ $fileContent := readFile "./deployment/env/base_env.yaml" | fromYaml  }}
-          {{ range $index,$item := index $fileContent "env" }}
-          - name: {{ index $item "name" }}
-            value: {{ index $item "value"}}
-          {{ end }}
-          # * load environment specific environment variables here *
-          {{ $envFile := join "" (list "./deployment/env/" .Environment.Name "_env.yaml") }}
-          {{ $fileContent := readFile $envFile | fromYaml  }}
-          {{ range $index,$item := index $fileContent "env" }}
-          - name: {{ index $item "name" }}
-            value: {{ index $item "value"}}
-          {{ end }}
-          # * environment variables that need template fxns go here *
-          - name : ALLOWED_HOSTS
-            value: {{ $hosts }}
+    {{ range $_,$i := .Values.env }}
+    {{ range $__,$envTuple := $i }}
+    {{ $envName := $envTuple | get "name" }}
+    {{ $envValue := $envTuple | get "value"}}
+        - name: {{ $envName }}
+          value: {{ $envValue }}
+    {{ end }}
+    {{ end }}
 
   - name: heimdall-apis
     namespace: heimdall

@@ -54,6 +54,8 @@ spec:
             - containerPort: 8000
               protocol: TCP
           env:
+            - name: ALLOWED_HOSTS
+              value: heimdall-svc.heimdall.svc,localhost
             - name: DJANGO_SECRET
               value: django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-
             - name: SERVICE_NAME
@@ -66,6 +68,4 @@ spec:
               value: ZWRlbi9lZGVuLWFwaQ
             - name: ENVIRONMENT
               value: local
-            - name: ALLOWED_HOSTS
-              value: heimdall-svc.heimdall.svc,localhost
 
