@@ -5,7 +5,7 @@
 environments:
   default:
     values:
-    - env:
+      - env:
     {{ range $_,$item := $env }}
     {{ $name := (index $item "name")}}
     {{ if eq $name "ALLOWED_HOSTS" }}
@@ -15,6 +15,18 @@ environments:
         - name: {{ $name }}
           value: {{ (index $item "value") }}
     {{ end }}
-    - header : {{ $header }}
-
+      - header : {{ $header }}
+  development:
+    values:
+      - env:
+    {{ range $_,$item := $env }}
+    {{ $name := (index $item "name")}}
+    {{ if eq $name "ALLOWED_HOSTS" }}
+        {{ $header_list := split "," (index $item "value") }}
+        {{ $header = index $header_list "_0" }}
+    {{ end }}
+        - name: {{ $name }}
+          value: {{ (index $item "value") }}
+    {{ end }}
+      - header : {{ $header }}
 
