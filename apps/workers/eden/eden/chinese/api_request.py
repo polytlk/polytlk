@@ -14,7 +14,7 @@ from pydantic import ValidationError
 from eden.chinese.schema.response import ResponseModel
 
 TIMEOUT = 40.0
-BASE_URL = 'http://socrates-svc:8079'
+BASE_URL = 'http://socrates-svc.socrates.svc.cluster.local:8079'
 ENDPOINT = '/chatgpt'
 TARGET = 'zh'
 
