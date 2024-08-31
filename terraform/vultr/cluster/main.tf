@@ -30,7 +30,7 @@ resource "vultr_kubernetes" "vke_cluster" {
 resource "vultr_kubernetes_node_pools" "node_pool_1" {
   cluster_id    = vultr_kubernetes.vke_cluster.id
   node_quantity = 1
-  plan          = "vc2-1c-2gb"
+  plan          = "vc2-4c-8gb"
   label         = "${local.environment}-node-pool-1"
   auto_scaler   = false
   min_nodes     = 1
@@ -41,7 +41,7 @@ resource "vultr_kubernetes_node_pools" "node_pool_1" {
 resource "vultr_kubernetes_node_pools" "node_pool_2" {
   cluster_id    = vultr_kubernetes.vke_cluster.id
   node_quantity = 1
-  plan          = "vc2-1c-2gb"
+  plan          = "vc2-4c-8gb"
   label         = "${local.environment}-node-pool-2"
   auto_scaler   = false
   min_nodes     = 1
