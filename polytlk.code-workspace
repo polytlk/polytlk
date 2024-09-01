@@ -27,7 +27,7 @@
 		{
 			"name": "root",
 			"path": "."
-		},
+		}
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,

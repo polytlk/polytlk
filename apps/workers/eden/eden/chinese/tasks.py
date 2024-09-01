@@ -8,10 +8,12 @@ from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from redis import Redis
 
 from eden.chinese.api_request import get_en_interpretation
+from eden.config import settings
 from eden.model.singleton import ModelLoader
 from eden.tracing import tracer
 
-redis_db = Redis(host='redis-master.default.svc.cluster.local', port=6379, db=0)
+redis_db = Redis.from_url(url=settings.celery_broker_url)
+
 
 def check_list_str(doc: Any) -> list[str]:
     """Ensure input is list of str."""

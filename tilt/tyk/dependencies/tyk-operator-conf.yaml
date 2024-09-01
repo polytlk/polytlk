@@ -1,0 +1,14 @@
+---
+# Source: dependencies/templates/tyk-operator-conf.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tyk-operator-conf
+  namespace: tyk
+type: Opaque
+stringData:
+  TYK_MODE: ce
+  TYK_URL: http://gateway-svc-tyk-headless.tyk.svc.cluster.local:8080
+  TYK_ORG: 5e9d9544a1dcd60001d0ed20
+  TYK_AUTH: CHANGEME
+  TYK_TLS_INSECURE_SKIP_VERIFY: "true"

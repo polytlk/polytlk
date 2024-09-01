@@ -10,13 +10,14 @@ from sse_starlette.sse import EventSourceResponse
 
 from eden.celery_utils import create_celery
 from eden.chinese.schemas import ChineseQuery, ChineseTask, Message
+from eden.config import settings
 from eden.tracing import tracer  # noqa: I001
 from eden.utils.validation import is_zh
 
 router = APIRouter()
 
 celery_app = create_celery()
-redis_db = Redis(host='redis-master.default.svc.cluster.local', port=6379, db=0)
+redis_db = Redis.from_url(url=settings.celery_broker_url)
 
 
 @router.post('/interpretation', response_model=ChineseTask, responses={422: {'model': Message}})

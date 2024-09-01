@@ -136,7 +136,7 @@ if not LOCAL_MODE == 'msw':
 
   include('./helm/base/cert-manager/Tiltfile')
   include('./helm/base/opentelemetry/Tiltfile')
-  include('./helm/base/tyk/Tiltfile')
+  include('./tilt/tyk/Tiltfile')
 
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')
