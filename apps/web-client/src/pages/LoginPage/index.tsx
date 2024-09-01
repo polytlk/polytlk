@@ -27,6 +27,7 @@ const LoginContainer: FC = () => {
 
     if (config.platform === 'web') {
       const interval = setInterval(() => {
+        // @ts-expect-error fdffasd
         if (typeof window.google !== 'undefined' && buttonRef.current != null) {
           // Clear the interval so it doesn't keep running once the variable is found
           clearInterval(interval);
@@ -46,6 +47,7 @@ const LoginContainer: FC = () => {
         baseUrl: config.baseUrl,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array makes useEffect run once on component mount
 
   return <LoginPage buttonRef={buttonRef} />;

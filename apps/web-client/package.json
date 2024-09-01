@@ -6,7 +6,6 @@
     "@capacitor/cli": "^5.0.3",
     "@capacitor/device": "../../node_modules/@capacitor/device",
     "@capacitor/ios": "../../node_modules/@capacitor/ios",
-    "@polytlk/echo-plugin": "../../node_modules/@polytlk/echo-plugin",
     "capacitor-secure-storage-plugin": "../../node_modules/capacitor-secure-storage-plugin"
   }
 }

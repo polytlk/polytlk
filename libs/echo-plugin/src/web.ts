@@ -3,7 +3,7 @@ import type { EchoPluginPlugin } from './definitions';
 import { WebPlugin } from '@capacitor/core';
 
 declare global {
-  var google: {
+  const google: {
     accounts: {
       id: {
         initialize: (opts: {

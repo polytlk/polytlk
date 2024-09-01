@@ -29,7 +29,12 @@ type HomeProps = {
   loading: boolean;
   language: 'zh' | 'kr';
   text: string;
-  send: any;
+  send: (
+    action:
+      | { type: string; text: string }
+      | { language: string; type: string }
+      | string
+  ) => void;
 };
 
 export type LanguageData = LanguageDataProps;
