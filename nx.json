@@ -94,5 +94,10 @@
   "plugins": [
     "@nxlv/python"
   ],
-  "useInferencePlugins": false
+  "useInferencePlugins": false,
+  "release": {
+    "version": {
+      "preVersionCommand": "pnpx nx run echo-plugin:build"
+    }
+  }
 }
