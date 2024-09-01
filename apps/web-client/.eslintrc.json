@@ -43,7 +43,6 @@
           }
         ],
         "@typescript-eslint/consistent-type-definitions": [2, "type"],
-        "@typescript-eslint/no-implicit-any-catch": 2,
         "total-functions/no-unsafe-type-assertion": 0,
         "@typescript-eslint/no-base-to-string": 2,
         "@typescript-eslint/prefer-reduce-type-parameter": 2,

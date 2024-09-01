@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web-client/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -31,7 +32,8 @@
             "input": "apps/web-client/src/theme/variables.css"
           }
         ],
-        "scripts": []
+        "scripts": [],
+        "webpackConfig": "apps/web-client/webpack.config.cjs"
       },
       "configurations": {
         "development": {
@@ -86,14 +88,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/web-client/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "apps/web-client/jest.config.ts"
       }
     },
     "cap": {
@@ -211,6 +206,5 @@
         }
       }
     }
-  },
-  "tags": []
+  }
 }
