@@ -16,7 +16,6 @@ gateway:
     tag: v5.0.0
     pullPolicy: IfNotPresent
   service:
-    type: NodePort
     port: 8080
     externalTrafficPolicy: Local
     annotations: {}
