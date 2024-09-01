@@ -8,7 +8,6 @@ module.exports = composePlugins(
   (config) => {
   // Note: This was added by an Nx migration. Webpack builds are required to have a corresponding Webpack config file.
   // See: https://nx.dev/recipes/webpack/webpack-config-setup
-  console.log("config", config)
 
 
   return config;
