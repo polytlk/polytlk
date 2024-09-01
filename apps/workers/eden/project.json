@@ -104,8 +104,8 @@
     "template": {
       "executor": "nx:run-commands",
       "options": {
-          "command": "./apps/workers/eden/scripts/template.sh"
-        }
+        "command": "./apps/workers/eden/scripts/template.sh"
+      }
     }
   },
   "tags": []

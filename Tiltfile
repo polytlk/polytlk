@@ -91,7 +91,7 @@ config.set_enabled_resources(resources)
 
 local_resource(
   name='verdaccio',
-  serve_cmd='nx local-registry',
+  serve_cmd='pnpm nx local-registry',
   labels=['host_machine'],
   links=link('http://localhost:4873', 'registry')
 )
@@ -112,14 +112,14 @@ if LOCAL_MODE == 'expose_cluster':
 else:
   local_resource(
     name='react-dev-server',
-    serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE),
+    serve_cmd='NX_LOCAL_MODE={0} pnpm nx run web-client:serve:development'.format(LOCAL_MODE),
     labels=['host_machine'],
     links=link('http://localhost:4200/', 'frontend')
   )
 
   local_resource(
     name='storybook',
-    serve_cmd='nx run web-client:storybook',
+    serve_cmd='pnpm nx run web-client:storybook',
     labels=['host_machine'],
     links=link('http://localhost:4400/', 'storybook')
   )

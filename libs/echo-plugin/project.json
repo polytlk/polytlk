@@ -16,7 +16,8 @@
         "rollupConfig": "libs/echo-plugin/rollup.config.js",
         "external": ["@capacitor/core"],
         "compiler": "tsc",
-        "format": ["esm"]
+        "format": ["esm"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "publish": {
@@ -25,7 +26,7 @@
       "forwardAllArgs": true
     },
     "verify": {
-      "command":  "cd libs/echo-plugin/ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ../../.."
+      "command": "cd libs/echo-plugin/ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ../../.."
     },
     "lint": {
       "executor": "@nx/linter:eslint",
