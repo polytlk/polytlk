@@ -210,11 +210,10 @@
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": ["build"],
       "options": {
-        "engine": "docker",
         "push": true,
         "platforms": ["linux/amd64"],
         "metadata": {
-          "images": ["ewr.vultrcr.com/polytlk/web"],
+          "images": ["ewr.vultrcr.com/polytlk/web-client"],
           "tags": [
             "type=schedule",
             "type=ref,event=branch",
