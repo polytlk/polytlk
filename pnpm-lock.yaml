@@ -20,9 +20,6 @@ importers:
       '@ionic/react-router':
         specifier: ^7.0.0
         version: 7.8.6(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.3(react@18.2.0))(react-router@5.3.3(react@18.2.0))(react@18.2.0)
-      '@polytlk/echo-plugin':
-        specifier: 0.31.0
-        version: 0.31.0
       '@xstate/react':
         specifier: ^3.2.2
         version: 3.2.2(@types/react@18.2.14)(react@18.2.0)(xstate@4.38.3)
@@ -1665,9 +1662,6 @@ packages:
         optional: true
       webpack-plugin-serve:
         optional: true
-
-  '@polytlk/echo-plugin@0.31.0':
-    resolution: {integrity: sha512-Du5Rwj50j6q6Gm0kjxVpbHiuk3WcffXknCGO5Nj3gEWK7RhC2vAkeyqRa6iVv7pPVT03cGrNTSDQmhLnNTnr/w==}
 
   '@radix-ui/number@1.0.1':
     resolution: {integrity: sha512-T5gIdVO2mmPW3NNhjNgEP3cqMXjXL9UbO0BzWcXfvdBs+BohbQxvd/K5hSVKmn9/lbTdsQVKbUcP5WLCwvUbBg==}
@@ -10665,8 +10659,6 @@ snapshots:
       type-fest: 2.19.0
       webpack-dev-server: 4.15.2(webpack@5.94.0(@swc/core@1.7.21(@swc/helpers@0.5.12))(esbuild@0.18.20))
       webpack-hot-middleware: 2.26.1
-
-  '@polytlk/echo-plugin@0.31.0': {}
 
   '@radix-ui/number@1.0.1':
     dependencies:
