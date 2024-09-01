@@ -26,6 +26,9 @@ importers:
       '@nx/web':
         specifier: 19.5.0
         version: 19.5.0(@babel/traverse@7.25.6)(@swc/core@1.7.21(@swc/helpers@0.5.12))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.21(@swc/helpers@0.5.12)))(typescript@5.5.4)(verdaccio@5.32.1(typanion@3.14.0))
+      '@polytlk/echo-plugin':
+        specifier: ^0.2.0
+        version: 0.2.0
       '@typescript-eslint/parser':
         specifier: 7.18.0
         version: 7.18.0(eslint@8.57.0)(typescript@5.5.4)
@@ -1836,6 +1839,9 @@ packages:
         optional: true
       webpack-plugin-serve:
         optional: true
+
+  '@polytlk/echo-plugin@0.2.0':
+    resolution: {integrity: sha512-Gpn74rH/OF+toLS0Ok1Sr6FV8eWg/WvYSOE7Ei40Vta83bjmdMhV4czxLSkZxzC2R2gnn4AufyI0NLpa0Cko9Q==}
 
   '@radix-ui/number@1.0.1':
     resolution: {integrity: sha512-T5gIdVO2mmPW3NNhjNgEP3cqMXjXL9UbO0BzWcXfvdBs+BohbQxvd/K5hSVKmn9/lbTdsQVKbUcP5WLCwvUbBg==}
@@ -11720,6 +11726,8 @@ snapshots:
       type-fest: 2.19.0
       webpack-dev-server: 4.15.2(webpack@5.94.0(@swc/core@1.7.21(@swc/helpers@0.5.12))(esbuild@0.18.20))
       webpack-hot-middleware: 2.26.1
+
+  '@polytlk/echo-plugin@0.2.0': {}
 
   '@radix-ui/number@1.0.1':
     dependencies:

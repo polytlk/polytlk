@@ -91,3 +91,4 @@ terraform.rc
 **/db.sqlite3
 staticfiles/
 .nx
+.npmrc
