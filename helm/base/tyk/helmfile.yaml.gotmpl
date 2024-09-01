@@ -24,9 +24,13 @@ releases:
     {{ if eq .Environment.Name "default" }}
   - name: gateway.service.type
     value: NodePort
+  - name: gateway.service.port
+    value: 8080
     {{ else }}
   - name: gateway.service.type
     value: LoadBalancer
+  - name: gateway.service.port
+    value: 80
   - name: gateway.service.annotations."service\.beta\.kubernetes\.io/vultr-loadbalancer-protocol"
     value: "http" 
     {{ end }}
