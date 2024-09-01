@@ -1,13 +1,13 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/eden"
-  tag: "sha-0ccbc04"
+  tag: "sha-045c15a"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
 - name: CELERY_BROKER_URL
-  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752?ssl_cert_reqs=none"
 - name: CELERY_RESULT_BACKEND
-  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752"
+  value: "rediss://default:AVNS_jkwFYGZUVFCQhVmdUMw@vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752?ssl_cert_reqs=none"
 - name: ENVIRONMENT
   value: "development"
 livenessProbe:

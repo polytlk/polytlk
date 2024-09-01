@@ -45,7 +45,7 @@ class Liveness(APIView):
     permission_classes = [AllowAny]
     schema = AutoSchema()
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, format=None):
         return Response('ok')
 
 
@@ -53,7 +53,7 @@ class Readiness(APIView):
     permission_classes = [AllowAny]
     schema = AutoSchema()
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, format=None):
         try:
             pass
         except Exception as e:

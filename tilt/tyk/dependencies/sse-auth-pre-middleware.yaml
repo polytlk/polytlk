@@ -1,0 +1,9 @@
+---
+# Source: dependencies/templates/sse-auth-pre-middleware.yaml
+apiVersion: v1
+data:
+  sse-auth-pre-middleware.js: "var sseAuthMiddlewarePreHook = new TykJS.TykMiddleware.NewMiddleware({});\n\nsseAuthMiddlewarePreHook.NewProcessRequest(function (request) {\n    log(\"request: \" +  JSON.stringify(request, null, 2))\n    rawlog(\"-----\")\n\n    var qparams = request.Params[\"key\"]|| ''\n\n    if (!qparams) return sseAuthMiddlewarePreHook.ReturnData(request, {});\n        \n    log(\"qparams: \" + JSON.stringify(qparams, null, 2));\n    rawlog(\"-----\");\n\n    var auth = 'Bearer ' + qparams[0];\n\n    log(\"auth: \" + JSON.stringify(auth, null, 2));\n    rawlog(\"-----\");\n    \n    request.SetHeaders[\"Authorization\"] = auth;\n\n    return sseAuthMiddlewarePreHook.ReturnData(request, {});\n});"
+kind: ConfigMap
+metadata:
+  namespace: tyk
+  name: sse-auth-pre-middleware-tbmcf478cg

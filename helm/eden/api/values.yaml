@@ -24,7 +24,7 @@ apiDefinitions:
     driver: otto
     pre:
     - name: "sseAuthMiddlewarePreHook"
-      path: "middleware/sse-auth-pre-middleware.js"
+      path: "/mnt/tyk-gateway/middleware/sse-auth-pre-middleware.js"
       require_session: false
   version_data:
     default_version: Default

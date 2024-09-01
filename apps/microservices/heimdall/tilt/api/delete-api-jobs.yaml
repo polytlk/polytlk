@@ -1,32 +1,4 @@
 ---
-# Source: api/templates/apidefinitions.yaml
-apiVersion: tyk.tyk.io/v1alpha1
-kind: ApiDefinition
-metadata:
-  name: heimdall-api
-spec:
-  name: heimdall-api
-  use_keyless: true
-  protocol: http
-  active: true
-  proxy:
-    target_url: http://heimdall-svc.heimdall.svc:8000
-    listen_path: /api/auth/
-    strip_listen_path: true
-  CORS:
-    enable: true
-    allowed_origins:
-    - "http://localhost:4200"
-    allowed_methods:
-    - "GET"
-    - "POST"
-    - "OPTIONS"
-    allowed_headers: []
-    exposed_headers: []
-    allow_credentials: false
-    max_age: 24
-    options_passthrough: false
----
 # Source: api/templates/delete-api-jobs.yaml
 apiVersion: batch/v1
 kind: Job
@@ -53,4 +25,3 @@ spec:
                 kubectl patch apidefinition.tyk.tyk.io $api --type=json -p='[{"op": "remove", "path": "/metadata/finalizers"}]' --namespace heimdall
               done
       restartPolicy: OnFailure
-

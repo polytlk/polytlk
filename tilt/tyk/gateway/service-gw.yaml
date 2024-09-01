@@ -1,0 +1,20 @@
+---
+# Source: tyk-headless/templates/service-gw.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-svc-tyk-headless
+  labels:
+    app: gateway-svc-tyk-headless
+    chart: tyk-headless-0.15.0
+    release: tyk-headless
+    heritage: Helm
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: gateway-tyk-headless
+    release: tyk-headless

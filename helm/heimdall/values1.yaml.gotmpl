@@ -1,0 +1,32 @@
+{{ $baseEnv := (index .Values.env 0) }}
+{{ $specificEnv := (index .Values.env 1) }}
+{{ $env := (concat $baseEnv $specificEnv) }}
+{{ $header :=  "" }}
+environments:
+  default:
+    values:
+      - env:
+    {{ range $_,$item := $env }}
+    {{ $name := (index $item "name")}}
+    {{ if eq $name "ALLOWED_HOSTS" }}
+        {{ $header_list := split "," (index $item "value") }}
+        {{ $header = index $header_list "_0" }}
+    {{ end }}
+        - name: {{ $name }}
+          value: {{ (index $item "value") }}
+    {{ end }}
+      - header : {{ $header }}
+  development:
+    values:
+      - env:
+    {{ range $_,$item := $env }}
+    {{ $name := (index $item "name")}}
+    {{ if eq $name "ALLOWED_HOSTS" }}
+        {{ $header_list := split "," (index $item "value") }}
+        {{ $header = index $header_list "_0" }}
+    {{ end }}
+        - name: {{ $name }}
+          value: {{ (index $item "value") }}
+    {{ end }}
+      - header : {{ $header }}
+

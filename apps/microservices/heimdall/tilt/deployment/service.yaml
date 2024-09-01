@@ -1,0 +1,20 @@
+---
+# Source: deployment/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: heimdall-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: heimdall-svc
+    app.kubernetes.io/instance: heimdall-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: heimdall-svc
+    app.kubernetes.io/instance: heimdall-deployment

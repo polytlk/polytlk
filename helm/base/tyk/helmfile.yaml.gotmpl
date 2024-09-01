@@ -1,0 +1,43 @@
+environments:
+  default: {}
+  development: {}
+---
+repositories:
+- name: tyk-helm
+  url: https://helm.tyk.io/public/helm/charts/
+
+releases:
+- name: tyk-deps
+  namespace: tyk
+  chart: ./dependencies
+  installed: true
+
+- name: tyk-headless
+  namespace: tyk
+  chart: tyk-helm/tyk-headless
+  version: 0.15.0
+  installed: true
+  values:
+  - tyk-headless-values.yaml
+  - tyk-redis-{{ .Environment.Name }}-values.yaml
+  set:
+    {{ if eq .Environment.Name "default" }}
+  - name: gateway.service.type
+    value: NodePort
+    {{ else }}
+  - name: gateway.service.type
+    value: LoadBalancer
+  - name: gateway.service.annotations."service\.beta\.kubernetes\.io/vultr-loadbalancer-protocol"
+    value: "http" 
+    {{ end }}
+
+  needs:
+  - tyk-deps
+
+- name: tyk-operator
+  namespace: tyk
+  chart: tyk-helm/tyk-operator
+  version: 0.18.0
+  installed: true
+  needs:
+  - tyk-headless

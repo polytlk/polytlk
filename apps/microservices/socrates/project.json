@@ -102,6 +102,12 @@
           ]
         }
       }
+    },
+    "template": {
+      "executor": "nx:run-commands",
+      "options": {
+          "command": "./apps/microservices/socrates/scripts/template.sh"
+        }
     }
   },
   "tags": []

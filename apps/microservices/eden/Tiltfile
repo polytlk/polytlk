@@ -4,10 +4,11 @@ load('ext://nerdctl', 'nerdctl_build')
 NAMESPACE = 'eden'
 namespace_create(NAMESPACE)
 
-k8s_yaml(namespace_inject(read_file('./tilt/kubernetes.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('./tilt/deployment/deployment.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('./tilt/deployment/service.yaml'), NAMESPACE))
 k8s_resource('eden-svc', labels=["chinese"])
 
-k8s_yaml(namespace_inject(read_file('./tilt/api.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('./tilt/api/apidefinitions.yaml'), NAMESPACE))
 
 k8s_resource(
   objects=['eden-api:apidefinition'],

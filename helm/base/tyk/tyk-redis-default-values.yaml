@@ -1,0 +1,5 @@
+redis:
+  addrs:
+  - redis-master.default.svc.cluster.local:6379
+  storage:
+    database: 0

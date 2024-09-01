@@ -1,0 +1,78 @@
+templates:
+  baseenv:
+    values:
+      - env: &baseenv [
+        { name: ALLOWED_HOSTS, value: "heimdall-svc.heimdall.svc,localhost"},
+        { name: DJANGO_SECRET, value: "django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-"},
+        { name: SERVICE_NAME, value: "heimdall-service"},
+        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"},
+        { name: GATEWAY_HOST, value: "gateway-svc-tyk-headless.tyk.svc.cluster.local"},
+        { name: EDEN_API_ID, value: "ZWRlbi9lZGVuLWFwaQ"}
+      ]
+  defaultenv:
+    values:
+      - env: &defaultenv [
+        {name: ENVIRONMENT, value: "local"}
+      ]
+  developmentenv:
+    values:
+      - env: &developmentenv [{
+        name: ENVIRONMENT, value: "development"}
+      ]
+environments:
+  default:
+    values:
+    - env: [*baseenv, *defaultenv]
+  development:
+    values:
+    - env: [*baseenv, *developmentenv]
+---
+bases:
+  - values1.yaml.gotmpl
+---
+releases:
+  - name: heimdall-deployment
+    namespace: heimdall
+    chart: ../charts/deployment
+    labels:
+      type: deployment
+    installed: true
+    values:
+      - deployment/values.yaml
+      - deployment/{{ .Environment.Name }}_values.yaml
+    {{ if eq .Environment.Name "default" | not }}
+      - livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+            httpHeaders:
+              - name: Host
+                value: {{ .Values.header }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      - readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 8000
+            httpHeaders:
+              - name: Host
+                value: {{ .Values.header }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+    {{ end }}
+      - env:
+    {{ range $_,$i := .Values.env }}
+        - name: {{ $i | get "name" }}
+          value: {{ $i | get "value" }}
+    {{ end }}
+
+  - name: heimdall-apis
+    namespace: heimdall
+    chart: ../charts/api
+    labels:
+      type: api
+    installed: true
+    values:
+      - api/values.yaml
+    needs:
+      - heimdall-deployment

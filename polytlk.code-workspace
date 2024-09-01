@@ -27,13 +27,10 @@
 		{
 			"name": "root",
 			"path": "."
-		},
+		}
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,
-		"python.linting.enabled": true,
-		"python.linting.flake8Enabled": false,
-		"python.linting.mypyEnabled": true,
 		"files.exclude": {
 			"**/__pycache__": true,
 			"**/*.hypothesis": true,
@@ -41,8 +38,16 @@
 			"**/*.pytest_cache": true
 		},
 		"eslint.enable": false,
-		"yaml.schemas": {
-			"kubernetes://schema/tyk.tyk.io/v1alpha1@apidefinition": "file:///Users/haiturtle/Public/polytlk/k8s/tyk/apis/eden.yaml"
+		"yaml.schemas": {},
+		"vs-kubernetes": {
+			"vs-kubernetes.kubectl-path": "$HOME/.rd/bin/kubectl",
+			"vs-kubernetes.helm-path": "$HOME/.rd/bin/kubectl",
+			"vs-kubernetes.outputFormat": "yaml",
+			"checkForMinikubeUpgrade": false,
+			"imageBuildTool": "Docker"
+		},
+		"files.associations": {
+			"*.gotmpl": "helm"
 		}
 	}
 }
