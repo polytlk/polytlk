@@ -28,6 +28,8 @@
     "@capacitor/android": "^5.0.3",
     "@capacitor/cli": "^5.0.3",
     "@capacitor/ios": "^5.0.3",
+    "@import-meta-env/typescript": "^0.4.0",
+    "@import-meta-env/unplugin": "^0.6.0",
     "@nx-tools/nx-container": "^6.0.2",
     "@nx/devkit": "19.5.0",
     "@nx/eslint-plugin": "19.5.0",
