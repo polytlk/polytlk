@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
-  tag: "sha-c7234b1"
+  tag: "sha-1e9db80"
 env:
 - name: BASE_URL
   value: http://dev.api.polytlk.io
