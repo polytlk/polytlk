@@ -11,6 +11,7 @@ RUN npx postject import-meta-env-alpine NODE_SEA_BLOB sea-prep.blob --sentinel-f
 
 FROM docker.io/nginx:stable-alpine
 
+RUN apk add libstdc++
 RUN mkdir /app
 
 COPY --from=build-stage /app/import-meta-env-alpine /app/

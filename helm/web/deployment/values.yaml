@@ -1,6 +1,11 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
-  tag: "sha-97c0ce1"
+  tag: "sha-c7234b1"
+env:
+- name: BASE_URL
+  value: http://dev.api.polytlk.io
+- name: TARGET_ENV
+  value: "development"
 replicaCount: 1
 imagePullSecrets: []
 nameOverride: "web-client-svc"
