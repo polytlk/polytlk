@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
-  tag: "sha-56827e5"
+  tag: "sha-97c0ce1"
 replicaCount: 1
 imagePullSecrets: []
 nameOverride: "web-client-svc"
