@@ -1,0 +1,1 @@
+helmfile apply -e development -f helm/web/helmfile.yaml.gotmpl

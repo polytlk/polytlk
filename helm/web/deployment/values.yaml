@@ -1,0 +1,29 @@
+image:
+  repository: "ewr.vultrcr.com/polytlk/web-client"
+  tag: "sha-56827e5"
+replicaCount: 1
+imagePullSecrets: []
+nameOverride: "web-client-svc"
+fullnameOverride: "web-client-svc"
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  enabled: true
+  type: LoadBalancer
+  port: 443
+resources: {}
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}
+volumeMounts:
+  - mountPath: "/etc/nginx/ssl"
+    name: nginx-tls
+    readOnly: true
+volumes:
+  - name: nginx-tls
+    secret:
+      secretName: nginx-tls
