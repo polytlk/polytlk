@@ -40,10 +40,11 @@ releases:
     values:
       - deployment/values.yaml
       - deployment/{{ .Environment.Name }}_values.yaml
+      - deployment/tls.yaml
     {{ if eq .Environment.Name "default" | not }}
       - livenessProbe:
           httpGet:
-            path: /healthz
+            path: /healthz/
             port: 8000
             httpHeaders:
               - name: Host
@@ -52,7 +53,7 @@ releases:
           periodSeconds: 10
       - readinessProbe:
           httpGet:
-            path: /readiness
+            path: /readiness/
             port: 8000
             httpHeaders:
               - name: Host
@@ -73,6 +74,6 @@ releases:
       type: api
     installed: true
     values:
-      - api/values.yaml
+      - api/{{ .Environment.Name }}-values.yaml
     needs:
       - heimdall-deployment
