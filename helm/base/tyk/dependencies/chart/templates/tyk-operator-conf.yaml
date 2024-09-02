@@ -6,7 +6,7 @@ metadata:
 type: Opaque
 stringData:
   TYK_MODE: ce
-  TYK_URL: http://gateway-svc-tyk-headless.tyk.svc.cluster.local
+  TYK_URL: {{ .Values.operator.tyk_url }}
   TYK_ORG: 5e9d9544a1dcd60001d0ed20
   TYK_AUTH: CHANGEME
   TYK_TLS_INSECURE_SKIP_VERIFY: "true"

@@ -1,0 +1,1 @@
+helmfile apply -e development -f helm/base/tyk/helmfile.yaml.gotmpl

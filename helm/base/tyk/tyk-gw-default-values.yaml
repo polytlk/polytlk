@@ -21,17 +21,12 @@ gateway:
     port: 9696
     type: ClusterIP
     annotations: {}
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
   ingress:
     enabled: false
-  resources: {}
-  securityContext:
-    runAsUser: 1000
-    fsGroup: 2000
-  nodeSelector: {}
-  tolerations:
-  - key: node-role.kubernetes.io/master
-    effect: NoSchedule
-  affinity: {}
   extraEnvs:
   - name: TYK_GW_ENABLEJSVM
     value: "true"

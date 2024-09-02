@@ -1,0 +1,8 @@
+operator:
+  tyk_url: https://gateway-svc-tyk-headless.tyk.svc.cluster.local
+gateway:
+  tls:
+    enabled: true
+    secretName: gateway-tls
+    cert: ref+doppler://#CERT
+    key: ref+doppler://#KEY

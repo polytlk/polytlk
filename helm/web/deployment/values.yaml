@@ -3,7 +3,7 @@ image:
   tag: "sha-1e9db80"
 env:
 - name: BASE_URL
-  value: http://dev.api.polytlk.io
+  value: https://dev.api.polytlk.io
 - name: TARGET_ENV
   value: "development"
 replicaCount: 1

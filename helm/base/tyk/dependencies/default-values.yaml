@@ -1,0 +1,2 @@
+operator:
+  tyk_url: http://gateway-svc-tyk-headless.tyk.svc.cluster.local
