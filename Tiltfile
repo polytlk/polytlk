@@ -2,6 +2,9 @@ load('ext://uibutton', 'cmd_button', 'location', 'text_input')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
+load('ext://cert_manager', 'deploy_cert_manager')
+
+deploy_cert_manager(version="v1.15.3")
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -134,7 +137,6 @@ if not LOCAL_MODE == 'msw':
               set=['auth.enabled=false']
   )
 
-  include('./helm/base/cert-manager/Tiltfile')
   include('./tilt/opentelemetry/Tiltfile')
   include('./tilt/tyk/Tiltfile')
 
