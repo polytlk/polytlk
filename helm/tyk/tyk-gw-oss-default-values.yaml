@@ -28,7 +28,7 @@ tyk-gateway:
     opentelemetry:
       enabled: true
       exporter: http
-      endpoint: http://opentelemetry-collector.default.svc.cluster.local/v1/traces
+      endpoint: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
       headers: {}
       connectionTimeout: 1
       resourceName: tyk-api-gateway

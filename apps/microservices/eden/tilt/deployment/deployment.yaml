@@ -35,7 +35,7 @@ spec:
               protocol: TCP
           env:
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-              value: http://opentelemetry-collector.default.svc.cluster.local/v1/traces
+              value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
             - name: CELERY_BROKER_URL
               value: redis://redis-master.default.svc.cluster.local:6379/0
             - name: CELERY_RESULT_BACKEND

@@ -173,7 +173,7 @@ spec:
           - name: TYK_GW_OPENTELEMETRY_EXPORTER
             value: "http"
           - name: TYK_GW_OPENTELEMETRY_ENDPOINT
-            value: "http://opentelemetry-collector.default.svc.cluster.local/v1/traces"
+            value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
           - name: TYK_GW_OPENTELEMETRY_CONNECTIONTIMEOUT
             value: "1"
           - name: TYK_GW_OPENTELEMETRY_RESOURCENAME
