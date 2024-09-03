@@ -23,6 +23,12 @@ config:
       send_batch_max_size: 1000
       send_batch_size: 100
       timeout: 10s
+    filter/ottl:
+      error_mode: ignore
+      traces:
+        span:
+          - 'attributes["http.target"] == "/healthz"'
+          - 'attributes["http.target"] == "/readiness"'
   exporters:
     otlp/honey:
       endpoint: "api.honeycomb.io:443"
@@ -34,6 +40,6 @@ config:
     pipelines:
       traces:
         receivers: [otlp]
-        processors: [batch]
+        processors: [batch, filter/ottl]
         exporters: [logging, otlp/honey]
       metrics: null
