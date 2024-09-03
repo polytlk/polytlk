@@ -8,9 +8,9 @@ apiDefinitions:
     listen_path: '/api/chinese'
     strip_listen_path: true
   CORS:
-    enable: true
+    enable: false
     allowed_origins:
-    - http://localhost:4200
+    - https://dev.polytlk.io
     allowed_methods:
     - GET
     - POST
