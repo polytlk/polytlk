@@ -27,4 +27,4 @@ spec:
     max_age: 24
     options_passthrough: false
     debug: false
-  detailed_tracing: true
+  detailed_tracing: false

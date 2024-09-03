@@ -25,4 +25,4 @@ apiDefinitions:
         use_extended_paths: true
         global_headers:
           Authorization: "Bearer $tyk_meta.jwt"
-  detailed_tracing: true
+  detailed_tracing: false
