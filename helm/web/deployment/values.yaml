@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
-  tag: "sha-1e9db80"
+  tag: "sha-b9885a4"
 env:
 - name: BASE_URL
   value: https://dev.api.polytlk.io
@@ -17,7 +17,7 @@ securityContext: {}
 service:
   enabled: true
   type: ClusterIP
-  port: 443
+  port: 80
 ingress:
   enabled: true
   className: "nginx"
