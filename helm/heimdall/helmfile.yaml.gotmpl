@@ -12,12 +12,14 @@ templates:
   defaultenv:
     values:
       - env: &defaultenv [
-        {name: ENVIRONMENT, value: "local"}
+        { name: ENVIRONMENT, value: "local" },
+        { name: GATEWAY_PORT, value: 8080 },
       ]
   developmentenv:
     values:
-      - env: &developmentenv [{
-        name: ENVIRONMENT, value: "development"}
+      - env: &developmentenv [
+        { name: ENVIRONMENT, value: "development" },
+        { name: GATEWAY_PORT, value: 80 },
       ]
 environments:
   default:
