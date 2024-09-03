@@ -16,8 +16,21 @@ podSecurityContext: {}
 securityContext: {}
 service:
   enabled: true
-  type: LoadBalancer
+  type: ClusterIP
   port: 443
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: dev.polytlk.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: nginx-tls
+      hosts:
+        - dev.polytlk.io
 resources: {}
 autoscaling:
   enabled: false
