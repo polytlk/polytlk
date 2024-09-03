@@ -1,5 +1,5 @@
 operator:
-  tyk_url: https://gateway-svc-tyk-headless-tyk-gateway.tyk.svc.cluster.local
+  tyk_url: http://gateway-svc-tyk-headless-tyk-gateway.tyk.svc.cluster.local
 gateway:
   tls:
     enabled: true
