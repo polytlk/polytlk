@@ -16,12 +16,11 @@ releases:
 
 - name: tyk-headless
   namespace: tyk
-  chart: tyk-helm/tyk-headless
-  version: 0.15.0
+  chart: tyk-helm/tyk-oss
+  version: 1.6.0
   installed: true
   values:
-  - tyk-gw-{{ .Environment.Name }}-values.yaml
-  - tyk-redis-{{ .Environment.Name }}-values.yaml
+  - tyk-gw-oss-{{ .Environment.Name }}-values.yaml
   needs:
   - tyk-deps
 

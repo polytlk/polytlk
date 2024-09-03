@@ -29,10 +29,14 @@ spec:
     - {{ . | quote }}
     {{- end }}
     allowed_headers: []
-    exposed_headers: []
+    exposed_headers:
+    {{- range .CORS.exposed_headers }}
+    - {{ . | quote }}
+    {{- end }}
     allow_credentials: {{ .CORS.allow_credentials }}
     max_age: {{ .CORS.max_age }}
     options_passthrough: {{ .CORS.options_passthrough }}
+    debug: {{ .CORS.debug }}
   {{- if .custom_middleware }}
   custom_middleware:
     driver: {{ .custom_middleware.driver }}
