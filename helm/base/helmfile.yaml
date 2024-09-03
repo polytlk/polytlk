@@ -5,4 +5,4 @@ environments:
 helmfiles:
 - path: cert-manager/helmfile.yaml
 - path: opentelemetry/helmfile.yaml
-- path: tyk/helmfile.yaml.gotmpl
+- path: nginx-ingress/helmfile.yaml.gotmpl

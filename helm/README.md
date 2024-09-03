@@ -3,15 +3,21 @@
 ## deploy base components first
 helmfile apply -e development -f helm/base/helmfile.yaml
 
-## deploy services
+## deploy tyk-api-gateway second
+helmfile apply -e development -f helm/tyk/helmfile.yaml.gotmpl
+
+## deploy apps last
 helmfile apply -e development -f helm/helmfile.yaml
 
 # how to reset dev env
 
-## destroy services first
+## destroy apps first
 helmfile destroy -e development -f helm/helmfile.yaml
 
-## destroy base components
+## deploy tyk-api-gateway second
+helmfile destroy -e development -f helm/tyk/helmfile.yaml.gotmpl
+
+## destroy base components last
 helmfile destroy -e development -f helm/base/helmfile.yaml
 
 
