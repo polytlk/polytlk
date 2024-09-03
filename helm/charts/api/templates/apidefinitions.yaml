@@ -29,11 +29,15 @@ spec:
     - {{ . | quote }}
     {{- end }}
     allowed_headers: []
-    exposed_headers: []
+    exposed_headers:
+    {{- range .CORS.exposed_headers }}
+    - {{ . | quote }}
+    {{- end }}
     allow_credentials: {{ .CORS.allow_credentials }}
     max_age: {{ .CORS.max_age }}
     options_passthrough: {{ .CORS.options_passthrough }}
-  {{- if .custom_middleware }}
+    debug: {{ .CORS.debug }}
+{{- if .custom_middleware }}
   custom_middleware:
     driver: {{ .custom_middleware.driver }}
     pre:
@@ -42,8 +46,8 @@ spec:
       path: "{{ .path }}"
       require_session: {{ .require_session }}
     {{- end }}
-  {{- end }}
-  {{- if .version_data }}
+{{- end }}
+{{- if .version_data }}
   version_data:
     default_version: {{ .version_data.default_version }}
     not_versioned: {{ .version_data.not_versioned }}
@@ -54,4 +58,5 @@ spec:
         global_headers:
           Authorization: "{{ .version_data.versions.Default.global_headers.Authorization }}"
   {{- end }}
+  detailed_tracing: {{ .detailed_tracing }}
 {{- end }}

@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web-client/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -31,7 +32,8 @@
             "input": "apps/web-client/src/theme/variables.css"
           }
         ],
-        "scripts": []
+        "scripts": [],
+        "webpackConfig": "apps/web-client/webpack.config.cjs"
       },
       "configurations": {
         "development": {
@@ -41,12 +43,6 @@
           "vendorChunk": true
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/web-client/src/environments/environment.ts",
-              "with": "apps/web-client/src/environments/environment.prod.ts"
-            }
-          ],
           "optimization": true,
           "outputHashing": "all",
           "sourceMap": false,
@@ -86,14 +82,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/web-client/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "apps/web-client/jest.config.ts"
       }
     },
     "cap": {
@@ -210,7 +199,24 @@
           "quiet": true
         }
       }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "push": true,
+        "platforms": ["linux/amd64"],
+        "metadata": {
+          "images": ["ewr.vultrcr.com/polytlk/web-client"],
+          "tags": [
+            "type=schedule",
+            "type=ref,event=branch",
+            "type=ref,event=tag",
+            "type=ref,event=pr",
+            "type=sha,prefix=sha-"
+          ]
+        }
+      }
     }
-  },
-  "tags": []
+  }
 }

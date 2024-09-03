@@ -1,8 +1,0 @@
-redis:
-  addrs:
-  - vultr-prod-d47b69c5-e2a2-45ec-87e7-0ea500632c3e-vultr-prod-e0ea.vultrdb.com:16752
-  masterName: default
-  pass: "AVNS_jkwFYGZUVFCQhVmdUMw"
-  useSSL: true
-  storage:
-    database: 0

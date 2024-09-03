@@ -1,4 +1,5 @@
 import type { LanguageDataProps } from '../../components/LanguageData';
+import type { MachineEvents } from './types';
 
 import {
   IonButton,
@@ -29,7 +30,7 @@ type HomeProps = {
   loading: boolean;
   language: 'zh' | 'kr';
   text: string;
-  send: any;
+  send: (action: MachineEvents) => void;
 };
 
 export type LanguageData = LanguageDataProps;
@@ -111,10 +112,12 @@ const Home: React.FC<HomeProps> = ({
                     value={language}
                     placeholder="Select One"
                     onIonChange={(e) => {
-                      send({
-                        type: 'UPDATE_LANGUAGE',
-                        language: e.detail.value + '',
-                      });
+                      if (e.detail.value === 'zh' || e.detail.value === 'kr') {
+                        send({
+                          type: 'UPDATE_LANGUAGE',
+                          language: e.detail.value,
+                        });
+                      }
                     }}
                   >
                     <IonSelectOption value="zh">
@@ -148,7 +151,7 @@ const Home: React.FC<HomeProps> = ({
               <IonCol size="1">
                 <IonButton
                   onClick={() => {
-                    send('SUBMIT');
+                    send({ type: 'SUBMIT' });
                   }}
                 >
                   Submit

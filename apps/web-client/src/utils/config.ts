@@ -1,16 +1,9 @@
 import { Device } from '@capacitor/device';
 
-type Env = 'development' | 'simulated_ios' | 'real_dev_ios';
-
-type baseUrl =
-  | 'http://localhost:8080'
-  | 'http://localhost:4200'
-  | 'https://polytlk.ngrok.io';
-
 export type ClientConfig = {
-  baseUrl: baseUrl;
+  baseUrl: string;
   platform: 'web' | 'ios' | 'android';
-  env: Env;
+  env: string;
   oAuth2AuthOpts: {
     scope: string;
     web: {
@@ -20,11 +13,6 @@ export type ClientConfig = {
 };
 
 const baseConfig = {
-  baseUrl:
-    process.env.NODE_ENV === 'development' &&
-    process.env.NX_LOCAL_MODE === 'msw'
-      ? 'http://localhost:4200'
-      : 'http://localhost:8080',
   oAuth2AuthOpts: {
     scope: 'email profile',
     web: {
@@ -32,6 +20,11 @@ const baseConfig = {
         '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
     },
   },
+} as const;
+
+const baseWebConfig = {
+  baseUrl: import.meta.env.BASE_URL,
+  env: import.meta.env.TARGET_ENV,
 } as const;
 
 class Config {
@@ -49,39 +42,23 @@ class Config {
 
   private async load() {
     const { platform, isVirtual } = await Device.getInfo();
-    let env: Env;
 
     if (platform === 'web') {
-      env = 'development';
+      this.data = {
+        ...baseConfig,
+        ...baseWebConfig,
+        platform,
+      };
     } else {
-      env = isVirtual ? 'simulated_ios' : 'real_dev_ios';
-    }
-
-    switch (env) {
-      case 'development':
-        this.data = {
-          ...baseConfig,
-          platform,
-          env,
-        };
-        break;
-      case 'simulated_ios':
-        this.data = {
-          ...baseConfig,
-          platform,
-          env,
-        };
-        break;
-      case 'real_dev_ios':
-        this.data = {
-          ...baseConfig,
-          platform,
-          env,
-          baseUrl: 'https://polytlk.ngrok.io',
-        };
-        break;
-      default:
-        throw new Error(`Unsupported environment: ${env}`);
+      this.data = {
+        ...baseConfig,
+        platform,
+        // baseWebConfig cannot be trusted when running from native client
+        env: isVirtual ? 'simulated_ios' : 'real_ios',
+        baseUrl: isVirtual
+          ? 'http://localhost:8080'
+          : 'https://dev.api.polytlk.io',
+      };
     }
 
     Object.freeze(this.data); // Prevents further modifications to the config object

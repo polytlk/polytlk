@@ -8,7 +8,9 @@ repositories:
 
 releases:
 - name: opentelemetry-collector
+  namespace: opentelemetry
   chart: open-telemetry/opentelemetry-collector
   version: 0.78.2
+  installed: true
   values:
   - otel-collector-{{ .Environment.Name }}-config.yaml

@@ -1,0 +1,5 @@
+tls:
+  enabled: true
+  secretName: nginx-tls
+  cert: ref+doppler://#CERT
+  key: ref+doppler://#KEY

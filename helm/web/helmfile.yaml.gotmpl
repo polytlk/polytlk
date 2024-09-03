@@ -1,0 +1,13 @@
+environments:
+  default: {}
+  development: {}
+---
+releases:
+- name: web-deployment
+  namespace: web
+  chart: ../charts/deployment
+  installed: true
+  values:
+  - deployment/values.yaml
+  - deployment/tls.yaml
+

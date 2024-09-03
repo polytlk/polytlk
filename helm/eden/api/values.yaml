@@ -8,17 +8,7 @@ apiDefinitions:
     listen_path: '/api/chinese'
     strip_listen_path: true
   CORS:
-    enable: true
-    allowed_origins:
-    - http://localhost:4200
-    allowed_methods:
-    - GET
-    - POST
-    - OPTIONS
-    allowed_headers: []
-    exposed_headers: []
-    allow_credentials: false
-    max_age: 24
+    enable: false
     options_passthrough: true
   custom_middleware:
     driver: otto
@@ -35,3 +25,4 @@ apiDefinitions:
         use_extended_paths: true
         global_headers:
           Authorization: "Bearer $tyk_meta.jwt"
+  detailed_tracing: true

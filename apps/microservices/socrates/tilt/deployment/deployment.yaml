@@ -37,6 +37,6 @@ spec:
             - name: OPENAI_API_KEY
               value: sk-svcacct-2GwbN26du2TEyZV2g0KhB675kkCRoE_bPw6mi6Yh88f0O_HQ3lhekoJrs7C0zufcr3TT3BlbkFJd-PcoO7N0bF6FfMTXrGjTsjxgTpKVPvSE8lsjdHwOoBEu9wVXDOZx0o8BBrdyAnkbswA
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-              value: http://opentelemetry-collector.default.svc.cluster.local/v1/traces
+              value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local

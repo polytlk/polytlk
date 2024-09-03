@@ -1,0 +1,34 @@
+environments:
+  default: {}
+  development: {}
+---
+repositories:
+- name: tyk-helm
+  url: https://helm.tyk.io/public/helm/charts/
+
+releases:
+- name: tyk-deps
+  namespace: tyk
+  chart: ./dependencies/chart
+  installed: true
+  values:
+  - dependencies/{{ .Environment.Name }}-values.yaml
+
+- name: tyk-headless
+  namespace: tyk
+  chart: tyk-helm/tyk-oss
+  version: 1.6.0
+  installed: true
+  values:
+  - tyk-gw-oss-{{ .Environment.Name }}-values.yaml
+  needs:
+  - tyk-deps
+
+- name: tyk-operator
+  namespace: tyk
+  chart: tyk-helm/tyk-operator
+  version: 0.18.0
+  installed: true
+  needs:
+  - tyk-headless
+

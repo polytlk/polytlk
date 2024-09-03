@@ -3,10 +3,13 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/echo-plugin/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/rollup:rollup",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/echo-plugin",
         "main": "libs/echo-plugin/src/index.ts",
@@ -14,40 +17,57 @@
         "assets": [],
         "project": "libs/echo-plugin/package.json",
         "rollupConfig": "libs/echo-plugin/rollup.config.js",
-        "external": ["@capacitor/core"],
+        "external": [
+          "@capacitor/core"
+        ],
         "compiler": "tsc",
-        "format": ["esm"]
+        "format": [
+          "esm"
+        ]
       }
     },
     "publish": {
       "command": "node tools/scripts/publish.mjs echo-plugin {args.ver} {args.tag}",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "forwardAllArgs": true
     },
     "verify": {
-      "command":  "cd libs/echo-plugin/ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ../../.."
+      "command": "cd libs/echo-plugin/ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ../../.."
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/echo-plugin/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/echo-plugin/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
-        "jestConfig": "libs/echo-plugin/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
+        "jestConfig": "libs/echo-plugin/jest.config.ts"
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "release": {
+      "version": {
+        "generatorOptions": {
+          "packageRoot": "dist/{projectRoot}",
+          "currentVersionResolver": "git-tag"
         }
       }
     }
-  },
-  "tags": []
+  }
 }

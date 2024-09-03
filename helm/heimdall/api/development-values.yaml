@@ -10,13 +10,15 @@ apiDefinitions:
   CORS:
     enable: true
     allowed_origins:
-    - http://localhost:4200
+    - "https://dev.polytlk.io"
     allowed_methods:
-    - GET
-    - POST
-    - OPTIONS
+    - "GET"
+    - "POST"
+    - "OPTIONS"
     allowed_headers: []
     exposed_headers: []
     allow_credentials: false
     max_age: 24
     options_passthrough: false
+    debug: false
+  detailed_tracing: true

@@ -1,0 +1,7 @@
+operator:
+  tyk_url: http://gateway-svc-tyk.tyk.svc.cluster.local
+tls:
+  enabled: true
+  secretName: gateway-tls
+  cert: ref+doppler://#CERT
+  key: ref+doppler://#KEY

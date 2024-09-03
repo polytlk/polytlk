@@ -18,7 +18,7 @@ spec:
             - -c
             - |
               # Delete APIs
-              kubectl delete apidefinition.tyk.tyk.io --all --namespace heimdall
+              kubectl delete apidefinition.tyk.tyk.io --all --namespace heimdall --wait=false
 
               # Remove finalizers
               for api in $(kubectl get apidefinition.tyk.tyk.io -o jsonpath='{.items[*].metadata.name}' --namespace heimdall); do

@@ -1,4 +1,0 @@
-def helmfile_template(file):
-  return local("helmfile -f %s template --include-crds | grep -v -e '^Decrypting .*' | grep -v -e '^Fetching .*' | grep -v 'as it is not a table.$'" % file)
-
-k8s_yaml(helmfile_template("./helmfile.yaml"))

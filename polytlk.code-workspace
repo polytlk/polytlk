@@ -25,6 +25,14 @@
 			"path": "apps/web-client"
 		},
 		{
+			"name": "helm",
+			"path": "helm"
+		},
+		{
+			"name": "terraform",
+			"path": "terraform"
+		},
+		{
 			"name": "root",
 			"path": "."
 		}

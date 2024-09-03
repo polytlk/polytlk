@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from heimdall.settings import EDEN_API_ID, GATEWAY_HOST
+from heimdall.settings import EDEN_API_ID, GATEWAY_HOST, GATEWAY_PORT
 from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
@@ -122,7 +122,12 @@ class OAuthResponseView(APIView):
                 prepare_tyk_span.set_attribute('ply.tyk_key_signiture', signiture)
                 prepare_tyk_span.set_attribute('ply.targetapis.eden-api-id', EDEN_API_ID)
 
-                url = 'http://{0}:8080/tyk/keys/{1}'.format(GATEWAY_HOST, signiture)
+                url = 'http://{0}:{1}/tyk/keys/{2}'.format(
+                    GATEWAY_HOST,
+                    GATEWAY_PORT,
+                    signiture
+                )
+
                 headers = {
                     'Content-Type': 'application/json',
                     'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,

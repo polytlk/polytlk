@@ -2,6 +2,9 @@ load('ext://uibutton', 'cmd_button', 'location', 'text_input')
 load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
+load('ext://cert_manager', 'deploy_cert_manager')
+
+deploy_cert_manager(version="v1.15.3")
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -91,7 +94,7 @@ config.set_enabled_resources(resources)
 
 local_resource(
   name='verdaccio',
-  serve_cmd='nx local-registry',
+  serve_cmd='pnpm nx local-registry',
   labels=['host_machine'],
   links=link('http://localhost:4873', 'registry')
 )
@@ -112,14 +115,14 @@ if LOCAL_MODE == 'expose_cluster':
 else:
   local_resource(
     name='react-dev-server',
-    serve_cmd='NX_LOCAL_MODE={0} nx run web-client:serve:development'.format(LOCAL_MODE),
+    serve_cmd='NX_LOCAL_MODE={0} pnpm nx run web-client:serve:development'.format(LOCAL_MODE),
     labels=['host_machine'],
     links=link('http://localhost:4200/', 'frontend')
   )
 
   local_resource(
     name='storybook',
-    serve_cmd='nx run web-client:storybook',
+    serve_cmd='pnpm nx run web-client:storybook',
     labels=['host_machine'],
     links=link('http://localhost:4400/', 'storybook')
   )
@@ -134,8 +137,7 @@ if not LOCAL_MODE == 'msw':
               set=['auth.enabled=false']
   )
 
-  include('./helm/base/cert-manager/Tiltfile')
-  include('./helm/base/opentelemetry/Tiltfile')
+  include('./tilt/opentelemetry/Tiltfile')
   include('./tilt/tyk/Tiltfile')
 
   include('./apps/microservices/socrates/Tiltfile')

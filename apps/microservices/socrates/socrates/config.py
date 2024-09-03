@@ -1,6 +1,6 @@
 """Module for configuration logic."""
 from functools import lru_cache
-from os import environ
+from os import environ, getenv
 from typing import Union
 
 
@@ -8,10 +8,7 @@ class BaseConfig(object):
     """Store common configuration for eden application."""
 
     service_name: str = environ.get('SERVICE_NAME', 'socrates')
-    oltp_traces_endpoint: str = environ.get(
-        'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
-        'http://opentelemetry-collector.default.svc.cluster.local/v1/traces',
-    )
+    oltp_traces_endpoint: str = getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
 
 
 class DevelopmentConfig(BaseConfig):
