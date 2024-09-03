@@ -17,7 +17,7 @@ RUN mkdir /app
 COPY --from=build-stage /app/import-meta-env-alpine /app/
 
 COPY dist/apps/web-client/* /usr/share/nginx/html/
-COPY apps/web-client/nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY apps/web-client/nginx.conf /etc/nginx/conf.d/default.conf
 COPY apps/web-client/.env.example ./app/
 COPY apps/web-client/scripts/start.sh ./app/
 
