@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
-  tag: "sha-1e9db80"
+  tag: "sha-ec96a6c"
 env:
 - name: BASE_URL
   value: https://dev.api.polytlk.io
@@ -16,8 +16,21 @@ podSecurityContext: {}
 securityContext: {}
 service:
   enabled: true
-  type: LoadBalancer
-  port: 443
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: dev.polytlk.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: nginx-tls
+      hosts:
+        - dev.polytlk.io
 resources: {}
 autoscaling:
   enabled: false
