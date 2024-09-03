@@ -8,14 +8,12 @@ k8s_yaml(namespace_inject(read_file("./dependencies/policy-configmap.yaml"), 'ty
 k8s_yaml(namespace_inject(read_file("./dependencies/sse-auth-pre-middleware.yaml"), 'tyk'))
 k8s_yaml(namespace_inject(read_file("./dependencies/tyk-operator-conf.yaml"), 'tyk'))
 
-k8s_yaml(namespace_inject(read_file("./gateway/configmap-gateway.yaml"), 'tyk'))
 k8s_yaml(namespace_inject(read_file("./gateway/deployment-gw-repset.yaml"), 'tyk'))
-k8s_yaml(namespace_inject(read_file("./gateway/secret-certs.yaml"), 'tyk'))
 k8s_yaml(namespace_inject(read_file("./gateway/secrets.yaml"), 'tyk'))
 k8s_yaml(namespace_inject(read_file("./gateway/service-gw.yaml"), 'tyk'))
 
 k8s_resource(
-  workload='gateway-tyk-headless',
+  workload='gateway-tyk',
   new_name='tyk-gateway',
   labels=['api-gateway'],
   resource_deps=['redis-master'],

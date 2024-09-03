@@ -18,7 +18,7 @@ spec:
             - -c
             - |
               # Delete APIs
-              kubectl delete apidefinition.tyk.tyk.io --all --namespace eden
+              kubectl delete apidefinition.tyk.tyk.io --all --namespace eden --wait=false
 
               # Remove finalizers
               for api in $(kubectl get apidefinition.tyk.tyk.io -o jsonpath='{.items[*].metadata.name}' --namespace eden); do

@@ -101,7 +101,7 @@ tyk-gateway:
 
   # fullnameOverride overrides App name. It is truncated to 63 characters.
   # Default value: tyk-gateway.fullname
-  fullnameOverride: ""
+  fullnameOverride: "gateway-svc-tyk"
 
   gateway:
     # The hostname to bind the Gateway to.
@@ -278,7 +278,7 @@ tyk-gateway:
               pathType: Prefix
               backend:
                 service:
-                  name: gateway-svc-tyk-headless-tyk-gateway
+                  name: gateway-svc-tyk
                   port:
                     number: 80
 
