@@ -13,13 +13,13 @@ templates:
     values:
       - env: &defaultenv [
         { name: ENVIRONMENT, value: "local" },
-        { name: GATEWAY_PORT, value: 8080 },
+        { name: GATEWAY_PORT, value: "8080" }
       ]
   developmentenv:
     values:
       - env: &developmentenv [
         { name: ENVIRONMENT, value: "development" },
-        { name: GATEWAY_PORT, value: 80 },
+        { name: GATEWAY_PORT, value: "80" }
       ]
 environments:
   default:
@@ -66,7 +66,7 @@ releases:
       - env:
     {{ range $_,$i := .Values.env }}
         - name: {{ $i | get "name" }}
-          value: {{ $i | get "value" }}
+          value: {{ $i | get "value" | quote}}
     {{ end }}
 
   - name: heimdall-apis
