@@ -1,3 +1,4 @@
+{{- $fullName := include "deployment.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,6 +44,15 @@ spec:
               protocol: TCP
           {{- end }}
           env:
+            {{- if .Values.externalSecrets.enabled }}
+              {{- range .Values.externalSecrets.secrets }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ . }}
+                  name: {{ $fullName }}-{{ . | lower | kebabcase }}
+              {{- end }}
+            {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

@@ -7,11 +7,6 @@ externalSecrets:
   secrets:
     - OPENAI_API_KEY
 env:
-- name: OPENAI_API_KEY
-  valueFrom:
-    secretKeyRef:
-      name: socrates-svc-openai-api-key
-      key: OPENAI_API_KEY
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
 - name: ENVIRONMENT
