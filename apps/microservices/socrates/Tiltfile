@@ -5,9 +5,9 @@ load('ext://secret', 'secret_yaml_generic')
 NAMESPACE = 'socrates'
 namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('api-key-secret', from_env_file='./.env'))
-k8s_yaml(namespace_inject(read_file('./tilt/deployment/deployment.yaml'), NAMESPACE))
-k8s_yaml(namespace_inject(read_file('./tilt/deployment/service.yaml'), NAMESPACE))
+k8s_yaml(secret_yaml_generic('socrates-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
+k8s_yaml(namespace_inject(read_file('../../../tilt/socrates/deployment/deployment.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('../../../tilt/socrates/deployment/service.yaml'), NAMESPACE))
 
 k8s_resource(
     'socrates-svc',

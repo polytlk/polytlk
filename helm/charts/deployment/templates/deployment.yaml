@@ -45,12 +45,20 @@ spec:
           {{- end }}
           env:
             {{- if .Values.externalSecrets.enabled }}
-              {{- range .Values.externalSecrets.secrets }}
+              {{- range .Values.secrets }}
             - name: {{ . }}
               valueFrom:
                 secretKeyRef:
                   key: {{ . }}
                   name: {{ $fullName }}-{{ . | lower | kebabcase }}
+              {{- end }}
+            {{- else }}
+              {{- range .Values.secrets }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ . }}
+                  name: {{ $fullName }}-secret-env
               {{- end }}
             {{- end }}
             {{- with .Values.env }}

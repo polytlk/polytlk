@@ -1,4 +1,4 @@
-TARGET_FOLDER="apps/microservices/socrates/tilt"
+TARGET_FOLDER="tilt/socrates"
 
 rm -rf $TARGET_FOLDER/deployment/*
 

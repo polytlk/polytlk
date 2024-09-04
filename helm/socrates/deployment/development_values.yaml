@@ -4,8 +4,6 @@ image:
 externalSecrets:
   enabled: true
   secretName: doppler-token-socrates
-  secrets:
-    - OPENAI_API_KEY
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
