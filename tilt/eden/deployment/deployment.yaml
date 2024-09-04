@@ -34,11 +34,17 @@ spec:
             - containerPort: 7079
               protocol: TCP
           env:
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_BROKER_URL
+                  name: eden-svc-secret-env
+            - name: CELERY_RESULT_BACKEND
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_RESULT_BACKEND
+                  name: eden-svc-secret-env
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
               value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
-            - name: CELERY_BROKER_URL
-              value: redis://redis-master.default.svc.cluster.local:6379/0
-            - name: CELERY_RESULT_BACKEND
-              value: redis://redis-master.default.svc.cluster.local:6379/0
             - name: ENVIRONMENT
               value: local

@@ -1,11 +1,9 @@
 image:
   repository: "eden-svc-img"
+externalSecrets:
+  enabled: false
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
-- name: CELERY_BROKER_URL
-  value: "redis://redis-master.default.svc.cluster.local:6379/0"
-- name: CELERY_RESULT_BACKEND
-  value: "redis://redis-master.default.svc.cluster.local:6379/0"
 - name: ENVIRONMENT
   value: "local"

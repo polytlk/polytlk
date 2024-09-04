@@ -1,4 +1,4 @@
-TARGET_FOLDER="apps/microservices/eden/tilt"
+TARGET_FOLDER="tilt/eden"
 
 rm -rf $TARGET_FOLDER/api/*
 rm -rf $TARGET_FOLDER/deployment/*

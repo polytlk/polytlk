@@ -20,23 +20,21 @@ spec:
     strip_listen_path: {{ .proxy.strip_listen_path }}
   CORS:
     enable: {{ .CORS.enable }}
-    allowed_origins:
-    {{- range .CORS.allowed_origins }}
-    - {{ . | quote }}
+    {{- $corsKeys := dict "allowed_origins" .CORS.allowed_origins "allowed_methods" .CORS.allowed_methods "allowed_headers" .CORS.allowed_headers "exposed_headers" .CORS.exposed_headers }}
+    {{- range $key, $value := $corsKeys }}
+      {{- if $value }}
+    {{- $key }}:
+        {{- range $value }}
+     - {{ . | quote }}
+        {{- end }}
+      {{- end }}
     {{- end }}
-    allowed_methods:
-    {{- range .CORS.allowed_methods }}
-    - {{ . | quote }}
+    {{- $corsFields := dict "allow_credentials" .CORS.allow_credentials "max_age" .CORS.max_age "options_passthrough" .CORS.options_passthrough "debug" .CORS.debug }}
+    {{- range $key, $value := $corsFields }}
+      {{- if $value }}
+    {{ $key }}: {{ $value }}
+      {{- end }}
     {{- end }}
-    allowed_headers: []
-    exposed_headers:
-    {{- range .CORS.exposed_headers }}
-    - {{ . | quote }}
-    {{- end }}
-    allow_credentials: {{ .CORS.allow_credentials }}
-    max_age: {{ .CORS.max_age }}
-    options_passthrough: {{ .CORS.options_passthrough }}
-    debug: {{ .CORS.debug }}
 {{- if .custom_middleware }}
   custom_middleware:
     driver: {{ .custom_middleware.driver }}

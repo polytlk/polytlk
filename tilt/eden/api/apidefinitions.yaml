@@ -15,14 +15,7 @@ spec:
     strip_listen_path: true
   CORS:
     enable: false
-    allowed_origins:
-    allowed_methods:
-    allowed_headers: []
-    exposed_headers:
-    allow_credentials: 
-    max_age: 
     options_passthrough: true
-    debug: 
   custom_middleware:
     driver: otto
     pre:
