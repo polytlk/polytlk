@@ -106,6 +106,12 @@
       "options": {
         "command": "./apps/microservices/heimdall/scripts/template.sh"
       }
+    },
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./apps/microservices/heimdall/scripts/template_dev.sh"
+      }
     }
   },
   "tags": []

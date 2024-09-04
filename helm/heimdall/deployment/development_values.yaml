@@ -1,3 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/heimdall"
   tag: "sha-be1405b"
+externalSecrets:
+  enabled: true
+  secret-name: doppler-token-

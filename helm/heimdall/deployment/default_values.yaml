@@ -1,3 +1,4 @@
 image:
   repository: "heimdall-svc-img"
-
+externalSecrets:
+  enabled: false

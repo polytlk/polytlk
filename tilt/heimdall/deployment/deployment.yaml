@@ -34,10 +34,13 @@ spec:
             - containerPort: 8000
               protocol: TCP
           env:
+            - name: DJANGO_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: DJANGO_SECRET
+                  name: heimdall-svc-secret-env
             - name: ALLOWED_HOSTS
               value: heimdall-svc.heimdall.svc,localhost
-            - name: DJANGO_SECRET
-              value: django-insecure-362&o5gwwu+9d8#ohs2r59y)bhhl9gp_buhnzyv-g*m#o)&5b-
             - name: SERVICE_NAME
               value: heimdall-service
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT

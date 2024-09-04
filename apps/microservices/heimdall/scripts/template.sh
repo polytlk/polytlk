@@ -1,4 +1,4 @@
-TARGET_FOLDER="apps/microservices/heimdall/tilt"
+TARGET_FOLDER="tilt/heimdall"
 
 rm -rf $TARGET_FOLDER/api/*
 rm -rf $TARGET_FOLDER/deployment/*

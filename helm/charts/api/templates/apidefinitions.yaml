@@ -23,7 +23,7 @@ spec:
     {{- $corsKeys := dict "allowed_origins" .CORS.allowed_origins "allowed_methods" .CORS.allowed_methods "allowed_headers" .CORS.allowed_headers "exposed_headers" .CORS.exposed_headers }}
     {{- range $key, $value := $corsKeys }}
       {{- if $value }}
-    {{- $key }}:
+    {{ $key }}:
         {{- range $value }}
      - {{ . | quote }}
         {{- end }}
