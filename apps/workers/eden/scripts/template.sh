@@ -1,4 +1,4 @@
-TARGET_FOLDER="apps/workers/eden/tilt"
+TARGET_FOLDER="tilt/eden-worker"
 
 rm -rf $TARGET_FOLDER/deployment/*
 

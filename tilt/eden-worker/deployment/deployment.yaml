@@ -31,11 +31,17 @@ spec:
             {}
           image: "eden-worker-img:latest"
           env:
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_BROKER_URL
+                  name: eden-worker-secret-env
+            - name: CELERY_RESULT_BACKEND
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_RESULT_BACKEND
+                  name: eden-worker-secret-env
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
               value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
-            - name: CELERY_BROKER_URL
-              value: redis://redis-master.default.svc.cluster.local:6379/0
-            - name: CELERY_RESULT_BACKEND
-              value: redis://redis-master.default.svc.cluster.local:6379/0
             - name: ENVIRONMENT
               value: local

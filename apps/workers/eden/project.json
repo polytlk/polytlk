@@ -106,6 +106,12 @@
       "options": {
         "command": "./apps/workers/eden/scripts/template.sh"
       }
+    },
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./apps/workers/eden/scripts/template_dev.sh"
+      }
     }
   },
   "tags": []

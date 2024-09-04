@@ -2,9 +2,11 @@ replicaCount: 1
 imagePullSecrets: []
 nameOverride: "eden-worker"
 fullnameOverride: "eden-worker"
+secrets:
+ - CELERY_BROKER_URL
+ - CELERY_RESULT_BACKEND
 service:
   enabled: false
-
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}

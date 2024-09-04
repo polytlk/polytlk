@@ -4,7 +4,5 @@ environments:
 ---
 helmfiles:
 - path: eden/helmfile.yaml.gotmpl
-- path: eden-worker/helmfile.yaml.gotmpl
 - path: heimdall/helmfile.yaml.gotmpl
-- path: socrates/helmfile.yaml.gotmpl
 - path: web-client/helmfile.yaml.gotmpl
