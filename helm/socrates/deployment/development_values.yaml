@@ -1,9 +1,17 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/socrates"
   tag: "sha-045c15a"
+externalSecrets:
+  enabled: true
+  secretName: doppler-token-socrates
+  secrets:
+    - OPENAI_API_KEY
 env:
 - name: OPENAI_API_KEY
-  value: "sk-svcacct-2GwbN26du2TEyZV2g0KhB675kkCRoE_bPw6mi6Yh88f0O_HQ3lhekoJrs7C0zufcr3TT3BlbkFJd-PcoO7N0bF6FfMTXrGjTsjxgTpKVPvSE8lsjdHwOoBEu9wVXDOZx0o8BBrdyAnkbswA"
+  valueFrom:
+    secretKeyRef:
+      name: socrates-svc-openai-api-key
+      key: OPENAI_API_KEY
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
 - name: ENVIRONMENT
