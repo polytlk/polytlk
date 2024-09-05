@@ -1,6 +1,11 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
   tag: "sha-ec96a6c"
+externalSecrets:
+  enabled: true
+  secretName: doppler-token-web-client-svc
+  tls:
+    enabled: true
 env:
 - name: BASE_URL
   value: https://dev.api.polytlk.io
@@ -28,7 +33,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: nginx-tls
+    - secretName: web-client-svc-tls-secret
       hosts:
         - dev.polytlk.io
 resources: {}
@@ -39,9 +44,9 @@ tolerations: []
 affinity: {}
 volumeMounts:
   - mountPath: "/etc/nginx/ssl"
-    name: nginx-tls
+    name: web-client-svc-tls-secret
     readOnly: true
 volumes:
-  - name: nginx-tls
+  - name: web-client-svc-tls-secret
     secret:
-      secretName: nginx-tls
+      secretName: web-client-svc-tls-secret

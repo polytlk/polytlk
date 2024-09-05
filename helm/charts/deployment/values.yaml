@@ -1,4 +1,6 @@
-tls:
-  enabled: false
 ingress:
   enabled: false
+externalSecrets:
+  enabled: false
+  tls:
+    enabled: false

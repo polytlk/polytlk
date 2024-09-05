@@ -217,6 +217,12 @@
           ]
         }
       }
+    },
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./apps/web-client/scripts/template_dev.sh"
+      }
     }
   }
 }

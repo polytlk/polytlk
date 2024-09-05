@@ -1,7 +1,0 @@
-environments:
-  default: {}
-  development: {}
----
-helmfiles:
-- path: heimdall/helmfile.yaml.gotmpl
-- path: web-client/helmfile.yaml.gotmpl
