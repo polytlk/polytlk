@@ -1,0 +1,18 @@
+environments:
+  default: {}
+  development: {}
+---
+repositories:
+- name: argo
+  url: https://argoproj.github.io/argo-helm
+
+releases:
+- name: argocd
+  namespace: argocd
+  chart: argo/argo-cd
+  version: 7.5.2
+  values:
+    - crds:
+        install: true
+        keep: false
+
