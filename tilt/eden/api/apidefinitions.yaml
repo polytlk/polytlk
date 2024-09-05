@@ -19,9 +19,9 @@ spec:
   custom_middleware:
     driver: otto
     pre:
-    - name: "sseAuthMiddlewarePreHook"
-      path: "/mnt/tyk-gateway/middleware/sse-auth-pre-middleware.js"
-      require_session: false
+      - name: "sseAuthMiddlewarePreHook"
+        path: "/mnt/tyk-gateway/middleware/sse-auth-pre-middleware.js"
+        require_session: false
   version_data:
     default_version: Default
     not_versioned: true

@@ -25,7 +25,7 @@ spec:
       {{- if $value }}
     {{ $key }}:
         {{- range $value }}
-     - {{ . | quote }}
+      - {{ . | quote }}
         {{- end }}
       {{- end }}
     {{- end }}
@@ -40,9 +40,9 @@ spec:
     driver: {{ .custom_middleware.driver }}
     pre:
     {{- range .custom_middleware.pre }}
-    - name: "{{ .name }}"
-      path: "{{ .path }}"
-      require_session: {{ .require_session }}
+      - name: "{{ .name }}"
+        path: "{{ .path }}"
+        require_session: {{ .require_session }}
     {{- end }}
 {{- end }}
 {{- if .version_data }}
