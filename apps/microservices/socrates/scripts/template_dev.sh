@@ -1,4 +1,4 @@
-TARGET_FOLDER="../polytlk-cd/development"
+TARGET_FOLDER="../polytlk-cd/development/apps"
 
 rm -rf $TARGET_FOLDER/socrates/*
 
