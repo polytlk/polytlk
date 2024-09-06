@@ -33,7 +33,7 @@ config:
     otlp/honey:
       endpoint: "api.honeycomb.io:443"
       headers:
-        "x-honeycomb-team": "hcaik_01j67tfc8egdz73t6xjdx8e5yg0mqc1qt38qarfrmj80m3rf5f55mtyg96"
+        "x-honeycomb-team": "$HONEYCOMB_API_KEY"
     logging:
       verbosity: normal # can be normal, basic, or detailed
   service:
@@ -43,3 +43,9 @@ config:
         processors: [batch, filter/ottl]
         exporters: [logging, otlp/honey]
       metrics: null
+extraEnvs:
+  - name: HONEYCOMB_API_KEY
+    valueFrom:
+      secretKeyRef:
+        key: HONEYCOMB_API_KEY
+        name: opentelemetry-colector-honeycomb-api-key

@@ -11,7 +11,7 @@ releases:
   namespace: cert-manager
   chart: jetstack/cert-manager
   version: v1.15.3
-  set:
-  - name: crds.enabled
-    value: true
+  values:
+    - crds:
+        enabled: true
 

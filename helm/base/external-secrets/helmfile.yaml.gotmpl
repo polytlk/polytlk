@@ -11,3 +11,10 @@ releases:
   namespace: external-secrets
   chart: external-secrets/external-secrets
   installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  version: 0.10.2
+  values:
+    - crds:
+        createClusterExternalSecret: false
+        createClusterSecretStore: false
+      processClusterExternalSecret: false
+      processClusterStore: false

@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: polytlk-addons
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - name: cert-manager
+        repoURL: https://charts.jetstack.io
+        chartVersion: v1.15.3
+        chart: cert-manager
+        namespace: cert-manager
+
+      - name: external-secrets
+        repoURL: https://charts.external-secrets.io
+        chartVersion: 0.10.2
+        chart: external-secrets
+        namespace: external-secrets
+
+      - name: nginx-ingress
+        repoURL: https://helm.nginx.com/stable
+        chartVersion: 1.3.2
+        chart: nginx-ingress
+        namespace: nginx
+
+      - name: opentelemetry-collector
+        repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+        chartVersion:  0.78.2
+        chart: opentelemetry-collector
+        namespace: opentelemetry
+  template:
+    metadata:
+      name: '{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: '{{.repoURL}}'
+          targetRevision: '{{.chartVersion}}'
+          chart: '{{.chart}}'
+          helm:
+            valueFiles:
+              - $values/development/addons/{{.name}}/values.yaml
+        - repoURL: git@github.com:polytlk/polytlk-cd.git
+          targetRevision: HEAD
+          ref: values
+      destination:
+        name: ''
+        namespace: '{{.name}}'
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
