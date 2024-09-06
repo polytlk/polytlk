@@ -6,8 +6,6 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
 securityContext: {}
-secrets:
-  - DJANGO_SECRET
 service:
   enabled: true
   type: ClusterIP

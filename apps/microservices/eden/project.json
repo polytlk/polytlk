@@ -110,7 +110,7 @@
     "template:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./apps/microservices/eden/scripts/template_dev.sh"
+        "command": "./tools/scripts/template_apps.sh eden"
       }
     }
   },

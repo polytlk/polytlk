@@ -7,9 +7,6 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
 securityContext: {}
-secrets:
-  - CELERY_BROKER_URL
-  - CELERY_RESULT_BACKEND
 service:
   enabled: true
   type: ClusterIP
