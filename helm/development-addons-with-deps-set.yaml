@@ -1,30 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: polytlk-addons
+  name: polytlk-addons-with-deps
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
   - list:
       elements:
-      - name: cert-manager
-        repoURL: https://charts.jetstack.io
-        chartVersion: v1.15.3
-        chart: cert-manager
-        namespace: cert-manager
-
-      - name: external-secrets
-        repoURL: https://charts.external-secrets.io
-        chartVersion: 0.10.2
-        chart: external-secrets
-        namespace: external-secrets
-
-      - name: nginx-ingress
-        repoURL: https://helm.nginx.com/stable
-        chartVersion: 1.3.2
-        chart: nginx-ingress
-        namespace: nginx
+      - name: otel-collector
+        repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+        chartVersion:  0.78.2
+        chart: opentelemetry-collector
+        namespace: otel-collector
+        dependencies: true
 
   template:
     metadata:
@@ -42,6 +31,11 @@ spec:
         - repoURL: git@github.com:polytlk/polytlk-cd.git
           targetRevision: HEAD
           ref: values
+
+        - repoURL: git@github.com:polytlk/polytlk-cd.git
+          targetRevision: HEAD
+          path: ./development/addons/{{.name}}/secret
+
       destination:
         name: ''
         namespace: '{{.name}}'

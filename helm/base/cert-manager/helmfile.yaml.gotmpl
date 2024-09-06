@@ -11,6 +11,9 @@ releases:
   namespace: cert-manager
   chart: jetstack/cert-manager
   version: v1.15.3
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: remote
   values:
     - crds:
         enabled: true

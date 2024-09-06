@@ -10,8 +10,10 @@ releases:
 - name: external-secrets
   namespace: external-secrets
   chart: external-secrets/external-secrets
-  installed: {{ eq .Environment.Name "default" | not | toYaml }}
   version: 0.10.2
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: remote
   values:
     - crds:
         createClusterExternalSecret: false

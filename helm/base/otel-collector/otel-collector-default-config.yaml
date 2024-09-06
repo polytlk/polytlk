@@ -37,3 +37,9 @@ config:
         processors: [batch]
         exporters: [logging, otlp/honey]
       metrics: null
+extraEnvs:
+  - name: HONEYCOMB_API_KEY
+    valueFrom:
+      secretKeyRef:
+        key: HONEYCOMB_API_KEY
+        name: otel-collector-secret-env

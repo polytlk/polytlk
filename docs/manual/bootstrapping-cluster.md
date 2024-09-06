@@ -20,3 +20,12 @@ argocd login localhost:8080 --username=admin --password=<password> --insecure
 
 ## setup the private repo
 go to localhost:8080 in your browser. login with the same credentials as the last step. go into the settings and configure a repository with a valid ssh key
+
+## create secrets for external secrets provider
+
+authenticate to doppler 
+> doppler login
+
+per project create the expected secrets the manifests desire per env
+> TEMP_DOPPLER_TOKEN=$(doppler configs tokens create <project-name>-<config>-secrets --project <project-name> --config <config> --plain --no-read-env)
+> kubectl create secret generic <secret-name> --from-literal=dopplerToken=$TEMP_DOPPLER_TOKEN

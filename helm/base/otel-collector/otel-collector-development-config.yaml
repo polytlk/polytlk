@@ -48,4 +48,4 @@ extraEnvs:
     valueFrom:
       secretKeyRef:
         key: HONEYCOMB_API_KEY
-        name: opentelemetry-colector-honeycomb-api-key
+        name: otel-collector-secrets-honeycomb-api-key

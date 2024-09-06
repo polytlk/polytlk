@@ -1,0 +1,28 @@
+environments:
+  default: {}
+  development: {}
+---
+repositories:
+- name: open-telemetry
+  url: https://open-telemetry.github.io/opentelemetry-helm-charts
+
+releases:
+- name: otel-collector-secrets
+  namespace: otel-collector
+  chart: ../../charts/secret
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: secret
+  values: 
+  - secret/{{ .Environment.Name }}_values.yaml
+  - secret/secrets.yaml
+
+- name: otel-collector
+  namespace: otel-collector
+  chart: open-telemetry/opentelemetry-collector
+  version: 0.78.2
+  installed: true
+  labels:
+    type: remote
+  values:
+  - otel-collector-{{ .Environment.Name }}-config.yaml
