@@ -35,7 +35,7 @@ releases:
   - name: heimdall-secrets
     namespace: heimdall
     chart: ../charts/secret
-    installed: true
+    installed: {{ eq .Environment.Name "default" | not | toYaml }}
     labels:
       type: secret
     values: 
@@ -50,8 +50,10 @@ releases:
       type: deployment
     installed: true
     values:
-      - deployment/values.yaml
       - deployment/{{ .Environment.Name }}_values.yaml
+      - deployment/values.yaml
+      - secret/{{ .Environment.Name }}_values.yaml
+      - secret/secrets.yaml
 
     {{ if eq .Environment.Name "default" | not }}
       - livenessProbe:

@@ -1,9 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/eden"
   tag: "sha-5e3ec4f"
-externalSecrets:
-  enabled: true
-  secretName: doppler-token-eden-svc
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"

@@ -6,8 +6,6 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
 securityContext: {}
-secrets:
-  - OPENAI_API_KEY
 service:
   enabled: true
   type: ClusterIP

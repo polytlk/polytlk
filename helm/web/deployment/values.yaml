@@ -1,11 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
   tag: "sha-ec96a6c"
-externalSecrets:
-  enabled: true
-  secretName: doppler-token-web-client-svc
-  tls:
-    enabled: true
 env:
 - name: BASE_URL
   value: https://dev.api.polytlk.io

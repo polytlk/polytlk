@@ -1,7 +1,5 @@
 image:
   repository: "eden-worker-img"
-externalSecrets:
-  enabled: false
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
