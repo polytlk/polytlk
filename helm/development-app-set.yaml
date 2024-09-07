@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: polytlk-apps
-  namespace: argo-cd
+  namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -11,7 +11,7 @@ spec:
       repoURL: git@github.com:polytlk/polytlk-cd.git
       revision: HEAD
       directories:
-      - path: development/*
+      - path: development/apps/*
   template:
     metadata:
       name: '{{.path.basename}}'
@@ -21,9 +21,14 @@ spec:
         repoURL: git@github.com:polytlk/polytlk-cd.git
         targetRevision: HEAD
         path: '{{.path.path}}'
+        directory:
+            recurse: true
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.path.basename}}'
       syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
         syncOptions:
         - CreateNamespace=true

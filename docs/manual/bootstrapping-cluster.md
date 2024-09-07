@@ -28,4 +28,4 @@ authenticate to doppler
 
 per project create the expected secrets the manifests desire per env
 > TEMP_DOPPLER_TOKEN=$(doppler configs tokens create <project-name>-<config>-secrets --project <project-name> --config <config> --plain --no-read-env)
-> kubectl create secret generic <secret-name> --from-literal=dopplerToken=$TEMP_DOPPLER_TOKEN
+> kubectl create secret generic <secret-name> --from-literal=dopplerToken=$TEMP_DOPPLER_TOKEN -n <namespace>

@@ -13,7 +13,18 @@ spec:
         chartVersion:  0.78.2
         chart: opentelemetry-collector
         namespace: otel-collector
-        dependencies: true
+      
+      - name: tyk
+        repoURL: https://helm.tyk.io/public/helm/charts/
+        chartVersion:  1.6.0
+        chart: tyk-oss
+        namespace: tyk
+
+      - name: tyk-operator
+        repoURL: https://helm.tyk.io/public/helm/charts/
+        chartVersion:  0.18.0
+        chart: tyk-operator
+        namespace: tyk-operator
 
   template:
     metadata:
@@ -34,7 +45,11 @@ spec:
 
         - repoURL: git@github.com:polytlk/polytlk-cd.git
           targetRevision: HEAD
-          path: ./development/addons/{{.name}}/secret
+          path: ./development/addons/{{.name}}
+          directory:
+            exclude: 'values.yaml'
+            recurse: true
+
 
       destination:
         name: ''

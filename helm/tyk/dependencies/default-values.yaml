@@ -1,4 +1,0 @@
-operator:
-  tyk_url: http://gateway-svc-tyk.tyk.svc.cluster.local:8080
-tls:
-  enabled: false
