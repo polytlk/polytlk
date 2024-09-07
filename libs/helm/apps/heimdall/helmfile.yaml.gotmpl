@@ -34,7 +34,7 @@ bases:
 releases:
   - name: heimdall-secrets
     namespace: heimdall
-    chart: ../charts/secret
+    chart: ../../charts/secret
     installed: {{ eq .Environment.Name "default" | not | toYaml }}
     labels:
       type: secret
@@ -45,7 +45,7 @@ releases:
 
   - name: heimdall-deployment
     namespace: heimdall
-    chart: ../charts/deployment
+    chart: ../../charts/deployment
     labels:
       type: deployment
     installed: true
@@ -83,7 +83,7 @@ releases:
 
   - name: heimdall-apis
     namespace: heimdall
-    chart: ../charts/api
+    chart: ../../charts/api
     labels:
       type: api
     installed: true

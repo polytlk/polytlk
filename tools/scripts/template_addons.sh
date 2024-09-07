@@ -41,7 +41,7 @@ rm -rf $TARGET_FOLDER/secret/*
 rm -rf $TARGET_FOLDER/deps/*
 
 # Run helmfile template
-helmfile template -e $ENVIRONMENT -l type=secret -l type=deps -f "helm/base/$TARGET/helmfile.yaml.gotmpl" --output-dir "../../../$TARGET_FOLDER" --output-dir-template "{{ .OutputDir }}/{{ .Release.Name }}"
+helmfile template -e $ENVIRONMENT -l type=secret -l type=deps -f "libs/helm/addons/$TARGET/helmfile.yaml.gotmpl" --output-dir "../../../../$TARGET_FOLDER" --output-dir-template "{{ .OutputDir }}/{{ .Release.Name }}"
 
 if [ "$ENVIRONMENT" != "default" ]; then
   mv "$TARGET_FOLDER/$TARGET-secrets/secret/templates/"* "$TARGET_FOLDER/secret/"
@@ -56,8 +56,8 @@ fi
 rm -rf $TARGET_FOLDER/values.yaml
 
 # Generate values.yaml file using helmfile
-helmfile write-values -e "$ENVIRONMENT" -l type=remote -f "helm/base/$TARGET/helmfile.yaml.gotmpl" --output-file-template "{{ .State.BaseName }}/values.yaml"
+helmfile write-values -e "$ENVIRONMENT" -l type=remote -f "libs/helm/addons/$TARGET/helmfile.yaml.gotmpl" --output-file-template "{{ .State.BaseName }}/values.yaml"
 
 # Move and clean up
-mv "./helm/base/$TARGET/helmfile.yaml/values.yaml" "$TARGET_FOLDER"
-rm -rf ./helm/base/$TARGET/helmfile.yaml
+mv "./libs/helm/addons/$TARGET/helmfile.yaml/values.yaml" "$TARGET_FOLDER"
+rm -rf ./libs/helm/addons/$TARGET/helmfile.yaml

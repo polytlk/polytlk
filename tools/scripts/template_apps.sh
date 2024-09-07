@@ -59,7 +59,7 @@ if [ "$ENABLE_APIS" == "true" ]; then
 fi
 
 # Run helmfile template
-helmfile template -e $ENVIRONMENT -f "helm/$TARGET/helmfile.yaml.gotmpl" --output-dir "../../$TARGET_FOLDER" --output-dir-template "{{ .OutputDir }}/{{ .Release.Name }}"
+helmfile template -e $ENVIRONMENT -f "libs/helm/apps/$TARGET/helmfile.yaml.gotmpl" --output-dir "../../../../$TARGET_FOLDER" --output-dir-template "{{ .OutputDir }}/{{ .Release.Name }}"
 
 mv "$TARGET_FOLDER/$TARGET-deployment/deployment/templates/"* "$TARGET_FOLDER/$TARGET/deployment/"
 

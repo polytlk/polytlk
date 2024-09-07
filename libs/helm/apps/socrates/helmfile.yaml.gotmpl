@@ -3,9 +3,9 @@ environments:
   development: {}
 ---
 releases:
-- name: eden-secrets
-  namespace: eden
-  chart: ../charts/secret
+- name: socrates-secrets
+  namespace: socrates
+  chart: ../../charts/secret
   installed: {{ eq .Environment.Name "default" | not | toYaml }}
   labels:
     type: secret
@@ -14,26 +14,12 @@ releases:
   - secret/values.yaml
   - secret/secrets.yaml
 
-- name: eden-deployment
-  namespace: eden
-  chart: ../charts/deployment
+- name: socrates-deployment
+  namespace: socrates
+  chart: ../../charts/deployment
   installed: true
-  labels:
-    type: deployment
   values:
   - deployment/{{ .Environment.Name }}_values.yaml
   - deployment/values.yaml
   - secret/{{ .Environment.Name }}_values.yaml
   - secret/secrets.yaml
-
-- name: eden-apis
-  namespace: eden
-  chart: ../charts/api
-  installed: true
-  labels:
-    type: api
-  values:
-  - api/values.yaml
-  needs:
-  - eden-deployment
-
