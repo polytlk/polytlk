@@ -9,6 +9,7 @@ global:
   redis:
     addrs:
       - redis-master.default.svc.cluster.local:6379
+    pass: ""
     storage:
       database: 0
 tyk-gateway:
@@ -38,7 +39,7 @@ tyk-gateway:
       - name: TYK_GW_ENABLEJSVM
         value: "true"
       - name: TYK_GW_LOGLEVEL
-        value: "info"
+        value: "DEBUG"
       - name: TYK_GW_POLICIES_POLICYSOURCE
         value: "file"
       - name: TYK_GW_POLICIES_POLICYPATH

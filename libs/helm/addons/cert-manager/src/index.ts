@@ -1,0 +1,1 @@
+const variable = 'cert-manager';

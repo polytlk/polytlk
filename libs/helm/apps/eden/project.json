@@ -1,0 +1,20 @@
+{
+  "name": "eden-chart",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/helm/apps/eden/src",
+  "targets": {
+    "template": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh eden true"
+      }
+    },
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh eden true development"
+      }
+    }
+  }
+}

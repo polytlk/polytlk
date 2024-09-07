@@ -1,15 +1,17 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
+load('ext://secret', 'secret_yaml_generic')
 
-NAMESPACE = 'eden'
+NAMESPACE='eden'
+TYK_PATH='../../../tilt/eden'
 namespace_create(NAMESPACE)
 
 k8s_yaml(secret_yaml_generic('eden-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/eden/deployment/deployment.yaml'), NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/eden/deployment/service.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_resource('eden-svc', labels=["chinese"])
 
-k8s_yaml(namespace_inject(read_file('../../../tilt/eden/api/apidefinitions.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TYK_PATH)), NAMESPACE))
 
 k8s_resource(
   objects=['eden-api:apidefinition'],

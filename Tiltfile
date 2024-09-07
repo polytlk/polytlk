@@ -55,7 +55,7 @@ base = [
   'opentelemetry-collector',
   'redis-master',
   'tyk-operator',
-  'tyk-gateway'
+  'tyk-gateway',
 ]
 
 host = []
@@ -134,11 +134,13 @@ if not LOCAL_MODE == 'msw':
   helm_remote('redis',
               repo_name='bitnami',
               repo_url='https://charts.bitnami.com/bitnami',
+              version="18.0.0",
               set=['auth.enabled=false']
   )
 
-  include('./tilt/opentelemetry/Tiltfile')
+  include('./tilt/otel-collector/Tiltfile')
   include('./tilt/tyk/Tiltfile')
+  include('./tilt/tyk-operator/Tiltfile')
 
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')

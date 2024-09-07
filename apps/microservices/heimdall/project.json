@@ -100,18 +100,6 @@
           ]
         }
       }
-    },
-    "template": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh heimdall true"
-      }
-    },
-    "template:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh heimdall true development"
-      }
     }
   },
   "tags": []

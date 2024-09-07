@@ -2,12 +2,13 @@ load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
 load('ext://secret', 'secret_yaml_generic')
 
-NAMESPACE = 'socrates'
+NAMESPACE='socrates'
+TYK_PATH='../../../tilt/socrates'
 namespace_create(NAMESPACE)
 
 k8s_yaml(secret_yaml_generic('socrates-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/socrates/deployment/deployment.yaml'), NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/socrates/deployment/service.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
 
 k8s_resource(
     'socrates-svc',

@@ -1,0 +1,14 @@
+{
+  "name": "web-chart",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/helm/apps/web/src",
+  "targets": {
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh web false development"
+      }
+    }
+  }
+}

@@ -102,18 +102,6 @@
           ]
         }
       }
-    },
-    "template": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh socrates false"
-      }
-    },
-    "template:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh socrates false development"
-      }
     }
   },
   "tags": []

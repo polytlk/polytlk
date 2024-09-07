@@ -100,18 +100,6 @@
           ]
         }
       }
-    },
-    "template": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh eden-worker false development"
-      }
-    },
-    "template:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./tools/scripts/template_apps.sh eden-worker false development"
-      }
     }
   },
   "tags": []

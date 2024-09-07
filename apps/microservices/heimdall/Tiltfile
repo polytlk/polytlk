@@ -1,12 +1,14 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
+load('ext://secret', 'secret_yaml_generic')
 
 NAMESPACE = 'heimdall'
+TILT_PATH = '../../../tilt/heimdall'
 namespace_create(NAMESPACE)
 
 k8s_yaml(secret_yaml_generic('heimdall-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/heimdall/deployment.yaml'), NAMESPACE))
-k8s_yaml(namespace_inject(read_file('../../../tilt/heimdall/service.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TILT_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TILT_PATH)), NAMESPACE))
 
 k8s_resource(
     'heimdall-svc',
@@ -19,7 +21,7 @@ k8s_resource(
     #]
 )
 
-k8s_yaml(namespace_inject(read_file('../../../tilt/heimdall/api/apidefinitions.yaml'), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TILT_PATH)), NAMESPACE))
 
 k8s_resource(
   objects=['heimdall-api:apidefinition'],
