@@ -1,0 +1,47 @@
+image:
+  repository: "ewr.vultrcr.com/polytlk/web-client"
+  tag: "sha-ec96a6c"
+env:
+- name: BASE_URL
+  value: https://dev.api.polytlk.io
+- name: TARGET_ENV
+  value: "development"
+replicaCount: 1
+imagePullSecrets: []
+nameOverride: "web-client-svc"
+fullnameOverride: "web-client-svc"
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: dev.polytlk.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: web-client-svc-tls-secret
+      hosts:
+        - dev.polytlk.io
+resources: {}
+autoscaling:
+  enabled: false
+nodeSelector: {}
+tolerations: []
+affinity: {}
+volumeMounts:
+  - mountPath: "/etc/nginx/ssl"
+    name: web-client-svc-tls-secret
+    readOnly: true
+volumes:
+  - name: web-client-svc-tls-secret
+    secret:
+      secretName: web-client-svc-tls-secret

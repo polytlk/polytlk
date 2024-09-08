@@ -1,0 +1,51 @@
+mode: deployment
+ports:
+  otlp-http:
+    servicePort: 80
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+config:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          cors:
+            allowed_origins:
+            - "*"
+  processors:
+    batch:
+      send_batch_max_size: 1000
+      send_batch_size: 100
+      timeout: 10s
+    filter/ottl:
+      error_mode: ignore
+      traces:
+        span:
+          - 'attributes["http.target"] == "/healthz"'
+          - 'attributes["http.target"] == "/readiness"'
+  exporters:
+    otlp/honey:
+      endpoint: "api.honeycomb.io:443"
+      headers:
+        "x-honeycomb-team": "$HONEYCOMB_API_KEY"
+    logging:
+      verbosity: normal # can be normal, basic, or detailed
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [batch, filter/ottl]
+        exporters: [logging, otlp/honey]
+      metrics: null
+extraEnvs:
+  - name: HONEYCOMB_API_KEY
+    valueFrom:
+      secretKeyRef:
+        key: HONEYCOMB_API_KEY
+        name: otel-collector-secrets-honeycomb-api-key

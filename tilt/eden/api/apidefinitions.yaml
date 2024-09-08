@@ -1,0 +1,34 @@
+---
+# Source: api/templates/apidefinitions.yaml
+apiVersion: tyk.tyk.io/v1alpha1
+kind: ApiDefinition
+metadata:
+  name: eden-api
+spec:
+  name: eden-api
+  use_standard_auth: true
+  protocol: http
+  active: true
+  proxy:
+    target_url: http://eden-svc.eden.svc:7079
+    listen_path: /api/chinese
+    strip_listen_path: true
+  CORS:
+    enable: false
+    options_passthrough: true
+  custom_middleware:
+    driver: otto
+    pre:
+      - name: "sseAuthMiddlewarePreHook"
+        path: "/mnt/tyk-gateway/middleware/sse-auth-pre-middleware.js"
+        require_session: false
+  version_data:
+    default_version: Default
+    not_versioned: true
+    versions:
+      Default:
+        name: Default
+        use_extended_paths: true
+        global_headers:
+          Authorization: "Bearer $tyk_meta.jwt"
+  detailed_tracing: false

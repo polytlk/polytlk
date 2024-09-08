@@ -1,8 +1,0 @@
-environments:
-  default: {}
-  development: {}
----
-helmfiles:
-- path: cert-manager/helmfile.yaml
-- path: opentelemetry/helmfile.yaml
-- path: nginx-ingress/helmfile.yaml.gotmpl

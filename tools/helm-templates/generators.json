@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "helm-template": {
+      "factory": "./src/generators/helm-template.ts/generator",
+      "schema": "./src/generators/helm-template.ts/schema.json",
+      "description": "helm-template generator"
+    }
+  }
+}

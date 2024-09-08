@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "strict": true,
     "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "helm-templates": ["tools/helm-templates/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

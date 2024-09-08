@@ -1,0 +1,22 @@
+environments:
+  development: {}
+  default: {}
+---
+repositories:
+- name: external-secrets
+  url: https://charts.external-secrets.io
+
+releases:
+- name: external-secrets
+  namespace: external-secrets
+  chart: external-secrets/external-secrets
+  version: 0.10.2
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: remote
+  values:
+    - crds:
+        createClusterExternalSecret: false
+        createClusterSecretStore: false
+      processClusterExternalSecret: false
+      processClusterStore: false

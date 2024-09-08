@@ -1,0 +1,50 @@
+---
+# Source: deployment/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eden-svc
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app.kubernetes.io/name: eden-svc
+    app.kubernetes.io/instance: eden-deployment
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: eden-svc
+      app.kubernetes.io/instance: eden-deployment
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: deployment-0.1.0
+        app.kubernetes.io/name: eden-svc
+        app.kubernetes.io/instance: eden-deployment
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      securityContext:
+        {}
+      containers:
+        - name: eden-svc
+          securityContext:
+            {}
+          image: "eden-svc-img:latest"
+          ports:
+            - containerPort: 7079
+              protocol: TCP
+          env:
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_BROKER_URL
+                  name: eden-svc-secret-env
+            - name: CELERY_RESULT_BACKEND
+              valueFrom:
+                secretKeyRef:
+                  key: CELERY_RESULT_BACKEND
+                  name: eden-svc-secret-env
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
+            - name: ENVIRONMENT
+              value: local

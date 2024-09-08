@@ -100,12 +100,6 @@
           ]
         }
       }
-    },
-    "template": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./apps/microservices/eden/scripts/template.sh"
-      }
     }
   },
   "tags": []

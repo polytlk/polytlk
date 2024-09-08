@@ -1,0 +1,25 @@
+environments:
+  default: {}
+  development: {}
+---
+releases:
+- name: eden-worker-secrets
+  namespace: eden-worker
+  chart: ../../charts/secret
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: secret
+  values: 
+  - secret/{{ .Environment.Name }}_values.yaml
+  - secret/values.yaml
+  - secret/secrets.yaml
+
+- name: eden-worker-deployment
+  namespace: eden-worker
+  chart: ../../charts/deployment
+  installed: true
+  values:
+  - deployment/{{ .Environment.Name }}_values.yaml
+  - deployment/values.yaml
+  - secret/{{ .Environment.Name }}_values.yaml
+  - secret/secrets.yaml

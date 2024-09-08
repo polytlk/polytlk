@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "HelmTemplate",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use?"
+    },
+    "type": {
+      "type": "string",
+      "description": "Provide the template type",
+      "x-prompt": {
+        "message": "Which type of tenmplate would you like to generate?",
+        "type": "list",
+        "items": [
+          {
+            "value": "addon",
+            "label": "Addon"
+          },
+          {
+            "value": "app",
+            "label": "App that is not exposed by api-gateway"
+          },
+          {
+            "value": "api",
+            "label": "App that is exposed by api-gateway"
+          }
+        ]
+      }
+    }    
+  },
+  "required": ["name", "type"]
+}

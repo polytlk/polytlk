@@ -1,0 +1,20 @@
+image:
+  repository: "ewr.vultrcr.com/polytlk/socrates"
+  tag: "sha-045c15a"
+env:
+- name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+  value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"
+- name: ENVIRONMENT
+  value: "development"
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8079
+  initialDelaySeconds: 5
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /readiness
+    port: 8079
+  initialDelaySeconds: 5
+  periodSeconds: 10

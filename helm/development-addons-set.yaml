@@ -1,0 +1,80 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: polytlk-addons
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - name: cert-manager
+        repoURL: https://charts.jetstack.io
+        chartVersion: v1.15.3
+        chart: cert-manager
+        namespace: cert-manager
+
+      - name: external-secrets
+        repoURL: https://charts.external-secrets.io
+        chartVersion: 0.10.2
+        chart: external-secrets
+        namespace: external-secrets
+
+      - name: nginx-ingress
+        repoURL: https://helm.nginx.com/stable
+        chartVersion: 1.3.2
+        chart: nginx-ingress
+        namespace: nginx
+
+      - name: otel-collector
+        repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+        chartVersion:  0.78.2
+        chart: opentelemetry-collector
+        namespace: otel-collector
+      
+      - name: tyk
+        repoURL: https://helm.tyk.io/public/helm/charts/
+        chartVersion:  1.6.0
+        chart: tyk-oss
+        namespace: tyk
+
+      - name: tyk-operator
+        repoURL: https://helm.tyk.io/public/helm/charts/
+        chartVersion:  0.18.0
+        chart: tyk-operator
+        namespace: tyk-operator
+
+  template:
+    metadata:
+      name: '{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: '{{.repoURL}}'
+          targetRevision: '{{.chartVersion}}'
+          chart: '{{.chart}}'
+          helm:
+            valueFiles:
+              - $values/development/addons/{{.name}}/values.yaml
+
+        - repoURL: git@github.com:polytlk/polytlk-cd.git
+          targetRevision: HEAD
+          ref: values
+
+        - repoURL: git@github.com:polytlk/polytlk-cd.git
+          targetRevision: HEAD
+          path: ./development/addons/{{.name}}
+          directory:
+            exclude: 'values.yaml'
+            recurse: true
+
+      destination:
+        name: ''
+        namespace: '{{.name}}'
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

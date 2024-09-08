@@ -1,0 +1,3 @@
+envFrom:
+- secretRef:
+    name: tyk-operator-secrets-tyk-operator-conf

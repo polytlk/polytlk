@@ -1,8 +1,0 @@
-load('ext://namespace', 'namespace_create')
-
-namespace_create('opentelemetry')
-
-k8s_yaml("./collector/configmap.yaml")
-k8s_yaml("./collector/deployment.yaml")
-k8s_yaml("./collector/service.yaml")
-k8s_yaml("./collector/serviceaccount.yaml")

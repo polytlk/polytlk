@@ -1,0 +1,14 @@
+{
+  "name": "cert-manager",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/helm/addons/cert-manager/src",
+  "targets": {
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_addons.sh cert-manager development"
+      }
+    }
+  }
+}

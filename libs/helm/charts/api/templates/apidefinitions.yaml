@@ -1,0 +1,60 @@
+{{- range .Values.apiDefinitions }}
+---
+apiVersion: tyk.tyk.io/v1alpha1
+kind: ApiDefinition
+metadata:
+  name: {{ .name }}
+spec:
+  name: {{ .name }}
+  {{- if .use_standard_auth }}
+  use_standard_auth: {{ .use_standard_auth }}
+  {{- end }}
+  {{- if .use_keyless }}
+  use_keyless: {{ .use_keyless }}
+  {{- end }}
+  protocol: {{ .protocol }}
+  active: {{ .active }}
+  proxy:
+    target_url: {{ .proxy.target_url }}
+    listen_path: {{ .proxy.listen_path }}
+    strip_listen_path: {{ .proxy.strip_listen_path }}
+  CORS:
+    enable: {{ .CORS.enable }}
+    {{- $corsKeys := dict "allowed_origins" .CORS.allowed_origins "allowed_methods" .CORS.allowed_methods "allowed_headers" .CORS.allowed_headers "exposed_headers" .CORS.exposed_headers }}
+    {{- range $key, $value := $corsKeys }}
+      {{- if $value }}
+    {{ $key }}:
+        {{- range $value }}
+      - {{ . | quote }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- $corsFields := dict "allow_credentials" .CORS.allow_credentials "max_age" .CORS.max_age "options_passthrough" .CORS.options_passthrough "debug" .CORS.debug }}
+    {{- range $key, $value := $corsFields }}
+      {{- if $value }}
+    {{ $key }}: {{ $value }}
+      {{- end }}
+    {{- end }}
+{{- if .custom_middleware }}
+  custom_middleware:
+    driver: {{ .custom_middleware.driver }}
+    pre:
+    {{- range .custom_middleware.pre }}
+      - name: "{{ .name }}"
+        path: "{{ .path }}"
+        require_session: {{ .require_session }}
+    {{- end }}
+{{- end }}
+{{- if .version_data }}
+  version_data:
+    default_version: {{ .version_data.default_version }}
+    not_versioned: {{ .version_data.not_versioned }}
+    versions:
+      Default:
+        name: {{ .version_data.versions.Default.name }}
+        use_extended_paths: {{ .version_data.versions.Default.use_extended_paths }}
+        global_headers:
+          Authorization: "{{ .version_data.versions.Default.global_headers.Authorization }}"
+  {{- end }}
+  detailed_tracing: {{ .detailed_tracing }}
+{{- end }}

@@ -1,0 +1,17 @@
+load('ext://namespace', 'namespace_create')
+load('ext://helm_remote', 'helm_remote')
+load('ext://secret', 'secret_yaml_generic')
+
+NAMESPACE='otel-collector'
+namespace_create(NAMESPACE)
+
+k8s_yaml(secret_yaml_generic('otel-collector-secret-env', from_env_file='./.env', namespace=NAMESPACE))
+
+helm_remote(
+    chart='opentelemetry-collector',
+    repo_name='open-telemetry',
+    repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
+    namespace=NAMESPACE,
+    version="0.78.2",
+    values="./values.yaml"
+)
