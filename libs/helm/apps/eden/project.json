@@ -16,5 +16,6 @@
         "command": "./tools/scripts/template_apps.sh eden true development"
       }
     }
-  }
+  },
+  "implicitDependencies": ["eden"]
 }
