@@ -1,0 +1,29 @@
+name: Merge Job
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    name: execute
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate with private NPM package
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ./.npmrc
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 9.9.0
+          run_install: true
+
+      - name: Get base commit SHA
+        id: get-base
+        run: echo "BASE_SHA=$(git log HEAD~1 -1 --format=%H)" >> "$GITHUB_OUTPUT"
+  
+      - run: pnpm nx show projects --affected --base=$BASE_SHA
+        env:
+          BASE_SHA: ${{ steps.get-base.outputs.BASE_SHA }}
