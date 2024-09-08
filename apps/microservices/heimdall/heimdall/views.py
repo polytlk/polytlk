@@ -9,7 +9,7 @@ from google.auth.transport import requests as req_trans
 from google.oauth2 import id_token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
 from rest_framework.views import APIView
 
 from heimdall.config import settings
@@ -36,29 +36,6 @@ def extract_signature(jwt_token):
     if len(parts) != 3:
         raise ValueError('Invalid JWT token')
     return parts[2]
-
-
-class Liveness(APIView):
-    permission_classes = [AllowAny]
-    schema = AutoSchema()
-
-    def get(self, request, format=None):
-        return Response('ok')
-
-
-class Readiness(APIView):
-    permission_classes = [AllowAny]
-    schema = AutoSchema()
-
-    def get(self, request, format=None):
-        try:
-            pass
-        except Exception as e:
-            return Response(
-                'down',
-                status=HTTP_400_BAD_REQUEST,
-            )
-        return Response('ok')
 
 
 class OAuthResponseView(APIView):
@@ -189,3 +166,43 @@ class OAuthResponseView(APIView):
                         {'error': 'Invalid JSON response', 'message': str(err)},
                         status=HTTP_400_BAD_REQUEST,
                     )
+
+
+class OAuthCheckView(APIView):
+    permission_classes = [AllowAny]
+    schema = AutoSchema()
+
+    def post(self, request, format=None):
+        key = request.data.get('key', None)
+        print("KEY", key)
+
+        url = 'http://{0}:{1}/tyk/keys/{2}'.format(
+            settings.gateway_host,
+            settings.gateway_port,
+            key,
+        )
+
+        print("url", url)
+
+        headers = {
+            'Content-Type': 'application/json',
+            'x-tyk-authorization': settings.tyk_api_key,
+        }
+
+        print("headers", headers)
+
+        raw_key_response = requests.get(
+            url,
+            headers=headers,
+        )
+
+        print("raw", raw_key_response.status_code)
+
+        if raw_key_response.status_code != HTTP_200_OK:
+            return Response({"message": 'session is expired'}, status=HTTP_404_NOT_FOUND)
+
+        response = raw_key_response.json()
+        print("check check response")
+        print(response)
+
+        return Response({"message": 'session is valid'}, status=HTTP_200_OK)

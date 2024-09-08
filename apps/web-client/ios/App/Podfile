@@ -1,6 +1,6 @@
 require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
-platform :ios, '13.0'
+platform :ios, '14.0'
 use_frameworks!
 
 # workaround to avoid Xcode caching of Pods that requires
@@ -12,7 +12,7 @@ def capacitor_pods
   pod 'Capacitor', :path => '../../../../node_modules/.pnpm/@capacitor+ios@5.7.8_@capacitor+core@5.7.8/node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../../../node_modules/.pnpm/@capacitor+ios@5.7.8_@capacitor+core@5.7.8/node_modules/@capacitor/ios'
   pod 'CapacitorDevice', :path => '../../../../node_modules/.pnpm/@capacitor+device@5.0.8_@capacitor+core@5.7.8/node_modules/@capacitor/device'
-  pod 'PolytlkEchoPlugin', :path => '../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.5.0/node_modules/@polytlk/echo-plugin'
+  pod 'PolytlkEchoPlugin', :path => '../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.6.0/node_modules/@polytlk/echo-plugin'
   pod 'CapacitorSecureStoragePlugin', :path => '../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.7.8/node_modules/capacitor-secure-storage-plugin'
 end
 
