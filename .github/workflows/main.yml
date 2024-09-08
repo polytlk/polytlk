@@ -29,3 +29,20 @@ jobs:
       - run: pnpm nx show projects --affected --base=$BASE_SHA
         env:
           BASE_SHA: ${{ steps.get-base.outputs.BASE_SHA }}
+
+      - run: pnpm nx show projects --affected --base=main~1
+
+      - name: Docker Login
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: https://ewr.vultrcr.com/polytlk
+          username: 96d895d4-f075-42fa-b566-a8e22ba9007b
+          password: ${{ secrets.VULTR_DOCKER_PASSWORD }}
+
+      - run: pnpm nx affected -t container --base=$BASE_SHA --head=main 
+        env:
+          BASE_SHA: ${{ steps.get-base.outputs.BASE_SHA }}
+
+      - run: pnpm nx affected -t template:dev --base=$BASE_SHA --head=main 
+        env:
+          BASE_SHA: ${{ steps.get-base.outputs.BASE_SHA }}

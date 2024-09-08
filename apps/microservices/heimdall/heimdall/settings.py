@@ -26,6 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if settings.environment not in {'production', 'development', 'local'}:
     raise ValueError('ENV must be production, development, or local.')
 
+SECRET_KEY = settings.django_secret
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings.environment == 'local'
 

@@ -17,9 +17,6 @@ from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
 ORG_ID = '5e9d9544a1dcd60001d0ed20'
-TYK_MANAGEMENT_API_KEY = 'CHANGEME'
-CLIENT_ID_WEB = '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com'
-CLIENT_ID_IOS = '540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com'
 
 KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'apply_policies': [],
@@ -91,7 +88,7 @@ class OAuthResponseView(APIView):
                 oauth_span.set_attribute('ply.idinfo.email', idinfo['email'])
                 oauth_span.set_attribute('ply.idinfo.email_verified', idinfo['email_verified'])
 
-                if idinfo['aud'] not in {CLIENT_ID_WEB, CLIENT_ID_IOS}:
+                if idinfo['aud'] not in {settings.client_id_web, settings.client_id_ios}:
                     oauth_span.set_attribute('ply.access_token_state', 'external')
                     root_span.set_attribute('ply.access_token_state', 'external')
                     raise ValueError('Could not verify audience.')
@@ -129,7 +126,7 @@ class OAuthResponseView(APIView):
 
                 headers = {
                     'Content-Type': 'application/json',
-                    'x-tyk-authorization': TYK_MANAGEMENT_API_KEY,
+                    'x-tyk-authorization': settings.tyk_api_key,
                 }
 
                 KEY_REQUEST_TEMPLATE['meta_data'] = {'jwt': token}

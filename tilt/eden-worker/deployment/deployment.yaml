@@ -42,6 +42,6 @@ spec:
                   key: CELERY_RESULT_BACKEND
                   name: eden-worker-secret-env
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-              value: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
+              value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local

@@ -54,7 +54,7 @@ tyk-gateway:
       connectionTimeout: 1
       contextPropagation: tracecontext
       enabled: true
-      endpoint: http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces
+      endpoint: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
       exporter: http
       headers: {}
       resourceName: tyk-api-gateway
