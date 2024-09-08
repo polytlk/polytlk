@@ -11,11 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import logging
-import os
 import types
 from pathlib import Path
 
-from heimdall.config import settings 
+from heimdall.config import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +27,7 @@ if settings.environment not in {'production', 'development', 'local'}:
     raise ValueError('ENV must be production, development, or local.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT == 'local'
+DEBUG = settings.environment == 'local'
 
 ALLOWED_HOSTS = settings.allowed_hosts.split(',')
 
