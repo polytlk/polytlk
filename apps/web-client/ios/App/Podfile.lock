@@ -21,7 +21,7 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 4.0, >= 1.5)
   - GTMSessionFetcher/Core (3.1.1)
-  - PolytlkEchoPlugin (0.3.0):
+  - PolytlkEchoPlugin (0.5.0):
     - Capacitor
     - GoogleSignIn
   - SwiftKeychainWrapper (4.0.1)
@@ -31,7 +31,7 @@ DEPENDENCIES:
   - "CapacitorCordova (from `../../../../node_modules/.pnpm/@capacitor+ios@5.7.8_@capacitor+core@5.7.8/node_modules/@capacitor/ios`)"
   - "CapacitorDevice (from `../../../../node_modules/.pnpm/@capacitor+device@5.0.8_@capacitor+core@5.7.8/node_modules/@capacitor/device`)"
   - "CapacitorSecureStoragePlugin (from `../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.7.8/node_modules/capacitor-secure-storage-plugin`)"
-  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.3.0/node_modules/@polytlk/echo-plugin`)"
+  - "PolytlkEchoPlugin (from `../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.5.0/node_modules/@polytlk/echo-plugin`)"
 
 SPEC REPOS:
   trunk:
@@ -51,7 +51,7 @@ EXTERNAL SOURCES:
   CapacitorSecureStoragePlugin:
     :path: "../../../../node_modules/.pnpm/capacitor-secure-storage-plugin@0.9.0_@capacitor+core@5.7.8/node_modules/capacitor-secure-storage-plugin"
   PolytlkEchoPlugin:
-    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.3.0/node_modules/@polytlk/echo-plugin"
+    :path: "../../../../node_modules/.pnpm/@polytlk+echo-plugin@0.5.0/node_modules/@polytlk/echo-plugin"
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
@@ -62,9 +62,9 @@ SPEC CHECKSUMS:
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
   GTMAppAuth: 99fb010047ba3973b7026e45393f51f27ab965ae
   GTMSessionFetcher: e8647203b65cee28c5f73d0f473d096653945e72
-  PolytlkEchoPlugin: dbd0cceac3e40c0dd84082757f01961272e3b4ed
+  PolytlkEchoPlugin: d733cbaeb0dd566d8826a95e42c41fe1c3a61452
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: 1b3ec0f4a7c68798b59dc720237d75a6f34a4d70
+PODFILE CHECKSUM: b91acf996426b6fb49409bdc14a6fbcab111ca27
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

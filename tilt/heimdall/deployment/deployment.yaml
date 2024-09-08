@@ -44,16 +44,6 @@ spec:
                 secretKeyRef:
                   key: TYK_MANAGEMENT_API_KEY
                   name: heimdall-svc-secret-env
-            - name: CLIENT_ID_WEB
-              valueFrom:
-                secretKeyRef:
-                  key: CLIENT_ID_WEB
-                  name: heimdall-svc-secret-env
-            - name: CLIENT_ID_IOS
-              valueFrom:
-                secretKeyRef:
-                  key: CLIENT_ID_IOS
-                  name: heimdall-svc-secret-env
             - name: ALLOWED_HOSTS
               value: heimdall-svc.heimdall.svc,localhost
             - name: SERVICE_NAME
@@ -68,3 +58,7 @@ spec:
               value: local
             - name: GATEWAY_PORT
               value: "8080"
+            - name: CLIENT_ID_WEB
+              value: 540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com
+            - name: CLIENT_ID_IOS
+              value: 540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com
