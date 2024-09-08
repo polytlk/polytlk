@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import logging
-import os
 import types
 from pathlib import Path
+
+from heimdall.config import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,25 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET')
-
-ENVIRONMENT = os.getenv('ENVIRONMENT')
-SERVICE_NAME: str = os.getenv('SERVICE_NAME', 'heimdall-service')
-OTEL_TRACES_ENDPOINT: str = os.getenv('OTEL_EXPORTER_OTLP_TRACES_ENDPOINT')
-GATEWAY_HOST: str = os.getenv('GATEWAY_HOST')
-GATEWAY_PORT: str = os.getenv('GATEWAY_PORT')
-EDEN_API_ID: str = os.getenv('EDEN_API_ID')
-ENV_ALLOWED_HOSTS: str = os.getenv('ALLOWED_HOSTS')
-
 # Check if the environment variable is set
-if ENVIRONMENT not in {'production', 'development', 'local'}:
+if settings.environment not in {'production', 'development', 'local'}:
     raise ValueError('ENV must be production, development, or local.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT == 'local'
+DEBUG = settings.environment == 'local'
 
-ALLOWED_HOSTS = ENV_ALLOWED_HOSTS.split(',')
+ALLOWED_HOSTS = settings.allowed_hosts.split(',')
 
 # Application definition
 
