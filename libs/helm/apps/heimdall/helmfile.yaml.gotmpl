@@ -12,13 +12,17 @@ templates:
     values:
       - env: &defaultenv [
         { name: ENVIRONMENT, value: "local" },
-        { name: GATEWAY_PORT, value: "8080" }
+        { name: GATEWAY_PORT, value: "8080" },
+        { name: CLIENT_ID_WEB, value: "540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com" },
+        { name: CLIENT_ID_IOS, value: "540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com"},
       ]
   developmentenv:
     values:
       - env: &developmentenv [
         { name: ENVIRONMENT, value: "development" },
-        { name: GATEWAY_PORT, value: "80" }
+        { name: GATEWAY_PORT, value: "80" },
+        { name: CLIENT_ID_WEB, value: "1048294563394-dk9or7n1rbindlioiq9esda80erktjkh.apps.googleusercontent.com" },
+        { name: CLIENT_ID_IOS, value: "540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com"},
       ]
 environments:
   default:

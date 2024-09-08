@@ -2,6 +2,8 @@ image:
   repository: "ewr.vultrcr.com/polytlk/web-client"
   tag: "sha-ec96a6c"
 env:
+- name: CLIENT_ID_WEB
+  values: 1048294563394-dk9or7n1rbindlioiq9esda80erktjkh.apps.googleusercontent.com
 - name: BASE_URL
   value: https://dev.api.polytlk.io
 - name: TARGET_ENV
