@@ -39,6 +39,21 @@ spec:
                 secretKeyRef:
                   key: DJANGO_SECRET
                   name: heimdall-svc-secret-env
+            - name: TYK_MANAGEMENT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: TYK_MANAGEMENT_API_KEY
+                  name: heimdall-svc-secret-env
+            - name: CLIENT_ID_WEB
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_ID_WEB
+                  name: heimdall-svc-secret-env
+            - name: CLIENT_ID_IOS
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_ID_IOS
+                  name: heimdall-svc-secret-env
             - name: ALLOWED_HOSTS
               value: heimdall-svc.heimdall.svc,localhost
             - name: SERVICE_NAME
