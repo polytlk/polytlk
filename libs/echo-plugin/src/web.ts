@@ -1,4 +1,4 @@
-import type { EchoPluginPlugin } from './definitions';
+import type { EchoPluginPlugin, renderLoginWebProps } from './definitions';
 
 import { WebPlugin } from '@capacitor/core';
 
@@ -27,17 +27,12 @@ export class EchoPluginWeb extends WebPlugin implements EchoPluginPlugin {
     document.head.appendChild(script);
   }
 
-  async renderLogin({
-    baseUrl,
-    buttonElem,
-  }: {
-    buttonElem: HTMLElement;
-    baseUrl: string;
-  }): Promise<void> {
+  async renderLogin(data: renderLoginWebProps): Promise<void> {
     if (google?.accounts?.id) {
+      const { clientId, baseUrl, buttonElem } = data;
+
       google.accounts.id.initialize({
-        client_id:
-          '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
+        client_id: clientId,
         callback: async (response) => {
           if ('credential' in response) {
             const { credential } = response;

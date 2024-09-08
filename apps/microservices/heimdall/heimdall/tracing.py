@@ -5,10 +5,10 @@ from opentelemetry.sdk.resources import Resource  # noqa: I005
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor  # noqa: I001
 
-from heimdall.settings import OTEL_TRACES_ENDPOINT, SERVICE_NAME
+from heimdall.config import settings
 
-provider = TracerProvider(resource=Resource.create({SERVICE_NAME: SERVICE_NAME}))
-span_processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=OTEL_TRACES_ENDPOINT))
+provider = TracerProvider(resource=Resource.create({'SERVICE_NAME': settings.service_name}))
+span_processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=settings.oltp_traces_endpoint))
 
 provider.add_span_processor(span_processor)
 trace.set_tracer_provider(provider)

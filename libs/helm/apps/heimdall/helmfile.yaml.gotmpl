@@ -4,7 +4,7 @@ templates:
       - env: &baseenv [
         { name: ALLOWED_HOSTS, value: "heimdall-svc.heimdall.svc,localhost"},
         { name: SERVICE_NAME, value: "heimdall-service"},
-        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://opentelemetry-collector.opentelemetry.svc.cluster.local/v1/traces"},
+        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"},
         { name: GATEWAY_HOST, value: "gateway-svc-tyk.tyk.svc.cluster.local"},
         { name: EDEN_API_ID, value: "ZWRlbi9lZGVuLWFwaQ"}
       ]

@@ -100,7 +100,7 @@ local_resource(
 )
 
 cmd_button(name='publish-btn',
-          argv=['sh', '-c', 'nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+          argv=['sh', '-c', 'pnpm nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
           text='local publish',
           location=location.NAV,
           icon_name='waving_hand',

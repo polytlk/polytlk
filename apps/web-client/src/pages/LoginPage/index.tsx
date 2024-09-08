@@ -36,6 +36,8 @@ const LoginContainer: FC = () => {
           EchoPlugin.renderLogin({
             baseUrl: config.baseUrl,
             buttonElem: buttonRef.current,
+            platform: config.platform,
+            clientId: config.clientId,
           }); // Pass it to renderLogin
         }
       }, 1000); // Check every second
@@ -45,6 +47,7 @@ const LoginContainer: FC = () => {
     } else if (config.platform === 'ios') {
       EchoPlugin.renderLogin({
         baseUrl: config.baseUrl,
+        platform: config.platform,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

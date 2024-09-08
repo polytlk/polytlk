@@ -1,30 +1,22 @@
 import { Device } from '@capacitor/device';
 
-export type ClientConfig = {
-  baseUrl: string;
-  platform: 'web' | 'ios' | 'android';
-  env: string;
-  oAuth2AuthOpts: {
-    scope: string;
-    web: {
-      appId: string;
+export type ClientConfig =
+  | {
+      baseUrl: string;
+      platform: 'web';
+      env: string;
+      clientId: string;
+    }
+  | {
+      baseUrl: string;
+      platform: 'ios' | 'android';
+      env: string;
     };
-  };
-};
-
-const baseConfig = {
-  oAuth2AuthOpts: {
-    scope: 'email profile',
-    web: {
-      appId:
-        '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
-    },
-  },
-} as const;
 
 const baseWebConfig = {
   baseUrl: import.meta.env.BASE_URL,
   env: import.meta.env.TARGET_ENV,
+  clientId: import.meta.env.CLIENT_ID_WEB,
 } as const;
 
 class Config {
@@ -45,13 +37,11 @@ class Config {
 
     if (platform === 'web') {
       this.data = {
-        ...baseConfig,
         ...baseWebConfig,
         platform,
       };
     } else {
       this.data = {
-        ...baseConfig,
         platform,
         // baseWebConfig cannot be trusted when running from native client
         env: isVirtual ? 'simulated_ios' : 'real_ios',
