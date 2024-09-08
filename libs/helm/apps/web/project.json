@@ -10,5 +10,6 @@
         "command": "./tools/scripts/template_apps.sh web false development"
       }
     }
-  }
+  },
+  "implicitDependencies": ["web-client"]
 }

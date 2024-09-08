@@ -16,5 +16,6 @@
         "command": "./tools/scripts/template_apps.sh heimdall true development"
       }
     }
-  }
+  },
+  "implicitDependencies": ["heimdall"]
 }
