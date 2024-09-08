@@ -42,6 +42,7 @@ jobs:
       - run: pnpm nx affected -t container --base=$BASE_SHA --head=main 
         env:
           BASE_SHA: ${{ steps.get-base.outputs.BASE_SHA }}
+          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: pnpm nx affected -t template:dev --base=$BASE_SHA --head=main 
         env:
