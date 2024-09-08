@@ -4,7 +4,6 @@ import time
 
 import jwt
 import requests
-from django.conf import settings
 from drf_spectacular.openapi import AutoSchema
 from google.auth.transport import requests as req_trans
 from google.oauth2 import id_token
@@ -13,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from heimdall.settings import EDEN_API_ID, GATEWAY_HOST, GATEWAY_PORT
+from heimdall.config import settings
 from heimdall.tracing import tracer
 
 EXPIRATION_TIME = 3600
@@ -33,6 +32,7 @@ KEY_REQUEST_TEMPLATE = {  # noqa: WPS407
     'access_rights': {},
     'jwt_data': {},
 }
+
 
 def extract_signature(jwt_token):
     parts = jwt_token.split('.')
@@ -62,7 +62,6 @@ class Readiness(APIView):
                 status=HTTP_400_BAD_REQUEST,
             )
         return Response('ok')
-
 
 
 class OAuthResponseView(APIView):
@@ -114,18 +113,18 @@ class OAuthResponseView(APIView):
                     'exp': exp,
                 }
 
-                secret = settings.SECRET_KEY  # Use Django's secret key to sign the JWT
+                secret = settings.django_secret
 
                 token = jwt.encode(payload, secret, algorithm='HS256')
                 signiture = extract_signature(token)
 
                 prepare_tyk_span.set_attribute('ply.tyk_key_signiture', signiture)
-                prepare_tyk_span.set_attribute('ply.targetapis.eden-api-id', EDEN_API_ID)
+                prepare_tyk_span.set_attribute('ply.targetapis.eden-api-id', settings.eden_api_id)
 
                 url = 'http://{0}:{1}/tyk/keys/{2}'.format(
-                    GATEWAY_HOST,
-                    GATEWAY_PORT,
-                    signiture
+                    settings.gateway_host,
+                    settings.gateway_port,
+                    signiture,
                 )
 
                 headers = {
@@ -135,9 +134,9 @@ class OAuthResponseView(APIView):
 
                 KEY_REQUEST_TEMPLATE['meta_data'] = {'jwt': token}
 
-                KEY_REQUEST_TEMPLATE['access_rights'][EDEN_API_ID] = {
+                KEY_REQUEST_TEMPLATE['access_rights'][settings.eden_api_id] = {
                     'api_name': 'eden-api',
-                    'api_id': EDEN_API_ID,
+                    'api_id': settings.eden_api_id,
                     'versions': [
                         'Default',
                     ],
@@ -167,7 +166,7 @@ class OAuthResponseView(APIView):
 
                     # Log or print the keys and values for debugging (optional)
                     print(f"Keys and values present in response: {kvs}")
-                    
+
                     # Check if required keys are in the response
                     required_keys = ['key', 'status', 'action', 'key_hash']
                     for key in required_keys:
