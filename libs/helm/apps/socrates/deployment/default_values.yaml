@@ -2,6 +2,6 @@ image:
   repository: "socrates-svc-img"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-  value: "http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"
+  value: "http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"
 - name: ENVIRONMENT
   value: "local"

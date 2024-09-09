@@ -4,7 +4,6 @@ templates:
       - env: &baseenv [
         { name: ALLOWED_HOSTS, value: "heimdall-svc.heimdall.svc,localhost"},
         { name: SERVICE_NAME, value: "heimdall-service"},
-        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"},
         { name: GATEWAY_HOST, value: "gateway-svc-tyk.tyk.svc.cluster.local"},
         { name: EDEN_API_ID, value: "ZWRlbi9lZGVuLWFwaQ"}
       ]
@@ -15,6 +14,7 @@ templates:
         { name: GATEWAY_PORT, value: "8080" },
         { name: CLIENT_ID_WEB, value: "540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com" },
         { name: CLIENT_ID_IOS, value: "540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com"},
+        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"},
       ]
   developmentenv:
     values:
@@ -23,6 +23,7 @@ templates:
         { name: GATEWAY_PORT, value: "80" },
         { name: CLIENT_ID_WEB, value: "1048294563394-dk9or7n1rbindlioiq9esda80erktjkh.apps.googleusercontent.com" },
         { name: CLIENT_ID_IOS, value: "1048294563394-5h953jk4mpo9l4602jf4llpnplk0kavf.apps.googleusercontent.com"},
+        { name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT, value: "http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"},
       ]
 environments:
   default:
