@@ -45,11 +45,11 @@ const Home: React.FC<HomeProps> = ({
   send,
 }) => {
   return (
-    <IonPage id="main">
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Interpret</IonTitle>
-          <IonMenuButton autoHide={false} slot="end" />
+          <IonMenuButton autoHide={false} slot="end" id="debug" />
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>

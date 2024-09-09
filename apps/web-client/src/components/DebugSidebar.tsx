@@ -29,7 +29,7 @@ const DebugSidebar: FC = () => {
   }, [containerRef, iframeRef]);
 
   return (
-    <IonMenu side="end" contentId="main" style={{ '--min-width': '50%' }}>
+    <IonMenu side="end" contentId="debug" style={{ '--min-width': '50%' }}>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Debug Sidebar</IonTitle>

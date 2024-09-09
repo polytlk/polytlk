@@ -3,6 +3,7 @@ import type { FC, RefObject } from 'react';
 import {
   IonContent,
   IonHeader,
+  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -17,6 +18,7 @@ export const LoginPage: FC<LoginPageProps> = ({ buttonRef }) => (
     <IonHeader>
       <IonToolbar>
         <IonTitle>Login</IonTitle>
+        <IonMenuButton autoHide={false} slot="end" id="debug" />
       </IonToolbar>
     </IonHeader>
     <IonContent className="ion-padding">
