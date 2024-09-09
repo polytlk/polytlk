@@ -5,6 +5,7 @@ import type { LanguageData } from './Home';
 import { CapacitorHttp } from '@capacitor/core';
 import { useMachine } from '@xstate/react';
 import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
+import { machine } from 'interpret-machine';
 import { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { assign } from 'xstate';
@@ -12,7 +13,6 @@ import { assign } from 'xstate';
 import AuthContext, { KEY } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
 import Home from './Home';
-import { machine } from './machine';
 
 const HomeContainer: FC = () => {
   const [taskResult, setTaskResult] = useState<string>('');

@@ -1,5 +1,5 @@
+import type { MachineEvents } from 'interpret-machine';
 import type { LanguageDataProps } from '../../components/LanguageData';
-import type { MachineEvents } from './types';
 
 import {
   IonButton,
