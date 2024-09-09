@@ -39,20 +39,18 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       );
 
       if (savedToken != null && savedToken.value !== '') {
-        const keyData = getTokenData(savedToken.value);
-        console.log('keyData from authProvider', keyData);
-
         const response = await CapacitorHttp.post({
           url: `${config.baseUrl}/api/auth/check/`,
           headers: {
             'Content-Type': 'application/json',
           },
-          data: { key: keyData },
+          data: { key: savedToken.value },
         });
 
         console.log('check reponse status', response.status);
         // If token is valid and not expired, set the state
         if (response.status === 200) {
+          const keyData = getTokenData(savedToken.value);
           // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
           setToken(keyData.id as string);
         } else {
