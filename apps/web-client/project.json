@@ -218,5 +218,6 @@
         }
       }
     }
-  }
+  },
+  "implicitDependencies": ["!echo-plugin"]
 }

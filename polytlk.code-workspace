@@ -33,9 +33,13 @@
 			"path": "terraform"
 		},
 		{
+			"name": "docs",
+			"path": "docs"
+		},
+		{
 			"name": "root",
 			"path": "."
-		}
+		},
 	],
 	"settings": {
 		"python.terminal.activateEnvironment": false,

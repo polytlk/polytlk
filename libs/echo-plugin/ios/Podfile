@@ -1,14 +1,15 @@
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 def capacitor_pods
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
-  pod 'Capacitor', :path => '../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../../../node_modules/.pnpm/@capacitor+ios@5.0.3_@capacitor+core@5.0.3/node_modules/@capacitor/ios'
+  pod 'Capacitor', :path => '../../../node_modules/.pnpm/@capacitor+ios@5.7.8_@capacitor+core@5.7.8/node_modules/@capacitor/ios'
+  pod 'CapacitorCordova', :path => '../../../node_modules/.pnpm/@capacitor+ios@5.7.8_@capacitor+core@5.7.8/node_modules/@capacitor/ios'
 end
 
 target 'Plugin' do
   capacitor_pods
+  pod 'GoogleSignIn' # Ensure that GoogleSignIn is listed here
 end
 
 target 'PluginTests' do
