@@ -7,6 +7,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonImg,
   IonInput,
   IonItem,
@@ -20,6 +21,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { logOutOutline } from 'ionicons/icons';
 
 import { LanguageDataComponent } from '../../components/LanguageData';
 
@@ -31,6 +33,7 @@ type HomeProps = {
   language: 'zh' | 'kr';
   text: string;
   send: (event: InterpretEvents) => void;
+  handleLogout: () => void;
 };
 
 export type LanguageData = LanguageDataProps;
@@ -43,13 +46,17 @@ const Home: React.FC<HomeProps> = ({
   text,
   loading,
   send,
+  handleLogout,
 }) => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Interpret</IonTitle>
-          <IonMenuButton slot="end" />
+          <IonButton color="danger" slot="end" onClick={handleLogout}>
+            <IonIcon icon={logOutOutline} slot="start" />
+            Logout
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>

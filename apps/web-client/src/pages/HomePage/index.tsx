@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
+import type { LanguageData } from './Home';
 
-//import type { LanguageData } from './Home';
 import { createBrowserInspector } from '@statelyai/inspect';
 import { useActorRef, useSelector } from '@xstate/react';
 import { machine } from 'interpret-machine';
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
@@ -19,7 +18,10 @@ const HomeContainer: FC = () => {
   const config = useContext(ConfigContext)!;
   const token = AuthContext.useSelector(({ context }) => context.token);
   const authRef = AuthContext.useActorRef();
-  const history = useHistory();
+
+  const handleLogout = () => {
+    authRef.send({ type: 'LOGOUT' });
+  };
 
   const interpretRef = useActorRef(machine, {
     inspect,
@@ -39,25 +41,31 @@ const HomeContainer: FC = () => {
   const language = useSelector(interpretRef, ({ context }) => context.language);
   const loading = useSelector(interpretRef, ({ context }) => context.loading);
   const text = useSelector(interpretRef, ({ context }) => context.text);
+  const data = useSelector(interpretRef, ({ context }) => {
+    const { results } = context;
+    let key: keyof typeof results;
+    const d: LanguageData[] = [];
 
-  interpretRef.subscribe(({ context }) => {
-    if (context.inputError === 'Access to this API has been disallowed') {
-      authRef.send({ type: 'LOGOUT' });
-      history.push('/login');
+    for (key in results) {
+      const result = results[key];
+      if (result !== undefined) {
+        d.push(result);
+      }
     }
-  });
 
-  //const data = { words: [], meaning: '', dialogue: [] };
+    return d[0] !== undefined ? d[0] : null;
+  });
 
   return (
     <Home
-      data={null}
+      data={data}
       inputError={inputError}
       inputColor={inputColor}
       language={language}
       loading={loading}
       text={text}
       send={interpretRef.send}
+      handleLogout={handleLogout}
     />
   );
 };
