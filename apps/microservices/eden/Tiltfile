@@ -9,7 +9,14 @@ namespace_create(NAMESPACE)
 k8s_yaml(secret_yaml_generic('eden-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
-k8s_resource('eden-svc', labels=["chinese"])
+k8s_resource(
+  'eden-svc',
+  labels=["chinese"],
+  # expose openapi
+  port_forwards=[
+    port_forward(7079, 7079, name='openapi', link_path='/openapi.json'),
+  ]
+)
 
 k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TYK_PATH)), NAMESPACE))
 

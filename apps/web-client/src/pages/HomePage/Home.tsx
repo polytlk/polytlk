@@ -1,4 +1,4 @@
-import type { MachineEvents } from 'interpret-machine';
+import type { InterpretEvents } from 'interpret-machine';
 import type { LanguageDataProps } from '../../components/LanguageData';
 
 import {
@@ -30,7 +30,7 @@ type HomeProps = {
   loading: boolean;
   language: 'zh' | 'kr';
   text: string;
-  send: (action: MachineEvents) => void;
+  send: (event: InterpretEvents) => void;
 };
 
 export type LanguageData = LanguageDataProps;

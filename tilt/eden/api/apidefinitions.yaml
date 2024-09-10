@@ -14,8 +14,17 @@ spec:
     listen_path: /api/chinese
     strip_listen_path: true
   CORS:
-    enable: false
-    options_passthrough: true
+    enable: true
+    allowed_methods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+    allowed_origins:
+      - "http://localhost:4200"
+    allowed_headers:
+      - "content-type"
+      - "authorization"
+    debug: true
   custom_middleware:
     driver: otto
     pre:
@@ -31,4 +40,4 @@ spec:
         use_extended_paths: true
         global_headers:
           Authorization: "Bearer $tyk_meta.jwt"
-  detailed_tracing: false
+  detailed_tracing: true

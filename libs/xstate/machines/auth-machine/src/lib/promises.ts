@@ -24,6 +24,10 @@ export const setCookie = fromPromise(async ({ input }: { input: { token: string 
 }
 )
 
+export const deleteCookie = fromPromise(async () => {
+    await SecureStoragePlugin.remove({ key: KEY })
+})
+
 export const validateCookie = fromPromise(async ({ input }: { input: { baseUrl: string, token: string } }) => {
     const response = await CapacitorHttp.post({
         url: `${input.baseUrl}/api/auth/check/`,

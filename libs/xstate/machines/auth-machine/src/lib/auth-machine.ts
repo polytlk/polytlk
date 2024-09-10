@@ -1,5 +1,5 @@
 import { assign, setup, enqueueActions } from "xstate";
-import { fetchCookie, validateCookie, setCookie } from './promises'
+import { fetchCookie, validateCookie, setCookie, deleteCookie } from './promises'
 
 
 export const machine = setup({
@@ -15,7 +15,8 @@ export const machine = setup({
     children: {} as {
       'cookieFetcher': 'fetchCookie',
       'cookieValidator': 'validateCookie'
-      'cookieSetter': 'setCookie'
+      'cookieSetter': 'setCookie',
+      'cookieDeleter': 'deleteCookie',
     },
     input: {} as {
       baseUrl: string
@@ -29,7 +30,8 @@ export const machine = setup({
   actors: {
     fetchCookie,
     validateCookie,
-    setCookie
+    setCookie,
+    deleteCookie
   }
 }).createMachine({
   context: ({ input }) => ({
@@ -110,14 +112,31 @@ export const machine = setup({
     "logged-in": {
       on: {
         LOGOUT: {
-          target: "logged-out",
-          actions: ({ context, event }) => {
-            console.log("User clicked log out, transitioning to logged out.");
-          },
+          target: "logging-out",
         },
       },
       description: "The user is currently logged in.",
     },
+    "logging-out": {
+      invoke: {
+        id: "cookieDeleter",
+        src: "deleteCookie",
+        onDone: {
+          target: 'logged-out',
+          actions: assign({
+            token: "",
+            hashedToken: ""
+           })
+        },
+        onError: {
+          target: 'logged-out',
+          actions: assign({
+            token: "",
+            hashedToken: ""
+           })
+        },
+      }
+    }
   },
 });
 

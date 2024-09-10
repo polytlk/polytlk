@@ -1,9 +1,22 @@
 
-import { assign, setup} from 'xstate';
+import { assign, setup, log } from 'xstate';
 
-type eventType = { type: 'TASK_RECEIVED', taskId: string } | { type: 'SUBMIT' } | { type: 'UPDATE_LANGUAGE', language: 'zh' | 'kr' } | { type: 'UPDATE_TEXT', text: string } | { type: 'NEW_TASK' }
+type eventType = { type: 'SUBMIT' } | { type: 'CLEAR_ERRORS' } | { type: "TASK_ERROR" } | { type: 'UPDATE_LANGUAGE', language: 'zh' | 'kr' } | { type: 'UPDATE_TEXT', text: string } | { type: 'TASK_COMPLETE', data: ariData } | { type: 'NEW_TASK' }
 
-import { interpretationFetcher } from './promises'
+import { interpretationFetcher } from './actors/promises'
+import type { ariData } from './actors/observables'
+import { interpretation$ } from './actors/observables'
+
+import { z } from 'zod'
+
+const errorMessagesSchema = z.union([z.literal("Access to this API has been disallowed"), z.literal("unknown error"), z.literal('')])
+
+const errorSchema = z.object({
+  message: errorMessagesSchema,
+}).catch({ message: "unknown error" })
+
+type errorMessages = z.infer<typeof errorMessagesSchema>
+
 
 export const machine = setup({
   types: {
@@ -15,39 +28,31 @@ export const machine = setup({
       language: 'zh' | 'kr'
       text: string
       loading: boolean
-      inputError: string
+      inputError: errorMessages
       inputColor: 'light' | 'danger'
       taskId: string
+      taskIds: string[]
       baseUrl: string
       token: string
+      results: Record<string, ariData>
     },
     events: {} as eventType,
     children: {} as {
-      'fetcher': 'interpretationFetcher'
+      'fetcher': 'interpretationFetcher',
+      'subscriber': 'interpretation$'
     },
   },
   guards: {
     isChinese: ({ context }) => context.language === 'zh',
   },
   actions: {
-    setTaskId: assign({
-      taskId: ({ context, event }) => event.type === "TASK_RECEIVED" ? event.taskId : context.taskId
-    }),
     clearError: assign({ inputError: '', inputColor: 'light' }),
-    setValidError: assign({
-      inputError: 'Please enter valid Chinese',
-      inputColor: 'danger',
-    }),
-    setApiError: assign({
-      inputError: 'Something went wrong',
-      inputColor: 'danger',
-    }),
-    // loading actions
     setLoading: assign({ loading: true }),
     resetLoading: assign({ loading: false }),
   },
   actors: {
-    interpretationFetcher
+    interpretationFetcher,
+    interpretation$
   }
 
 }).createMachine({
@@ -57,19 +62,32 @@ export const machine = setup({
     language: 'zh',
     text: '',
     taskId: '',
+    taskIds: [],
     inputError: '',
     inputColor: 'light',
     loading: false,
     baseUrl: input.baseUrl || '',
-    token: input.token || ''
+    token: input.token || '',
+    results: {}
   }),
   states: {
     idle: {
       on: {
+        CLEAR_ERRORS: {
+          actions: [
+            'clearError'
+          ]
+        },
         SUBMIT: {
           guard: 'isChinese',
-          target: 'loading',
-          actions: 'setLoading'
+          target: 'verifying',
+          actions: [
+            assign({
+              inputError: "",
+              inputColor: 'light'
+            }),
+            'setLoading'
+          ]
         },
         UPDATE_LANGUAGE: {
           actions: [
@@ -83,28 +101,60 @@ export const machine = setup({
         }
       }
     },
-    loading: {
+    verifying: {
       invoke: {
         id: "fetcher",
         src: "interpretationFetcher",
         input: ({ context }) => ({ taskId: context.taskId, baseUrl: context.baseUrl, text: context.text, token: context.token }),
         onDone: {
-          target: 'completed',
-          actions: ['setTaskId', 'clearError'],
+          target: 'waiting',
+          actions: [
+            assign({ taskId: ({ event }) => event.output })
+          ],
         },
         onError: {
           target: 'idle',
-          actions: ['setApiError']
+          actions: [
+            assign({
+              inputError: ({ event }) => errorSchema.parse(event.error).message,
+              inputColor: 'danger'
+            }),
+            'resetLoading',
+          ]
         },
       }
     },
-    completed: {
+    waiting: {
       on: {
-        NEW_TASK: {
+        TASK_COMPLETE: {
           target: 'idle',
-          actions: ['resetLoading'],
+          actions: [
+            assign({
+              results: ({ context, event }) => ({ ...context.results, [context.taskId]: event.data }),
+              taskIds: ({ context }) => [...context.taskIds, context.taskId],
+            }),
+            'resetLoading'
+          ],
+        },
+        TASK_ERROR: {
+          target: 'idle',
+          actions: [
+            assign({
+              inputError: "unknown error",
+              inputColor: 'danger'
+            }),
+            'resetLoading'
+          ]
         },
       },
-    },
+      invoke: {
+        id: "subscriber",
+        src: "interpretation$",
+        input: ({ context }) => ({ taskId: context.taskId, baseUrl: context.baseUrl, token: context.token }),
+        onError: {
+          actions: [log('onError from subscriber def called')]
+        }
+      }
+    }
   }
 })
