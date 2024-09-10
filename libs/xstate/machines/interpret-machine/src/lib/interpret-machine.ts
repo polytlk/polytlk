@@ -1,59 +1,102 @@
-import type { MachineContext, MachineEvents } from './types';
 
-import { assign, createMachine } from 'xstate';
+import { assign, setup} from 'xstate';
 
-export const machine = createMachine<MachineContext, MachineEvents>({
+type eventType = { type: 'TASK_RECEIVED', taskId: string } | { type: 'SUBMIT' } | { type: 'UPDATE_LANGUAGE', language: 'zh' | 'kr' } | { type: 'UPDATE_TEXT', text: string } | { type: 'NEW_TASK' }
+
+import { interpretationFetcher } from './promises'
+
+export const machine = setup({
+  types: {
+    input: {} as {
+      baseUrl: string;
+      token: string;
+    },
+    context: {} as {
+      language: 'zh' | 'kr'
+      text: string
+      loading: boolean
+      inputError: string
+      inputColor: 'light' | 'danger'
+      taskId: string
+      baseUrl: string
+      token: string
+    },
+    events: {} as eventType,
+    children: {} as {
+      'fetcher': 'interpretationFetcher'
+    },
+  },
+  guards: {
+    isChinese: ({ context }) => context.language === 'zh',
+  },
+  actions: {
+    setTaskId: assign({
+      taskId: ({ context, event }) => event.type === "TASK_RECEIVED" ? event.taskId : context.taskId
+    }),
+    clearError: assign({ inputError: '', inputColor: 'light' }),
+    setValidError: assign({
+      inputError: 'Please enter valid Chinese',
+      inputColor: 'danger',
+    }),
+    setApiError: assign({
+      inputError: 'Something went wrong',
+      inputColor: 'danger',
+    }),
+    // loading actions
+    setLoading: assign({ loading: true }),
+    resetLoading: assign({ loading: false }),
+  },
+  actors: {
+    interpretationFetcher
+  }
+
+}).createMachine({
   id: 'task',
   initial: 'idle',
-  context: {
+  context: ({ input }) => ({
     language: 'zh',
     text: '',
     taskId: '',
     inputError: '',
     inputColor: 'light',
     loading: false,
-  },
+    baseUrl: input.baseUrl || '',
+    token: input.token || ''
+  }),
   states: {
     idle: {
       on: {
-        SUBMIT: [
-          {
-            target: 'loading',
-            cond: 'isChinese',
-            actions: ['setLoading'],
-          },
-          { target: 'idle', actions: 'setError' },
-        ],
+        SUBMIT: {
+          guard: 'isChinese',
+          target: 'loading',
+          actions: 'setLoading'
+        },
         UPDATE_LANGUAGE: {
-          actions: assign({ language: (_, event) => event.language }),
+          actions: [
+            assign({ language: ({ event }) => event.language })
+          ]
         },
         UPDATE_TEXT: {
-          actions: assign({ text: (_, event) => event.text }),
-        },
-      },
+          actions: [
+            assign({ text: ({ event }) => event.text })
+          ]
+        }
+      }
     },
     loading: {
       invoke: {
-        id: 'submitChinese',
-        src: 'submitChinese',
+        id: "fetcher",
+        src: "interpretationFetcher",
+        input: ({ context }) => ({ taskId: context.taskId, baseUrl: context.baseUrl, text: context.text, token: context.token }),
         onDone: {
           target: 'completed',
           actions: ['setTaskId', 'clearError'],
         },
         onError: {
           target: 'idle',
-          actions: assign({
-            inputError: 'Something went wrong',
-            inputColor: 'danger',
-          }),
+          actions: ['setApiError']
         },
-      },
-      on: {
-        TASK_RECEIVED: {
-          target: 'completed',
-          actions: ['setTaskId', 'clearError'],
-        },
-      },
+      }
     },
     completed: {
       on: {
@@ -63,5 +106,5 @@ export const machine = createMachine<MachineContext, MachineEvents>({
         },
       },
     },
-  },
-});
+  }
+})

@@ -18,7 +18,7 @@ export const LoginPage: FC<LoginPageProps> = ({ buttonRef }) => (
     <IonHeader>
       <IonToolbar>
         <IonTitle>Login</IonTitle>
-        <IonMenuButton autoHide={false} slot="end" id="debug" />
+        <IonMenuButton slot="end" />
       </IonToolbar>
     </IonHeader>
     <IonContent className="ion-padding">

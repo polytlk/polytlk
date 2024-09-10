@@ -49,16 +49,10 @@ const Home: React.FC<HomeProps> = ({
       <IonHeader>
         <IonToolbar>
           <IonTitle>Interpret</IonTitle>
-          <IonMenuButton autoHide={false} slot="end" id="debug" />
+          <IonMenuButton slot="end" />
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Interpret</IonTitle>
-            <IonMenuButton autoHide={false} slot="end" />
-          </IonToolbar>
-        </IonHeader>
         <IonGrid fixed={true}>
           <IonRow>
             <strong

@@ -1,28 +1,25 @@
 import type { FC } from 'react';
 
 import { EchoPlugin } from '@polytlk/echo-plugin';
-import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { useContext, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import AuthContext, { getTokenData, KEY } from '../../AuthContext';
+import { AuthContext } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
 import { LoginPage } from './LoginPage';
 
 const LoginContainer: FC = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null); // Create a ref
-  const { setToken } = useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!;
+  const authRef = AuthContext.useActorRef();
   const history = useHistory();
+  const token = AuthContext.useSelector(({ context }) => context.token);
+  const loading = AuthContext.useSelector(({ context }) => context.loading);
 
   useEffect(() => {
     EchoPlugin.addListener('loginResult', (data: { token: string }) => {
-      SecureStoragePlugin.set({ key: KEY, value: data.token });
-      const { id } = getTokenData(data.token);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setToken(id);
-      history.push('/home');
+      authRef.send({ type: 'START_LOGIN', hashedToken: data.token });
     });
 
     if (config.platform === 'web') {
@@ -52,6 +49,12 @@ const LoginContainer: FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array makes useEffect run once on component mount
+
+  useEffect(() => {
+    if (token && !loading) {
+      history.push('/home');
+    }
+  }, [history, token, loading]);
 
   return <LoginPage buttonRef={buttonRef} />;
 };

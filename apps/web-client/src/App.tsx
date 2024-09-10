@@ -18,14 +18,11 @@ import './theme/variables.css';
 
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { inspect } from '@xstate/inspect';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import { AuthProvider } from './AuthContext';
-import DebugSidebar from './components/DebugSidebar';
+import { AuthContext } from './AuthContext';
 import ConfigContext from './ConfigContext';
-import { IframeContext } from './context';
 import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
@@ -34,21 +31,8 @@ import Config from './utils/config';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const iframeRef = useRef<HTMLIFrameElement | null>(
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    document.getElementById('xstate-inspector') as HTMLIFrameElement | null
-  );
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [config, setConfig] = useState<ClientConfig | null>(null);
-
-  useEffect(() => {
-    if (iframeRef.current != null) {
-      inspect({
-        iframe: iframeRef.current,
-      });
-    }
-  }, []);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -66,24 +50,21 @@ const App: React.FC = () => {
 
   return (
     <ConfigContext.Provider value={config}>
-      <AuthProvider>
-        <IframeContext.Provider value={iframeRef}>
-          <IonApp>
-            <IonReactRouter>
-              <IonRouterOutlet>
-                <PrivateRoute exact path="/home" component={Home} />
-                <Route exact path="/login">
-                  <LoginPage />
-                </Route>
-                <Route exact path="/">
-                  <Redirect to="/home" />
-                </Route>
-              </IonRouterOutlet>
-              <DebugSidebar />
-            </IonReactRouter>
-          </IonApp>
-        </IframeContext.Provider>
-      </AuthProvider>
+      <AuthContext.Provider>
+        <IonApp>
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <PrivateRoute exact path="/home" component={Home} />
+              <Route exact path="/login">
+                <LoginPage />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </IonApp>
+      </AuthContext.Provider>
     </ConfigContext.Provider>
   );
 };
