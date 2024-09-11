@@ -1,6 +1,6 @@
 image:
   repository: "ewr.vultrcr.com/polytlk/eden"
-  tag: "sha-5e3ec4f"
+  tag: "sha-5383d56"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://otel-collector-opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"

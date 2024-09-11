@@ -11,6 +11,7 @@ apiDefinitions:
     enable: true
     allowed_origins:
       - "https://dev.polytlk.io"
+      - "capacitor://localhost"
     allowed_methods:
       - "GET"
       - "POST"
