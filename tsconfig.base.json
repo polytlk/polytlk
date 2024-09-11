@@ -22,6 +22,9 @@
       "helm-templates": ["tools/helm-templates/src/index.ts"],
       "interpret-machine": [
         "libs/xstate/machines/interpret-machine/src/index.ts"
+      ],
+      "xstate/machines/root-machine": [
+        "libs/xstate/machines/root-machine/src/index.ts"
       ]
     }
   },
