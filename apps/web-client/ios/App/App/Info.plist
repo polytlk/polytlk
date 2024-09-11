@@ -25,14 +25,14 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.540933041586-83lavib8c5hu16r0v6g63200jdruif77</string>
+				<string>$(GID_SCHEMA)</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>GIDClientID</key>
-	<string>540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com</string>
+	<string>$(GID_CLIENT_ID)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

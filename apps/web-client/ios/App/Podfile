@@ -22,5 +22,27 @@ target 'App' do
 end
 
 post_install do |installer|
-  assertDeploymentTarget(installer)
+  puts "Running post_install hook"
+  # assertDeploymentTarget(installer)
+  puts "Running post_install hook after assert"
+  
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      puts "Running post_install hook looping"
+      base_config_ref = config.base_configuration_reference
+      
+      if base_config_ref.nil?
+        puts "Warning: base_configuration_reference is nil for #{config.name}"
+        next
+      end
+      
+      real_path = base_config_ref.real_path
+      
+      if real_path.nil?
+        puts "Warning: real_path is nil for #{config.name}"
+      else
+        puts "Real path for #{config.name}: #{real_path}"
+      end
+    end
+  end
 end

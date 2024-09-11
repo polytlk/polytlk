@@ -1,0 +1,14 @@
+//
+//  Development.xcconfig
+//  App
+//
+//  Created by Haiturtle on 9/10/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// GOOGLE CONFIGS
+GID_CLIENT_ID = 1048294563394-5h953jk4mpo9l4602jf4llpnplk0kavf.apps.googleusercontent.com
+
+GID_SCHEMA = com.googleusercontent.apps.1048294563394-5h953jk4mpo9l4602jf4llpnplk0kavf
