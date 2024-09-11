@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
-import type { LanguageData } from './Home';
 
 import { createBrowserInspector } from '@statelyai/inspect';
 import { useActorRef, useSelector } from '@xstate/react';
@@ -44,7 +43,7 @@ const HomeContainer: FC = () => {
   const data = useSelector(interpretRef, ({ context }) => {
     const { results } = context;
     let key: keyof typeof results;
-    const d: LanguageData[] = [];
+    const d = [];
 
     for (key in results) {
       const result = results[key];
@@ -53,7 +52,7 @@ const HomeContainer: FC = () => {
       }
     }
 
-    return d[0] !== undefined ? d[0] : null;
+    return d;
   });
 
   return (

@@ -8,12 +8,10 @@ import {
   IonGrid,
   IonHeader,
   IonIcon,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
   IonLoading,
-  IonMenuButton,
   IonPage,
   IonRow,
   IonSelect,
@@ -23,10 +21,10 @@ import {
 } from '@ionic/react';
 import { logOutOutline } from 'ionicons/icons';
 
-import { LanguageDataComponent } from '../../components/LanguageData';
+import { LanguageDataList } from '../../components/LanguageDataList';
 
 type HomeProps = {
-  data: LanguageDataProps | null;
+  data: LanguageDataProps[];
   inputError: string;
   inputColor: string;
   loading: boolean;
@@ -35,8 +33,6 @@ type HomeProps = {
   send: (event: InterpretEvents) => void;
   handleLogout: () => void;
 };
-
-export type LanguageData = LanguageDataProps;
 
 const Home: React.FC<HomeProps> = ({
   data,
@@ -60,6 +56,7 @@ const Home: React.FC<HomeProps> = ({
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <LanguageDataList data={data} />
         <IonGrid fixed={true}>
           <IonRow>
             <strong
@@ -73,32 +70,7 @@ const Home: React.FC<HomeProps> = ({
               Welcome to Polytlk. Please input chinese you want to understand.
             </strong>
           </IonRow>
-          <IonRow className="ion-align-items-center" style={{ margin: '2em' }}>
-            {data !== null ? (
-              <LanguageDataComponent
-                words={data.words}
-                dialogue={data.dialogue}
-                meaning={data.meaning}
-              />
-            ) : (
-              <>
-                <IonCol size="3"></IonCol>
-                <IonCol size="6" className="ion-padding-top ion-padding-bottom">
-                  <IonImg
-                    src="https://source.unsplash.com/random/800x600"
-                    alt="Your Description"
-                    style={{
-                      width: '100%',
-                      height: '200px',
-                      objectFit: 'cover',
-                      margin: 'auto',
-                    }}
-                  />
-                </IonCol>
-                <IonCol size="3"></IonCol>
-              </>
-            )}
-          </IonRow>
+
           <>
             {inputError !== '' && (
               <IonRow>
@@ -112,7 +84,7 @@ const Home: React.FC<HomeProps> = ({
                   <IonSelect
                     value={language}
                     placeholder="Select One"
-                    onIonChange={(e) => {
+                    onIonChange={(e: { detail: { value: string } }) => {
                       if (e.detail.value === 'zh' || e.detail.value === 'kr') {
                         send({
                           type: 'UPDATE_LANGUAGE',
@@ -139,7 +111,7 @@ const Home: React.FC<HomeProps> = ({
                   <IonInput
                     value={text}
                     placeholder="Enter Text"
-                    onIonChange={(e) => {
+                    onIonChange={(e: { detail: { value: string } }) => {
                       send({
                         type: 'UPDATE_TEXT',
                         text: e.detail.value + '',
