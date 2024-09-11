@@ -2,13 +2,17 @@ import { setup } from 'xstate';
 
 export const machine = setup({
   types: {
-    context: {} as { token: '' },
+    context: {} as { token: string; baseUrl: string },
     events: {} as { type: 'CHECK' } | { type: 'LOGIN' } | { type: 'LOGOUT' },
+    input: {} as {
+      baseUrl: string;
+    },
   },
 }).createMachine({
-  context: {
+  context: ({ input }) => ({
     token: '',
-  },
+    baseUrl: input.baseUrl,
+  }),
   id: 'root',
   initial: 'loggedOut',
   states: {

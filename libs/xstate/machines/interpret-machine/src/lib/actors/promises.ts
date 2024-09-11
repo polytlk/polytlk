@@ -1,10 +1,14 @@
-
-import { fromPromise } from 'xstate';
 import { CapacitorHttp } from '@capacitor/core';
-import { chineseEndpointInterpretationPostResponse } from '../gen/zod'
- 
+import { fromPromise } from 'xstate';
 
-export const interpretationFetcher = fromPromise(async ({ input }: { input: { baseUrl: string, text: string, token: string } }): Promise<string> => {
+import { chineseEndpointInterpretationPostResponse } from '../gen/zod';
+
+export const interpretationFetcher = fromPromise(
+  async ({
+    input,
+  }: {
+    input: { baseUrl: string; text: string; token: string };
+  }): Promise<string> => {
     const response = await CapacitorHttp.post({
       url: `${input.baseUrl}/api/chinese/interpretation`,
       headers: {
@@ -12,17 +16,20 @@ export const interpretationFetcher = fromPromise(async ({ input }: { input: { ba
         Authorization: `Bearer ${input.token}`,
       },
       data: { user_input: input.text },
-    })
+    });
 
-    if (response.status === 200){
-      const { task_id } = chineseEndpointInterpretationPostResponse.parse(response.data)
+    if (response.status === 200) {
+      const { task_id } = chineseEndpointInterpretationPostResponse.parse(
+        response.data
+      );
 
-      return task_id
+      return task_id;
     }
 
-    if (response.status === 403 || 401){
-      throw Error('Access to this API has been disallowed')
+    if (response.status === 403 || 401) {
+      throw Error('Access to this API has been disallowed');
     }
 
-    throw Error('something')
-  })
+    throw Error('something');
+  }
+);

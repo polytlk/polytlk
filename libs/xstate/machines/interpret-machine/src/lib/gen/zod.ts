@@ -4,45 +4,37 @@
  * FastAPI
  * OpenAPI spec version: 0.1.0
  */
-import {
-  z as zod
-} from 'zod'
-
+import { z as zod } from 'zod';
 
 /**
  * Do NLP preprocessing and other logic before calling socrates.
  * @summary Chinese Endpoint
  */
 export const chineseEndpointInterpretationPostBody = zod.object({
-  "user_input": zod.string()
-})
+  user_input: zod.string(),
+});
 
 export const chineseEndpointInterpretationPostResponse = zod.object({
-  "task_id": zod.string()
-})
-
+  task_id: zod.string(),
+});
 
 /**
  * @summary Task Stream
  */
 export const taskStreamTaskTaskIdStreamGetParams = zod.object({
-  "task_id": zod.string()
-})
+  task_id: zod.string(),
+});
 
-export const taskStreamTaskTaskIdStreamGetResponse = zod.any()
-
+export const taskStreamTaskTaskIdStreamGetResponse = zod.any();
 
 /**
  * Liveness probe endpoint to check if the application is running.
  * @summary Health Check
  */
-export const healthCheckHealthzGetResponse = zod.any()
-
+export const healthCheckHealthzGetResponse = zod.any();
 
 /**
  * Readiness probe endpoint to check if the application is ready to serve traffic.
  * @summary Readiness Check
  */
-export const readinessCheckReadinessGetResponse = zod.any()
-
-
+export const readinessCheckReadinessGetResponse = zod.any();

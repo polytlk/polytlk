@@ -1,142 +1,153 @@
-import { assign, setup, enqueueActions } from "xstate";
-import { fetchCookie, validateCookie, setCookie, deleteCookie } from './promises'
+import { assign, enqueueActions, raise, setup } from 'xstate';
 
+import { authChecker } from './cookie-checker-machine';
+import { deleteCookie, setCookie } from './promises';
 
 export const machine = setup({
   types: {
     context: {} as {
-      hashedToken: string
-      token: string
-      loading: boolean
-      checked: boolean
-      baseUrl: string
+      hashedToken: string;
+      token: string;
+      loading: boolean;
+      checked: boolean;
+      baseUrl: string;
     },
-    events: {} as { type: "LOGOUT" } | { type: "CHECK_COOKIE" } | { type: "START_LOGIN", hashedToken: string },
+    events: {} as
+      | { type: 'LOGOUT' }
+      | { type: 'CHECK_COOKIE' }
+      | { type: 'COOKIE_VALID' }
+      | { type: 'COOKIE_INVALID' }
+      | { type: 'START_LOGIN'; hashedToken: string },
     children: {} as {
-      'cookieFetcher': 'fetchCookie',
-      'cookieValidator': 'validateCookie'
-      'cookieSetter': 'setCookie',
-      'cookieDeleter': 'deleteCookie',
+      checkAuth: 'authChecker';
+      cookieDeleter: 'deleteCookie';
+      cookieSetter: 'setCookie';
     },
     input: {} as {
-      baseUrl: string
-    }
+      baseUrl: string;
+    },
   },
   actions: {
     startLoading: assign({ loading: true }),
     stopLoading: assign({ loading: false }),
-    checked: assign({checked: true})
+    checked: assign({ checked: true }),
   },
   actors: {
-    fetchCookie,
-    validateCookie,
+    authChecker,
+    deleteCookie,
     setCookie,
-    deleteCookie
-  }
+  },
 }).createMachine({
   context: ({ input }) => ({
-      hashedToken: '',
-      token: '',
-      loading: false,
-      checked: false,
-      baseUrl: input.baseUrl
-    }),
-  id: "authentication",
-  initial: "logged-out",
+    hashedToken: '',
+    token: '',
+    loading: false,
+    checked: false,
+    baseUrl: input.baseUrl,
+  }),
+  id: 'authentication',
+  initial: 'logged-out',
   states: {
-    "logged-out": {
-      entry: enqueueActions(({enqueue, context}) => {
-        if(!context.checked) {
-          enqueue.raise({ type: 'CHECK_COOKIE' })
+    'logged-out': {
+      entry: enqueueActions(({ enqueue, context }) => {
+        if (!context.checked) {
+          enqueue.raise({ type: 'CHECK_COOKIE' });
         }
       }),
       on: {
-        "CHECK_COOKIE": {
-          target: "checking-cookie",
-          actions: ['startLoading']
+        CHECK_COOKIE: {
+          target: 'checking-cookie',
+          actions: ['startLoading'],
         },
-        "START_LOGIN": {
-          target: "setting-cookie",
+        START_LOGIN: {
+          target: 'setting-cookie',
           actions: assign({
-            hashedToken: ({ event }) =>
-              event.hashedToken
-          })
-        }
+            hashedToken: ({ event }) => event.hashedToken,
+          }),
+        },
       },
-      description: "The user is currently logged out.",
+      description: 'The user is currently logged out.',
     },
-    "checking-cookie": {
-      "invoke": {
-        id: "cookieFetcher",
-        src: "fetchCookie",
+    'checking-cookie': {
+      invoke: {
+        id: 'checkAuth',
+        src: 'authChecker',
+        input: ({ context }) => ({
+          baseUrl: context.baseUrl,
+        }),
         onDone: {
-          target: 'validating-cookie',
-          actions: assign({ hashedToken: ({ event }) => event.output })
+          actions: [
+            assign({
+              hashedToken: ({ event }) => {
+                return event.output.success ? event.output.hashedToken : '';
+              },
+              token: ({ event }) => {
+                return event.output.success ? event.output.token : '';
+              },
+            }),
+            raise(({ event }) => ({
+              type: event.output.success ? 'CHECK_COOKIE' : 'COOKIE_INVALID',
+            })),
+          ],
         },
         onError: {
           target: 'logged-out',
-          actions: ['stopLoading', 'checked']
+          actions: ['stopLoading', 'checked'],
         },
-      }
-    },
-    "validating-cookie": {
-      "invoke": {
-        id: "cookieValidator",
-        src: "validateCookie",
-        input: ({ context, }) => ({ token: context.hashedToken, baseUrl: context.baseUrl }),
-        onDone: {
+      },
+      on: {
+        COOKIE_VALID: {
           target: 'logged-in',
-          actions: [assign({ token: ({ event }) => event.output }), 'stopLoading', 'checked']
+          actions: ['stopLoading', 'checked'],
         },
-        onError: {
+        COOKIE_INVALID: {
           target: 'logged-out',
-          actions: ['stopLoading','checked']
+          actions: ['stopLoading', 'checked'],
         },
-      }
+      },
     },
-    "setting-cookie": {
-      "invoke": {
-        id: "cookieSetter",
-        src: "setCookie",
+    'setting-cookie': {
+      invoke: {
+        id: 'cookieSetter',
+        src: 'setCookie',
         input: ({ context }) => ({ token: context.hashedToken }),
         onDone: {
           target: 'logged-in',
-          actions: assign({ token: ({ event }) => event.output })
+          actions: assign({ token: ({ event }) => event.output }),
         },
         onError: {
           target: 'logged-out',
-          actions: 'stopLoading'
-        },
-      }
-    },
-    "logged-in": {
-      on: {
-        LOGOUT: {
-          target: "logging-out",
+          actions: 'stopLoading',
         },
       },
-      description: "The user is currently logged in.",
     },
-    "logging-out": {
+    'logged-in': {
+      on: {
+        LOGOUT: {
+          target: 'logging-out',
+        },
+      },
+      description: 'The user is currently logged in.',
+    },
+    'logging-out': {
       invoke: {
-        id: "cookieDeleter",
-        src: "deleteCookie",
+        id: 'cookieDeleter',
+        src: 'deleteCookie',
         onDone: {
           target: 'logged-out',
           actions: assign({
-            token: "",
-            hashedToken: ""
-           })
+            token: '',
+            hashedToken: '',
+          }),
         },
         onError: {
           target: 'logged-out',
           actions: assign({
-            token: "",
-            hashedToken: ""
-           })
+            token: '',
+            hashedToken: '',
+          }),
         },
-      }
-    }
+      },
+    },
   },
 });
-

@@ -1,1 +1,1 @@
-export * from './lib/xstate-machines-root-machine';
+export * from './lib/machine';

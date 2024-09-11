@@ -9,9 +9,7 @@ export const getTokenData = (token: string) => {
 };
 
 export const fetchCookie = fromPromise(async () => {
-  console.log('fetch cookie called');
   const { value } = await SecureStoragePlugin.get({ key: KEY });
-  console.log('cookie', value);
   return value;
 });
 
@@ -29,7 +27,6 @@ export const deleteCookie = fromPromise(async () => {
 
 export const validateCookie = fromPromise(
   async ({ input }: { input: { baseUrl: string; token: string } }) => {
-    console.log('validate url', `${input.baseUrl}/api/auth/check/`);
     const response = await CapacitorHttp.post({
       url: `${input.baseUrl}/api/auth/check/`,
       headers: {
@@ -37,8 +34,6 @@ export const validateCookie = fromPromise(
       },
       data: { key: input.token },
     });
-
-    console.log('validate cookie', response);
 
     if (response.status === 200) {
       return getTokenData(input.token).id;
