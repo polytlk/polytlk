@@ -1,4 +1,4 @@
-import { assign, setup } from 'xstate';
+import { assign, sendParent, setup } from 'xstate';
 
 import {
   deleteCookie,
@@ -83,16 +83,19 @@ export const authChecker = setup({
       },
     },
     'checking-complete': {
-      type: 'final',
+      entry: [
+        sendParent(({ context }) => {
+          return context.success
+            ? {
+                type: 'COOKIE_VALID',
+                payload: {
+                  hashedToken: context.hashedToken,
+                  token: context.token,
+                },
+              }
+            : { type: 'COOKIE_INVALID' };
+        }),
+      ],
     },
-  },
-  output: ({ context }) => {
-    return context.success
-      ? {
-          success: true,
-          hashedToken: context.hashedToken,
-          token: context.token,
-        }
-      : { success: false };
   },
 });

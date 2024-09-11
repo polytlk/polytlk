@@ -1,4 +1,4 @@
-import { assign, enqueueActions, raise, setup } from 'xstate';
+import { assign, log, setup } from 'xstate';
 
 import { authChecker } from './cookie-checker-machine';
 import { deleteCookie, setCookie } from './promises';
@@ -14,8 +14,10 @@ export const machine = setup({
     },
     events: {} as
       | { type: 'LOGOUT' }
-      | { type: 'CHECK_COOKIE' }
-      | { type: 'COOKIE_VALID' }
+      | {
+          type: 'COOKIE_VALID';
+          payload: { hashedToken: string; token: string };
+        }
       | { type: 'COOKIE_INVALID' }
       | { type: 'START_LOGIN'; hashedToken: string },
     children: {} as {
@@ -49,104 +51,103 @@ export const machine = setup({
   initial: 'logged-out',
   states: {
     'logged-out': {
-      entry: enqueueActions(({ enqueue, context }) => {
-        if (!context.checked) {
-          enqueue.raise({ type: 'CHECK_COOKIE' });
-        }
-      }),
-      on: {
-        CHECK_COOKIE: {
-          target: 'checking-cookie',
-          actions: ['startLoading'],
-        },
-        START_LOGIN: {
-          target: 'setting-cookie',
-          actions: assign({
-            hashedToken: ({ event }) => event.hashedToken,
-          }),
-        },
-      },
-      description: 'The user is currently logged out.',
-    },
-    'checking-cookie': {
-      invoke: {
-        id: 'checkAuth',
-        src: 'authChecker',
-        input: ({ context }) => ({
-          baseUrl: context.baseUrl,
-        }),
-        onDone: {
-          actions: [
-            assign({
-              hashedToken: ({ event }) => {
-                return event.output.success ? event.output.hashedToken : '';
-              },
-              token: ({ event }) => {
-                return event.output.success ? event.output.token : '';
-              },
+      initial: 'checking-cookie',
+      states: {
+        'checking-cookie': {
+          invoke: {
+            id: 'checkAuth',
+            src: 'authChecker',
+            input: ({ context }) => ({
+              baseUrl: context.baseUrl,
             }),
-            raise(({ event }) => ({
-              type: event.output.success ? 'CHECK_COOKIE' : 'COOKIE_INVALID',
-            })),
-          ],
+            onDone: {
+              actions: [log('checking-cookie invokcation done')],
+            },
+            onError: {
+              target: 'idle',
+              actions: ['stopLoading', 'checked'],
+            },
+          },
+          on: {
+            COOKIE_VALID: {
+              target: 'done',
+              actions: [log('cookie valid'), 'stopLoading', 'checked'],
+            },
+            COOKIE_INVALID: {
+              target: 'idle',
+              actions: [log('cookie valid'), 'stopLoading', 'checked'],
+            },
+          },
         },
-        onError: {
-          target: 'logged-out',
-          actions: ['stopLoading', 'checked'],
+        idle: {
+          on: {
+            START_LOGIN: {
+              target: 'setting-cookie',
+              actions: assign({
+                hashedToken: ({ event }) => event.hashedToken,
+              }),
+            },
+          },
+        },
+        'setting-cookie': {
+          invoke: {
+            id: 'cookieSetter',
+            src: 'setCookie',
+            input: ({ context }) => ({ token: context.hashedToken }),
+            onDone: {
+              target: 'done',
+              actions: assign({ token: ({ event }) => event.output }),
+            },
+            onError: {
+              target: 'idle',
+              actions: 'stopLoading',
+            },
+          },
+        },
+        done: {
+          type: 'final',
         },
       },
-      on: {
-        COOKIE_VALID: {
-          target: 'logged-in',
-          actions: ['stopLoading', 'checked'],
-        },
-        COOKIE_INVALID: {
-          target: 'logged-out',
-          actions: ['stopLoading', 'checked'],
-        },
-      },
-    },
-    'setting-cookie': {
-      invoke: {
-        id: 'cookieSetter',
-        src: 'setCookie',
-        input: ({ context }) => ({ token: context.hashedToken }),
-        onDone: {
-          target: 'logged-in',
-          actions: assign({ token: ({ event }) => event.output }),
-        },
-        onError: {
-          target: 'logged-out',
-          actions: 'stopLoading',
-        },
+      onDone: {
+        target: 'logged-in',
       },
     },
     'logged-in': {
-      on: {
-        LOGOUT: {
-          target: 'logging-out',
+      initial: 'ready',
+      states: {
+        ready: {
+          on: {
+            LOGOUT: {
+              target: 'logging-out',
+            },
+          },
+        },
+        'logging-out': {
+          invoke: {
+            id: 'cookieDeleter',
+            src: 'deleteCookie',
+            onDone: {
+              target: 'done',
+              actions: assign({
+                token: '',
+                hashedToken: '',
+              }),
+            },
+            onError: {
+              target: 'done',
+              actions: assign({
+                token: '',
+                hashedToken: '',
+              }),
+            },
+          },
+        },
+        done: {
+          type: 'final',
         },
       },
-      description: 'The user is currently logged in.',
-    },
-    'logging-out': {
-      invoke: {
-        id: 'cookieDeleter',
-        src: 'deleteCookie',
-        onDone: {
-          target: 'logged-out',
-          actions: assign({
-            token: '',
-            hashedToken: '',
-          }),
-        },
-        onError: {
-          target: 'logged-out',
-          actions: assign({
-            token: '',
-            hashedToken: '',
-          }),
-        },
+      onDone: {
+        target: 'logged-out',
       },
     },
   },
