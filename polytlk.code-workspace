@@ -33,6 +33,10 @@
 			"path": "terraform"
 		},
 		{
+			"name": "xstate",
+			"path": "libs/xstate"
+		},
+		{
 			"name": "docs",
 			"path": "docs"
 		},

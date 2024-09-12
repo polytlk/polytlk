@@ -33,7 +33,7 @@ releases:
   labels:
     type: api
   values:
-  - api/values.yaml
+  - api/{{ .Environment.Name }}_values.yaml
   needs:
   - eden-deployment
 

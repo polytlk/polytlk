@@ -1,5 +1,4 @@
-import type { LanguageDataProps } from '../../components/LanguageData';
-import type { MachineEvents } from './types';
+import type { UserInterpretEvents } from 'xstate/machines/root-machine';
 
 import {
   IonButton,
@@ -7,12 +6,11 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
-  IonImg,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonLoading,
-  IonMenuButton,
   IonPage,
   IonRow,
   IonSelect,
@@ -20,45 +18,46 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { logOutOutline } from 'ionicons/icons';
 
-import { LanguageDataComponent } from '../../components/LanguageData';
+import { LanguageDataList } from '../../components/LanguageDataList';
+import { RootContext } from '../../RootContext';
+
+const { useSelector } = RootContext;
 
 type HomeProps = {
-  data: LanguageDataProps | null;
   inputError: string;
   inputColor: string;
   loading: boolean;
   language: 'zh' | 'kr';
   text: string;
-  send: (action: MachineEvents) => void;
+  send: (event: UserInterpretEvents) => void;
+  handleLogout: () => void;
 };
 
-export type LanguageData = LanguageDataProps;
-
 const Home: React.FC<HomeProps> = ({
-  data,
   inputError,
   language,
   inputColor,
   text,
   loading,
   send,
+  handleLogout,
 }) => {
+  const isNative = useSelector(({ context }) => context.platform !== 'web');
+
   return (
-    <IonPage id="main">
+    <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Interpret</IonTitle>
-          <IonMenuButton autoHide={false} slot="end" />
+          <IonTitle>Interpret {isNative ? '(native)' : '(web)'}</IonTitle>
+          <IonButton color="danger" slot="end" onClick={handleLogout}>
+            <IonIcon icon={logOutOutline} slot="start" />
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Interpret</IonTitle>
-            <IonMenuButton autoHide={false} slot="end" />
-          </IonToolbar>
-        </IonHeader>
+        <LanguageDataList />
         <IonGrid fixed={true}>
           <IonRow>
             <strong
@@ -72,32 +71,7 @@ const Home: React.FC<HomeProps> = ({
               Welcome to Polytlk. Please input chinese you want to understand.
             </strong>
           </IonRow>
-          <IonRow className="ion-align-items-center" style={{ margin: '2em' }}>
-            {data !== null ? (
-              <LanguageDataComponent
-                words={data.words}
-                dialogue={data.dialogue}
-                meaning={data.meaning}
-              />
-            ) : (
-              <>
-                <IonCol size="3"></IonCol>
-                <IonCol size="6" className="ion-padding-top ion-padding-bottom">
-                  <IonImg
-                    src="https://source.unsplash.com/random/800x600"
-                    alt="Your Description"
-                    style={{
-                      width: '100%',
-                      height: '200px',
-                      objectFit: 'cover',
-                      margin: 'auto',
-                    }}
-                  />
-                </IonCol>
-                <IonCol size="3"></IonCol>
-              </>
-            )}
-          </IonRow>
+
           <>
             {inputError !== '' && (
               <IonRow>
@@ -111,7 +85,7 @@ const Home: React.FC<HomeProps> = ({
                   <IonSelect
                     value={language}
                     placeholder="Select One"
-                    onIonChange={(e) => {
+                    onIonChange={(e: { detail: { value: string } }) => {
                       if (e.detail.value === 'zh' || e.detail.value === 'kr') {
                         send({
                           type: 'UPDATE_LANGUAGE',
@@ -138,7 +112,7 @@ const Home: React.FC<HomeProps> = ({
                   <IonInput
                     value={text}
                     placeholder="Enter Text"
-                    onIonChange={(e) => {
+                    onIonChange={(e: { detail: { value: string } }) => {
                       send({
                         type: 'UPDATE_TEXT',
                         text: e.detail.value + '',

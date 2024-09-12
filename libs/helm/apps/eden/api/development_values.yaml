@@ -1,0 +1,42 @@
+apiDefinitions:
+- name: eden-api
+  use_standard_auth: true
+  protocol: http
+  active: true
+  proxy:
+    target_url: http://eden-svc.eden.svc:7079
+    listen_path: '/api/chinese'
+    strip_listen_path: true
+  CORS:
+    enable: true
+    allowed_origins:
+      - "https://dev.polytlk.io"
+      - "capacitor://localhost"
+    allowed_methods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+    allowed_headers:
+      - "content-type"
+      - "authorization"
+    exposed_headers: []
+    allow_credentials: false
+    max_age: 24
+    options_passthrough: false
+    debug: true
+  custom_middleware:
+    driver: otto
+    pre:
+    - name: "sseAuthMiddlewarePreHook"
+      path: "/mnt/tyk-gateway/middleware/sse-auth-pre-middleware.js"
+      require_session: false
+  version_data:
+    default_version: Default
+    not_versioned: true
+    versions:
+      Default:
+        name: Default
+        use_extended_paths: true
+        global_headers:
+          Authorization: "Bearer $tyk_meta.jwt"
+  detailed_tracing: false

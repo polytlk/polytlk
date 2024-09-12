@@ -1,0 +1,14 @@
+{
+  "name": "xstate/machines/root-machine",
+  "version": "0.0.1",
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "xstate": "^5.18.1",
+    "@capacitor/core": "^5.0.3",
+    "capacitor-secure-storage-plugin": "^0.9.0"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "private": true
+}

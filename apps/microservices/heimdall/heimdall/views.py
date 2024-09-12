@@ -9,7 +9,7 @@ from google.auth.transport import requests as req_trans
 from google.oauth2 import id_token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK, HTTP_401_UNAUTHORIZED
 from rest_framework.views import APIView
 
 from heimdall.config import settings
@@ -199,7 +199,18 @@ class OAuthCheckView(APIView):
         print("raw", raw_key_response.status_code)
 
         if raw_key_response.status_code != HTTP_200_OK:
-            return Response({"message": 'session is expired'}, status=HTTP_404_NOT_FOUND)
+            return Response({"message": 'session is invalid'}, status=HTTP_400_BAD_REQUEST)
+
+        # Parse the JSON response to get the 'expires' timestamp
+        key_data = raw_key_response.json()
+        expires_timestamp = key_data.get('expires', None)
+
+        # Get the current Unix timestamp
+        current_timestamp = int(time.time())
+
+        # Check if the key is expired
+        if current_timestamp > expires_timestamp:
+            return Response({"message": 'session is expired'}, status=HTTP_401_UNAUTHORIZED)
 
         response = raw_key_response.json()
         print("check check response")

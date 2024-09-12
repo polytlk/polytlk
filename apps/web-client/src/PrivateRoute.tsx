@@ -1,9 +1,8 @@
 import type { ComponentType, FunctionComponent } from 'react';
 
-import { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import AuthContext from './AuthContext';
+import { RootContext } from './RootContext';
 
 type PrivateRouteProps = {
   component: ComponentType;
@@ -12,9 +11,10 @@ type PrivateRouteProps = {
 const PrivateRoute: FunctionComponent<
   PrivateRouteProps & Record<string, unknown>
 > = ({ component: Component, ...rest }) => {
-  const { token, loading } = useContext(AuthContext);
+  const token = RootContext.useSelector(({ context }) => context.token);
+  const checked = RootContext.useSelector(({ context }) => context.checked);
 
-  if (loading) {
+  if (!token && !checked) {
     return null;
   }
 
