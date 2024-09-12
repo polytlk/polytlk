@@ -2,8 +2,8 @@ import { IonCol, IonImg } from '@ionic/react';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-import { RootContext } from '../RootContext';
-import { LanguageData } from './LanguageData';
+import { RootContext } from '../../RootContext';
+import { LanguageData } from '../LanguageData';
 
 const { useSelector } = RootContext;
 

@@ -38,6 +38,7 @@ export const machine = setup({
     },
     input: {} as {
       env: unknown
+      platform?: "web" | "ios" | "android"
       taskIds?: string[];
       results?: Record<string, ariData>;
     },
@@ -68,7 +69,7 @@ export const machine = setup({
       BASE_URL: "http://localhost:8080",
       CLIENT_ID_WEB: "540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com",
     },
-    platform: "web",
+    platform: input.platform || "web",
     isVirtual: false,
     hashedToken: '',
     token: '',

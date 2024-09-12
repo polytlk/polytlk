@@ -21,6 +21,9 @@ import {
 import { logOutOutline } from 'ionicons/icons';
 
 import { LanguageDataList } from '../../components/LanguageDataList';
+import { RootContext } from '../../RootContext';
+
+const { useSelector } = RootContext;
 
 type HomeProps = {
   inputError: string;
@@ -41,14 +44,15 @@ const Home: React.FC<HomeProps> = ({
   send,
   handleLogout,
 }) => {
+  const isNative = useSelector(({ context }) => context.platform !== 'web');
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Interpret</IonTitle>
+          <IonTitle>Interpret {isNative ? '(native)' : '(web)'}</IonTitle>
           <IonButton color="danger" slot="end" onClick={handleLogout}>
             <IonIcon icon={logOutOutline} slot="start" />
-            Logout
           </IonButton>
         </IonToolbar>
       </IonHeader>

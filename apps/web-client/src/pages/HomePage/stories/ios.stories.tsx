@@ -1,17 +1,59 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { RootContext } from '../RootContext';
-import { LanguageData } from './LanguageData';
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
-const meta: Meta<typeof LanguageData> = {
-  component: LanguageData,
-  title: 'Components/LanguageData',
+import { RootContext } from '../../../RootContext';
+import Home from '../Home';
+
+const meta: Meta<typeof Home> = {
+  component: Home,
+  title: 'Pages/Home/iOS',
+  parameters: {
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+      },
+      defaultViewport: 'iphone12promax',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Home>;
+
+const baseInput = {
+  env: {},
+  platform: 'ios',
+} as const;
+
+export const Primary: Story = {
   decorators: [
     (Story) => (
       <RootContext.Provider
         options={{
           input: {
-            baseUrl: '',
+            ...baseInput,
+          },
+        }}
+      >
+        <Story />
+      </RootContext.Provider>
+    ),
+  ],
+  args: {
+    language: 'zh',
+    loading: false,
+    text: '',
+  },
+};
+
+export const Interpreted: Story = {
+  decorators: [
+    (Story) => (
+      <RootContext.Provider
+        options={{
+          input: {
+            ...baseInput,
             taskIds: ['111'],
             results: {
               '111': {
@@ -46,18 +88,9 @@ const meta: Meta<typeof LanguageData> = {
       </RootContext.Provider>
     ),
   ],
-};
-export default meta;
-type Story = StoryObj<typeof LanguageData>;
-
-export const Primary: Story = {
   args: {
-    id: '111',
-  },
-};
-
-export const Expanded: Story = {
-  args: {
-    id: '111',
+    language: 'zh',
+    loading: false,
+    text: '你想找我聊天随时都可以',
   },
 };

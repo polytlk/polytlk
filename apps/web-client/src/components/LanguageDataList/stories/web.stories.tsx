@@ -2,15 +2,20 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { IonContent, IonPage } from '@ionic/react';
 
-import { RootContext } from '../RootContext';
-import { LanguageDataList } from './LanguageDataList';
+import { RootContext } from '../../../RootContext';
+import { LanguageDataList } from '..';
 
 const meta: Meta<typeof LanguageDataList> = {
   component: LanguageDataList,
-  title: 'Components/LanguageDataList',
+  title: 'Components/LanguageDataList/Web',
 };
 export default meta;
 type Story = StoryObj<typeof LanguageDataList>;
+
+const baseInput = {
+  env: {},
+  platform: 'web',
+} as const;
 
 export const Primary: Story = {
   decorators: [
@@ -18,7 +23,7 @@ export const Primary: Story = {
       <RootContext.Provider
         options={{
           input: {
-            baseUrl: '',
+            ...baseInput,
             taskIds: [],
             results: {},
           },
@@ -40,7 +45,7 @@ export const Single: Story = {
       <RootContext.Provider
         options={{
           input: {
-            baseUrl: '',
+            ...baseInput,
             taskIds: ['111'],
             results: {
               '111': {
@@ -137,7 +142,7 @@ export const Multiple: Story = {
                     'Yes, I have something I want to chat with you about.',
                   ],
                 ],
-              }
+              },
             },
           },
         }}
@@ -149,5 +154,5 @@ export const Multiple: Story = {
         </IonPage>
       </RootContext.Provider>
     ),
-  ]
+  ],
 };

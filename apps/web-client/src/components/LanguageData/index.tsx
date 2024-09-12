@@ -13,7 +13,7 @@ import {
 } from '@ionic/react';
 import React, { useState } from 'react';
 
-import { RootContext } from '../RootContext';
+import { RootContext } from '../../RootContext';
 
 export type LanguageDataProps = {
   id: string;
