@@ -1,13 +1,14 @@
 import type { AuthEvents } from 'auth-machine';
 import type {
-  ariData,
+  errorMessages,
+  InternalInterpretEvents,
   InterpretContext,
-  InterpretEvents,
 } from 'interpret-machine';
+import type { UserInterpretEvents } from './types';
 
 import { authChecker, deleteCookie, setCookie } from 'auth-machine';
 import { machine as interpretMachine } from 'interpret-machine';
-import { assign, raise, sendTo, setup } from 'xstate';
+import { assign, log, raise, setup } from 'xstate';
 
 export const machine = setup({
   types: {
@@ -17,14 +18,11 @@ export const machine = setup({
       loading: boolean;
       checked: boolean;
       baseUrl: string;
-      interpret: Omit<InterpretContext, 'token' | 'baseUrl'>;
+      interpret: Omit<InterpretContext, 'token' | 'baseUrl' | 'inputError'> & {
+        inputError: errorMessages | '';
+      };
     },
-    events: {} as
-      | AuthEvents
-      | InterpretEvents
-      | { type: 'INTERPRET_LOADING' }
-      | { type: 'INTERPRET_LOAD_DONE' }
-      | { type: 'ROOT_TASK_COMPLETE'; data: ariData; taskId: string },
+    events: {} as AuthEvents | UserInterpretEvents | InternalInterpretEvents,
     children: {} as {
       machineInterpreter: 'interpretMachine';
       checkAuth: 'authChecker';
@@ -142,6 +140,34 @@ export const machine = setup({
       initial: 'ready',
       states: {
         ready: {
+          on: {
+            LOGOUT: {
+              target: 'logging-out',
+            },
+            UPDATE_TEXT: {
+              actions: assign({
+                interpret: ({ context, event }) => ({
+                  ...context.interpret,
+                  text: event.text,
+                }),
+              }),
+            },
+            UPDATE_LANGUAGE: {
+              actions: assign({
+                interpret: ({ context, event }) => ({
+                  ...context.interpret,
+                  language: event.language,
+                }),
+              }),
+            },
+            SUBMIT: {
+              target: 'interpreting',
+            },
+          },
+        },
+        interpreting: {
+          entry: 'setInterpretLoading',
+          exit: 'unsetInterpretLoading',
           invoke: {
             id: 'machineInterpreter',
             src: 'interpretMachine',
@@ -149,6 +175,8 @@ export const machine = setup({
               return {
                 token: context.token,
                 baseUrl: context.baseUrl,
+                text: context.interpret.text,
+                language: context.interpret.language,
               };
             },
           },
@@ -156,38 +184,49 @@ export const machine = setup({
             LOGOUT: {
               target: 'logging-out',
             },
-            INTERPRET_LOADING: {
-              actions: 'setInterpretLoading',
-            },
-            INTERPRET_LOAD_DONE: {
-              actions: 'unsetInterpretLoading',
-            },
-            UPDATE_TEXT: {
-              actions: sendTo('machineInterpreter', ({ event }) => {
-                return { type: 'UPDATE_TEXT', text: event.text };
-              }),
-            },
-            UPDATE_LANGUAGE: {
-              actions: sendTo('machineInterpreter', ({ event }) => {
-                return { type: 'UPDATE_LANGUAGE', language: event.language };
-              }),
-            },
-            SUBMIT: {
-              actions: sendTo('machineInterpreter', () => {
-                return { type: 'SUBMIT' };
-              }),
-            },
-            ROOT_TASK_COMPLETE: {
-              actions: assign({
-                interpret: ({ context, event }) => ({
-                  ...context.interpret,
-                  results: {
-                    ...context.interpret.results,
-                    [event.taskId]: event.data,
-                  },
-                  taskIds: [...context.interpret.taskIds, event.taskId],
+            TASK_COMPLETE: {
+              target: 'ready',
+              actions: [
+                log('task complete from root'),
+                ({ event, context }) => {
+                  console.log('event', event);
+                  console.log('context', context);
+                },
+                assign({
+                  interpret: ({ context, event }) => ({
+                    ...context.interpret,
+                    results: {
+                      ...context.interpret.results,
+                      [event.taskId]: event.data,
+                    },
+                    taskIds: [...context.interpret.taskIds, event.taskId],
+                  }),
                 }),
-              }),
+              ],
+            },
+            VERIFYING_ERROR: {
+              target: 'ready',
+              actions: [
+                assign({
+                  interpret: ({ event, context }) => ({
+                    ...context.interpret,
+                    inputColor: 'danger',
+                    inputError: event.error,
+                  }),
+                }),
+              ],
+            },
+            WAITING_ERROR: {
+              target: 'ready',
+              actions: [
+                assign({
+                  interpret: ({ event, context }) => ({
+                    ...context.interpret,
+                    inputColor: 'danger',
+                    inputError: event.error,
+                  }),
+                }),
+              ],
             },
           },
         },

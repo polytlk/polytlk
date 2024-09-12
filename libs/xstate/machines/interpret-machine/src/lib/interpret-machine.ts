@@ -1,24 +1,18 @@
 import type { ariData } from './actors/observables';
 
-import { assign, log, sendParent, setup } from 'xstate';
+import { assign, sendParent, setup } from 'xstate';
 import { z } from 'zod';
 
 import { interpretation$ } from './actors/observables';
 import { interpretationFetcher } from './actors/promises';
 
 type eventType =
-  | { type: 'SUBMIT' }
-  | { type: 'CLEAR_ERRORS' }
   | { type: 'TASK_ERROR' }
-  | { type: 'UPDATE_LANGUAGE'; language: 'zh' | 'kr' }
-  | { type: 'UPDATE_TEXT'; text: string }
-  | { type: 'TASK_COMPLETE'; data: ariData }
-  | { type: 'NEW_TASK' };
+  | { type: 'TASK_COMPLETE'; data: ariData };
 
 const errorMessagesSchema = z.union([
   z.literal('Access to this API has been disallowed'),
   z.literal('unknown error'),
-  z.literal(''),
 ]);
 
 const errorSchema = z
@@ -27,7 +21,7 @@ const errorSchema = z
   })
   .catch({ message: 'unknown error' });
 
-type errorMessages = z.infer<typeof errorMessagesSchema>;
+export type errorMessages = z.infer<typeof errorMessagesSchema>;
 
 export type InterpretContext = {
   language: 'zh' | 'kr';
@@ -42,26 +36,29 @@ export type InterpretContext = {
   results: Record<string, ariData>;
 };
 
+// TODO: find a way to have some type safety when sending to parent without causing circular dependency
+export type InternalInterpretEvents =
+  | { type: 'VERIFYING_ERROR'; error: errorMessages }
+  | { type: 'WAITING_ERROR'; error: 'unknown error' }
+  | { type: 'TASK_COMPLETE'; data: ariData; taskId: string };
+
 export const machine = setup({
   types: {
     input: {} as {
       baseUrl: string;
       token: string;
+      language: 'zh' | 'kr';
+      text: string;
     },
-    context: {} as InterpretContext,
+    context: {} as Pick<
+      InterpretContext,
+      'taskId' | 'baseUrl' | 'token' | 'text' | 'language'
+    >,
     events: {} as eventType,
     children: {} as {
       fetcher: 'interpretationFetcher';
       subscriber: 'interpretation$';
     },
-  },
-  guards: {
-    isChinese: ({ context }) => context.language === 'zh',
-  },
-  actions: {
-    clearError: assign({ inputError: '', inputColor: 'light' }),
-    setRootLoading: sendParent({ type: 'INTERPRET_LOADING' }),
-    unsetRootLoading: sendParent({ type: 'INTERPRET_LOAD_DONE' }),
   },
   actors: {
     interpretationFetcher,
@@ -69,48 +66,15 @@ export const machine = setup({
   },
 }).createMachine({
   id: 'task',
-  initial: 'idle',
+  initial: 'verifying',
   context: ({ input }) => ({
-    language: 'zh',
-    text: '',
+    language: input.language,
+    text: input.text,
     taskId: '',
-    taskIds: [],
-    inputError: '',
-    inputColor: 'light',
-    loading: false,
     baseUrl: input.baseUrl || '',
     token: input.token || '',
-    results: {},
   }),
   states: {
-    idle: {
-      on: {
-        CLEAR_ERRORS: {
-          actions: ['clearError'],
-        },
-        SUBMIT: {
-          guard: 'isChinese',
-          target: 'verifying',
-          actions: [
-            assign({
-              inputError: '',
-              inputColor: 'light',
-            }),
-            'setRootLoading',
-            log('submit from interpret'),
-          ],
-        },
-        UPDATE_LANGUAGE: {
-          actions: [assign({ language: ({ event }) => event.language })],
-        },
-        UPDATE_TEXT: {
-          actions: [
-            assign({ text: ({ event }) => event.text }),
-            log('update text from interpret'),
-          ],
-        },
-      },
-    },
     verifying: {
       invoke: {
         id: 'fetcher',
@@ -126,13 +90,14 @@ export const machine = setup({
           actions: [assign({ taskId: ({ event }) => event.output })],
         },
         onError: {
-          target: 'idle',
+          target: 'done',
           actions: [
-            assign({
-              inputError: ({ event }) => errorSchema.parse(event.error).message,
-              inputColor: 'danger',
+            sendParent(({ event }) => {
+              return {
+                type: 'VERIFYING_ERROR',
+                error: errorSchema.parse(event.error).message,
+              };
             }),
-            'unsetRootLoading',
           ],
         },
       },
@@ -140,26 +105,21 @@ export const machine = setup({
     waiting: {
       on: {
         TASK_COMPLETE: {
-          target: 'idle',
+          target: 'done',
           actions: [
             sendParent(({ event, context }) => {
               return {
-                type: 'ROOT_TASK_COMPLETE',
+                type: 'TASK_COMPLETE',
                 data: event.data,
                 taskId: context.taskId,
               };
             }),
-            'unsetRootLoading',
           ],
         },
         TASK_ERROR: {
-          target: 'idle',
+          target: 'done',
           actions: [
-            assign({
-              inputError: 'unknown error',
-              inputColor: 'danger',
-            }),
-            'unsetRootLoading',
+            sendParent({ type: 'WAITING_ERROR', error: 'unknown error' }),
           ],
         },
       },
@@ -171,10 +131,10 @@ export const machine = setup({
           baseUrl: context.baseUrl,
           token: context.token,
         }),
-        onError: {
-          actions: [log('onError from subscriber def called')],
-        },
       },
+    },
+    done: {
+      type: 'final',
     },
   },
 });

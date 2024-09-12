@@ -29,7 +29,6 @@ export const interpretation$ = fromCallback<
       const data = ariDataSchema.parse(d);
       sendBack({ type: 'TASK_COMPLETE', data: data });
     } catch (e) {
-      console.log('z validation error', e);
       sendBack({ type: 'TASK_ERROR' });
     }
   };
