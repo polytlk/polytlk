@@ -29,24 +29,26 @@ const errorSchema = z
 
 type errorMessages = z.infer<typeof errorMessagesSchema>;
 
+export type InterpretContext = {
+  language: 'zh' | 'kr';
+  text: string;
+  loading: boolean;
+  inputError: errorMessages;
+  inputColor: 'light' | 'danger';
+  taskId: string;
+  taskIds: string[];
+  baseUrl: string;
+  token: string;
+  results: Record<string, ariData>;
+};
+
 export const machine = setup({
   types: {
     input: {} as {
       baseUrl: string;
       token: string;
     },
-    context: {} as {
-      language: 'zh' | 'kr';
-      text: string;
-      loading: boolean;
-      inputError: errorMessages;
-      inputColor: 'light' | 'danger';
-      taskId: string;
-      taskIds: string[];
-      baseUrl: string;
-      token: string;
-      results: Record<string, ariData>;
-    },
+    context: {} as InterpretContext,
     events: {} as eventType,
     children: {} as {
       fetcher: 'interpretationFetcher';

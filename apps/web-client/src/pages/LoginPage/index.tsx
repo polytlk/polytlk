@@ -16,8 +16,6 @@ const LoginContainer: FC = () => {
   const history = useHistory();
   const token = RootContext.useSelector(({ context }) => context.token);
   const loading = RootContext.useSelector(({ context }) => context.loading);
-  console.log("token", token)
-  console.log("loading", loading)
 
   useEffect(() => {
     EchoPlugin.addListener('loginResult', (data: { token: string }) => {

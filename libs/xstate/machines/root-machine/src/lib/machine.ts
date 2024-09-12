@@ -1,4 +1,8 @@
+import type { AuthEvents } from 'auth-machine';
+import type { InterpretContext, InterpretEvents } from 'interpret-machine';
+
 import { authChecker, deleteCookie, setCookie } from 'auth-machine';
+import { machine as interpretMachine } from 'interpret-machine';
 import { assign, raise, setup } from 'xstate';
 
 export const machine = setup({
@@ -9,16 +13,11 @@ export const machine = setup({
       loading: boolean;
       checked: boolean;
       baseUrl: string;
+      interpret: Omit<InterpretContext, 'token' | 'baseUrl'>;
     },
-    events: {} as
-      | { type: 'LOGOUT' }
-      | {
-          type: 'COOKIE_VALID';
-          payload: { hashedToken: string; token: string };
-        }
-      | { type: 'COOKIE_INVALID' }
-      | { type: 'START_LOGIN'; hashedToken: string },
+    events: {} as AuthEvents | InterpretEvents,
     children: {} as {
+      machineInterpreter: 'interpretMachine';
       checkAuth: 'authChecker';
       cookieDeleter: 'deleteCookie';
       cookieSetter: 'setCookie';
@@ -33,6 +32,7 @@ export const machine = setup({
     checked: assign({ checked: true }),
   },
   actors: {
+    interpretMachine,
     authChecker,
     deleteCookie,
     setCookie,
@@ -44,6 +44,16 @@ export const machine = setup({
     loading: false,
     checked: false,
     baseUrl: input.baseUrl,
+    interpret: {
+      language: 'zh',
+      text: '',
+      taskId: '',
+      taskIds: [],
+      inputError: '',
+      inputColor: 'light',
+      loading: false,
+      results: {},
+    },
   }),
   id: 'root',
   initial: 'logged-out',
@@ -117,6 +127,14 @@ export const machine = setup({
       initial: 'ready',
       states: {
         ready: {
+          invoke: {
+            id: 'machineInterpreter',
+            src: 'interpretMachine',
+            input: ({ context }) => ({
+              token: context.token,
+              baseUrl: context.token,
+            }),
+          },
           on: {
             LOGOUT: {
               target: 'logging-out',
