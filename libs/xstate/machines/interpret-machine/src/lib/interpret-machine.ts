@@ -1,6 +1,6 @@
 import type { ariData } from './actors/observables';
 
-import { assign, log, setup } from 'xstate';
+import { assign, log, sendParent, setup } from 'xstate';
 import { z } from 'zod';
 
 import { interpretation$ } from './actors/observables';
@@ -60,8 +60,8 @@ export const machine = setup({
   },
   actions: {
     clearError: assign({ inputError: '', inputColor: 'light' }),
-    setLoading: assign({ loading: true }),
-    resetLoading: assign({ loading: false }),
+    setRootLoading: sendParent({ type: 'INTERPRET_LOADING' }),
+    unsetRootLoading: sendParent({ type: 'INTERPRET_LOAD_DONE' }),
   },
   actors: {
     interpretationFetcher,
@@ -96,14 +96,18 @@ export const machine = setup({
               inputError: '',
               inputColor: 'light',
             }),
-            'setLoading',
+            'setRootLoading',
+            log('submit from interpret'),
           ],
         },
         UPDATE_LANGUAGE: {
           actions: [assign({ language: ({ event }) => event.language })],
         },
         UPDATE_TEXT: {
-          actions: [assign({ text: ({ event }) => event.text })],
+          actions: [
+            assign({ text: ({ event }) => event.text }),
+            log('update text from interpret'),
+          ],
         },
       },
     },
@@ -128,7 +132,7 @@ export const machine = setup({
               inputError: ({ event }) => errorSchema.parse(event.error).message,
               inputColor: 'danger',
             }),
-            'resetLoading',
+            'unsetRootLoading',
           ],
         },
       },
@@ -138,14 +142,14 @@ export const machine = setup({
         TASK_COMPLETE: {
           target: 'idle',
           actions: [
-            assign({
-              results: ({ context, event }) => ({
-                ...context.results,
-                [context.taskId]: event.data,
-              }),
-              taskIds: ({ context }) => [...context.taskIds, context.taskId],
+            sendParent(({ event, context }) => {
+              return {
+                type: 'ROOT_TASK_COMPLETE',
+                data: event.data,
+                taskId: context.taskId,
+              };
             }),
-            'resetLoading',
+            'unsetRootLoading',
           ],
         },
         TASK_ERROR: {
@@ -155,7 +159,7 @@ export const machine = setup({
               inputError: 'unknown error',
               inputColor: 'danger',
             }),
-            'resetLoading',
+            'unsetRootLoading',
           ],
         },
       },

@@ -1,9 +1,13 @@
 import type { AuthEvents } from 'auth-machine';
-import type { InterpretContext, InterpretEvents } from 'interpret-machine';
+import type {
+  ariData,
+  InterpretContext,
+  InterpretEvents,
+} from 'interpret-machine';
 
 import { authChecker, deleteCookie, setCookie } from 'auth-machine';
 import { machine as interpretMachine } from 'interpret-machine';
-import { assign, raise, setup } from 'xstate';
+import { assign, raise, sendTo, setup } from 'xstate';
 
 export const machine = setup({
   types: {
@@ -15,7 +19,12 @@ export const machine = setup({
       baseUrl: string;
       interpret: Omit<InterpretContext, 'token' | 'baseUrl'>;
     },
-    events: {} as AuthEvents | InterpretEvents,
+    events: {} as
+      | AuthEvents
+      | InterpretEvents
+      | { type: 'INTERPRET_LOADING' }
+      | { type: 'INTERPRET_LOAD_DONE' }
+      | { type: 'ROOT_TASK_COMPLETE'; data: ariData; taskId: string },
     children: {} as {
       machineInterpreter: 'interpretMachine';
       checkAuth: 'authChecker';
@@ -29,6 +38,12 @@ export const machine = setup({
   actions: {
     startLoading: assign({ loading: true }),
     stopLoading: assign({ loading: false }),
+    setInterpretLoading: assign(({ context }) => ({
+      interpret: { ...context.interpret, loading: true },
+    })),
+    unsetInterpretLoading: assign(({ context }) => ({
+      interpret: { ...context.interpret, loading: false },
+    })),
     checked: assign({ checked: true }),
   },
   actors: {
@@ -45,8 +60,8 @@ export const machine = setup({
     checked: false,
     baseUrl: input.baseUrl,
     interpret: {
-      language: 'zh',
       text: '',
+      language: 'zh',
       taskId: '',
       taskIds: [],
       inputError: '',
@@ -130,14 +145,49 @@ export const machine = setup({
           invoke: {
             id: 'machineInterpreter',
             src: 'interpretMachine',
-            input: ({ context }) => ({
-              token: context.token,
-              baseUrl: context.token,
-            }),
+            input: ({ context }) => {
+              return {
+                token: context.token,
+                baseUrl: context.baseUrl,
+              };
+            },
           },
           on: {
             LOGOUT: {
               target: 'logging-out',
+            },
+            INTERPRET_LOADING: {
+              actions: 'setInterpretLoading',
+            },
+            INTERPRET_LOAD_DONE: {
+              actions: 'unsetInterpretLoading',
+            },
+            UPDATE_TEXT: {
+              actions: sendTo('machineInterpreter', ({ event }) => {
+                return { type: 'UPDATE_TEXT', text: event.text };
+              }),
+            },
+            UPDATE_LANGUAGE: {
+              actions: sendTo('machineInterpreter', ({ event }) => {
+                return { type: 'UPDATE_LANGUAGE', language: event.language };
+              }),
+            },
+            SUBMIT: {
+              actions: sendTo('machineInterpreter', () => {
+                return { type: 'SUBMIT' };
+              }),
+            },
+            ROOT_TASK_COMPLETE: {
+              actions: assign({
+                interpret: ({ context, event }) => ({
+                  ...context.interpret,
+                  results: {
+                    ...context.interpret.results,
+                    [event.taskId]: event.data,
+                  },
+                  taskIds: [...context.interpret.taskIds, event.taskId],
+                }),
+              }),
             },
           },
         },

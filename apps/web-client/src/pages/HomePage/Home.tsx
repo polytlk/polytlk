@@ -112,6 +112,7 @@ const Home: React.FC<HomeProps> = ({
                     value={text}
                     placeholder="Enter Text"
                     onIonChange={(e: { detail: { value: string } }) => {
+                      console.log('updatedText');
                       send({
                         type: 'UPDATE_TEXT',
                         text: e.detail.value + '',
@@ -124,6 +125,7 @@ const Home: React.FC<HomeProps> = ({
               <IonCol size="1">
                 <IonButton
                   onClick={() => {
+                    console.log('clicked submit');
                     send({ type: 'SUBMIT' });
                   }}
                 >
