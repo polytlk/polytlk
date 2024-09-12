@@ -4,22 +4,24 @@ import { EchoPlugin } from '@polytlk/echo-plugin';
 import { useContext, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { AuthContext } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
+import { RootContext } from '../../RootContext';
 import { LoginPage } from './LoginPage';
 
 const LoginContainer: FC = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null); // Create a ref
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!;
-  const authRef = AuthContext.useActorRef();
+  const rootRef = RootContext.useActorRef();
   const history = useHistory();
-  const token = AuthContext.useSelector(({ context }) => context.token);
-  const loading = AuthContext.useSelector(({ context }) => context.loading);
+  const token = RootContext.useSelector(({ context }) => context.token);
+  const loading = RootContext.useSelector(({ context }) => context.loading);
+  console.log("token", token)
+  console.log("loading", loading)
 
   useEffect(() => {
     EchoPlugin.addListener('loginResult', (data: { token: string }) => {
-      authRef.send({ type: 'START_LOGIN', hashedToken: data.token });
+      rootRef.send({ type: 'START_LOGIN', hashedToken: data.token });
     });
 
     if (config.platform === 'web') {

@@ -1,10 +1,10 @@
 import { createBrowserInspector } from '@statelyai/inspect';
 import { createActorContext } from '@xstate/react';
-import { machine } from 'auth-machine';
+import { machine } from 'xstate/machines/root-machine';
 
 const { inspect } = createBrowserInspector();
 
-export const AuthContext = createActorContext(machine, {
+export const RootContext = createActorContext(machine, {
   inspect,
   input: { baseUrl: import.meta.env.BASE_URL },
 });

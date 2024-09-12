@@ -21,11 +21,11 @@ import { IonReactRouter } from '@ionic/react-router';
 import { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import { AuthContext } from './AuthContext';
 import ConfigContext from './ConfigContext';
 import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
+import { RootContext } from './RootContext';
 import Config from './utils/config';
 
 setupIonicReact();
@@ -50,7 +50,7 @@ const App: React.FC = () => {
 
   return (
     <ConfigContext.Provider value={config}>
-      <AuthContext.Provider>
+      <RootContext.Provider>
         <IonApp>
           <IonReactRouter>
             <IonRouterOutlet>
@@ -64,7 +64,7 @@ const App: React.FC = () => {
             </IonRouterOutlet>
           </IonReactRouter>
         </IonApp>
-      </AuthContext.Provider>
+      </RootContext.Provider>
     </ConfigContext.Provider>
   );
 };

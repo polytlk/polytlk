@@ -6,8 +6,8 @@ import { useActorRef, useSelector } from '@xstate/react';
 import { machine } from 'interpret-machine';
 import { useContext } from 'react';
 
-import { AuthContext } from '../../AuthContext';
 import ConfigContext from '../../ConfigContext';
+import { RootContext } from '../../RootContext';
 import Home from './Home';
 
 const { inspect } = createBrowserInspector();
@@ -15,11 +15,11 @@ const { inspect } = createBrowserInspector();
 const HomeContainer: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const config = useContext(ConfigContext)!;
-  const token = AuthContext.useSelector(({ context }) => context.token);
-  const authRef = AuthContext.useActorRef();
+  const token = RootContext.useSelector(({ context }) => context.token);
+  const rootRef = RootContext.useActorRef();
 
   const handleLogout = () => {
-    authRef.send({ type: 'LOGOUT' });
+    rootRef.send({ type: 'LOGOUT' });
   };
 
   const interpretRef = useActorRef(machine, {

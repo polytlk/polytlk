@@ -2,7 +2,7 @@ import type { ComponentType, FunctionComponent } from 'react';
 
 import { Redirect, Route } from 'react-router-dom';
 
-import { AuthContext } from './AuthContext';
+import { RootContext } from './RootContext';
 
 type PrivateRouteProps = {
   component: ComponentType;
@@ -11,8 +11,8 @@ type PrivateRouteProps = {
 const PrivateRoute: FunctionComponent<
   PrivateRouteProps & Record<string, unknown>
 > = ({ component: Component, ...rest }) => {
-  const token = AuthContext.useSelector(({ context }) => context.token);
-  const checked = AuthContext.useSelector(({ context }) => context.checked);
+  const token = RootContext.useSelector(({ context }) => context.token);
+  const checked = RootContext.useSelector(({ context }) => context.checked);
 
   if (!token && !checked) {
     return null;
