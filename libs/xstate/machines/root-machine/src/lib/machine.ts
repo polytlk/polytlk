@@ -6,22 +6,27 @@ import type {
   InterpretContext,
 } from 'interpret-machine';
 import type { UserInterpretEvents } from './types';
+import type { EnvType } from './env-schema'
 
 import { authChecker, deleteCookie, setCookie } from 'auth-machine';
 import { machine as interpretMachine } from 'interpret-machine';
 import { assign, raise, setup } from 'xstate';
+import { getConfig } from './actors';
 
 export const machine = setup({
   types: {
     context: {} as {
+      env: unknown;
+      config:  EnvType;
+      platform: "ios" | "web" | "android";
+      isVirtual: boolean;
       hashedToken: string;
       token: string;
       loading: boolean;
       checked: boolean;
-      baseUrl: string;
       interpret: Omit<InterpretContext, 'token' | 'baseUrl' | 'inputError'> & {
         inputError: errorMessages | '';
-      };
+      }
     },
     events: {} as AuthEvents | UserInterpretEvents | InternalInterpretEvents,
     children: {} as {
@@ -29,9 +34,10 @@ export const machine = setup({
       checkAuth: 'authChecker';
       cookieDeleter: 'deleteCookie';
       cookieSetter: 'setCookie';
+      configGetter: 'getConfig';
     },
     input: {} as {
-      baseUrl: string;
+      env: unknown
       taskIds?: string[];
       results?: Record<string, ariData>;
     },
@@ -52,14 +58,22 @@ export const machine = setup({
     authChecker,
     deleteCookie,
     setCookie,
+    getConfig
   },
 }).createMachine({
   context: ({ input }) => ({
+    env: input.env,
+    config: {
+      TARGET_ENV: "local",
+      BASE_URL: "http://localhost:8080",
+      CLIENT_ID_WEB: "540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com",
+    },
+    platform: "web",
+    isVirtual: false,
     hashedToken: '',
     token: '',
     loading: false,
     checked: false,
-    baseUrl: input.baseUrl,
     interpret: {
       text: '',
       language: 'zh',
@@ -72,8 +86,25 @@ export const machine = setup({
     },
   }),
   id: 'root',
-  initial: 'logged-out',
+  initial: 'loading',
   states: {
+    'loading': {
+      invoke: {
+        id: 'configGetter',
+        src: 'getConfig',
+        input: ({context}) => ({env: context.env}),
+        onDone: {
+          target: 'logged-out',
+          actions: assign({config: ({event}) => event.output.config, platform: ({event}) => event.output.platform, isVirtual: ({event}) => event.output.isVirtual})
+        },
+        onError: {
+          actions: ({event}) => {
+            console.log("event", event)
+            console.log("fatal config error occured")
+          }
+        }
+      }
+    },
     'logged-out': {
       initial: 'checking-cookie',
       states: {
@@ -82,7 +113,7 @@ export const machine = setup({
             id: 'checkAuth',
             src: 'authChecker',
             input: ({ context }) => ({
-              baseUrl: context.baseUrl,
+              baseUrl: context.config.BASE_URL,
             }),
             onError: {
               actions: [raise({ type: 'COOKIE_INVALID' })],
@@ -177,7 +208,7 @@ export const machine = setup({
             input: ({ context }) => {
               return {
                 token: context.token,
-                baseUrl: context.baseUrl,
+                baseUrl: context.config.BASE_URL,
                 text: context.interpret.text,
                 language: context.interpret.language,
               };
