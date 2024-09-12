@@ -1,5 +1,4 @@
 import type { UserInterpretEvents } from 'xstate/machines/root-machine';
-import type { LanguageDataProps } from '../../components/LanguageData';
 
 import {
   IonButton,
@@ -24,7 +23,6 @@ import { logOutOutline } from 'ionicons/icons';
 import { LanguageDataList } from '../../components/LanguageDataList';
 
 type HomeProps = {
-  data: LanguageDataProps[];
   inputError: string;
   inputColor: string;
   loading: boolean;
@@ -35,7 +33,6 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({
-  data,
   inputError,
   language,
   inputColor,
@@ -56,7 +53,7 @@ const Home: React.FC<HomeProps> = ({
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <LanguageDataList data={data} />
+        <LanguageDataList />
         <IonGrid fixed={true}>
           <IonRow>
             <strong

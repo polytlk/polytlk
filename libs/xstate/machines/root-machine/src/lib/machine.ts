@@ -1,5 +1,6 @@
 import type { AuthEvents } from 'auth-machine';
 import type {
+  ariData,
   errorMessages,
   InternalInterpretEvents,
   InterpretContext,
@@ -8,7 +9,7 @@ import type { UserInterpretEvents } from './types';
 
 import { authChecker, deleteCookie, setCookie } from 'auth-machine';
 import { machine as interpretMachine } from 'interpret-machine';
-import { assign, log, raise, setup } from 'xstate';
+import { assign, raise, setup } from 'xstate';
 
 export const machine = setup({
   types: {
@@ -31,6 +32,8 @@ export const machine = setup({
     },
     input: {} as {
       baseUrl: string;
+      taskIds?: string[];
+      results?: Record<string, ariData>;
     },
   },
   actions: {
@@ -61,11 +64,11 @@ export const machine = setup({
       text: '',
       language: 'zh',
       taskId: '',
-      taskIds: [],
+      taskIds: input.taskIds || [],
       inputError: '',
       inputColor: 'light',
       loading: false,
-      results: {},
+      results: input.results || {},
     },
   }),
   id: 'root',
@@ -187,11 +190,6 @@ export const machine = setup({
             TASK_COMPLETE: {
               target: 'ready',
               actions: [
-                log('task complete from root'),
-                ({ event, context }) => {
-                  console.log('event', event);
-                  console.log('context', context);
-                },
                 assign({
                   interpret: ({ context, event }) => ({
                     ...context.interpret,

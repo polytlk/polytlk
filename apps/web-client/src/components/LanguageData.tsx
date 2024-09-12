@@ -13,17 +13,18 @@ import {
 } from '@ionic/react';
 import React, { useState } from 'react';
 
+import { RootContext } from '../RootContext';
+
 export type LanguageDataProps = {
-  words: [string, string, string][];
-  meaning: string;
-  dialogue: [string, string, string][];
+  id: string;
 };
 
-export const LanguageData: FC<LanguageDataProps> = ({
-  words,
-  meaning,
-  dialogue,
-}) => {
+const { useSelector } = RootContext;
+
+export const LanguageData: FC<LanguageDataProps> = ({ id }) => {
+  const results = useSelector(({ context }) => context.interpret.results);
+  const { words, dialogue, meaning } = results[id]!;
+
   const sentence = words.reduce((sentence, [word]) => word + sentence, '');
   const [expanded, setExpanded] = useState(false);
 

@@ -1,22 +1,20 @@
-import type { LanguageDataProps } from './LanguageData';
-
 import { IonCol, IonImg } from '@ionic/react';
-import { type FC } from 'react';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
+import { RootContext } from '../RootContext';
 import { LanguageData } from './LanguageData';
 
-export const LanguageDataList: FC<{ data: LanguageDataProps[] }> = ({
-  data,
-}) => {
-  return data.length > 0 ? (
+const { useSelector } = RootContext;
+
+export const LanguageDataList = () => {
+  const resultIds = useSelector(({ context }) => context.interpret.taskIds);
+
+  return resultIds.length > 0 ? (
     <Virtuoso
       style={{ height: '50%' }}
-      data={data}
-      itemContent={(index, { words, dialogue, meaning }) => (
-        <LanguageData words={words} dialogue={dialogue} meaning={meaning} />
-      )}
+      data={resultIds}
+      itemContent={(_, id) => <LanguageData key={id} id={id} />}
     />
   ) : (
     <>

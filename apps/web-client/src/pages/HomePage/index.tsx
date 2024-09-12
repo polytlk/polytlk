@@ -19,24 +19,9 @@ const HomeContainer: FC = () => {
   const inputColor = useSelector(({ context }) => context.interpret.inputColor);
   const inputError = useSelector(({ context }) => context.interpret.inputError);
   const text = useSelector(({ context }) => context.interpret.text);
-  const data = useSelector(({ context }) => {
-    const { results } = context.interpret;
-    let key: keyof typeof results;
-    const d = [];
-
-    for (key in results) {
-      const result = results[key];
-      if (result !== undefined) {
-        d.push(result);
-      }
-    }
-
-    return d;
-  });
 
   return (
     <Home
-      data={data}
       inputError={inputError}
       inputColor={inputColor}
       language={language}
