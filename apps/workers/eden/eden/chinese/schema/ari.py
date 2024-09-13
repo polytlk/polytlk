@@ -1,8 +1,9 @@
 """This module defines the schema of a chinese ARI."""
 import re
 import unicodedata
+from typing import Annotated
 
-from pydantic import BaseModel, constr, validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, validator
 from zhon.pinyin import sent as pinyin_sent
 from zhon.pinyin import syl as pinyin_syl
 
@@ -28,9 +29,10 @@ class ChineseInterpretation(BaseModel):
             - translation
 
     """
+    model_config = ConfigDict(regex_engine='python-re', arbitrary_types_allowed=True)
 
-    words: list[tuple[str, constr(regex=pinyin_syl), str]]
-    meaning: constr(min_length=1)
+    words: list[tuple[str, Annotated[str, StringConstraints(pattern=pinyin_syl)], str]]
+    meaning: Field(min_length=1)
     dialogue: list[tuple[str, str, str]]
 
     @validator('words')

@@ -56,6 +56,7 @@ base = [
   'redis-master',
   'tyk-operator',
   'tyk-gateway',
+  'postgresql'
 ]
 
 host = []
@@ -135,6 +136,13 @@ if not LOCAL_MODE == 'msw':
               repo_name='bitnami',
               repo_url='https://charts.bitnami.com/bitnami',
               version="18.0.0",
+              set=['auth.enabled=false']
+  )
+
+  helm_remote('postgresql',
+              repo_name='bitnami',
+              repo_url='https://charts.bitnami.com/bitnami',
+              version="15.5.29",
               set=['auth.enabled=false']
   )
 

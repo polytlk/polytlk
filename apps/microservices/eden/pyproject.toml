@@ -40,6 +40,8 @@ python = ">=3.11,<4.0"
 redis = "^4.5.5"
 sse-starlette = "^1.6.1"
 zhon = "^1.1.5"
+sqlmodel = "^0.0.22"
+psycopg2 = "^2.9.9"
 
 [tool.poetry.dependencies.uvicorn]
 extras = ["standard"]
