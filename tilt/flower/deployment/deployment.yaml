@@ -30,6 +30,9 @@ spec:
           securityContext:
             null
           image: "mher/flower:latest"
+          ports:
+            - containerPort: 5555
+              protocol: TCP
           env:
             - name: CELERY_BROKER_URL
               valueFrom:

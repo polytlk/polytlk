@@ -5,7 +5,9 @@ fullnameOverride: "flower"
 image:
   repository: "mher/flower"
 service:
-  enabled: false
+  enabled: true
+  type: ClusterIP
+  port: 5555
 autoscaling:
   enabled: false
 
