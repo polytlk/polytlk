@@ -1,17 +1,9 @@
 import { EventObject, fromCallback } from 'xstate';
 import { z } from 'zod';
 
-const ariDataSchema = z.object({
-  words: z.array(z.tuple([z.string(), z.string(), z.string()])),
-  meaning: z.string(),
-  dialogue: z.array(z.tuple([z.string(), z.string(), z.string()])),
-});
+import { taskStreamTaskTaskIdStreamGetResponse } from '../gen/zod';
 
-export type ariData = z.infer<typeof ariDataSchema>;
-
-const schema = z.object({
-  ari_data: z.string(),
-});
+export type ariData = z.infer<typeof taskStreamTaskTaskIdStreamGetResponse.shape.ari_data>;
 
 export const interpretation$ = fromCallback<
   EventObject,
@@ -22,13 +14,12 @@ export const interpretation$ = fromCallback<
   );
 
   // Handle incoming messages
-  eventSource.onmessage = (event) => {
+  eventSource.onmessage = ({ data }) => {
     try {
-      const { ari_data } = schema.parse(JSON.parse(event.data));
-      const d = JSON.parse(ari_data);
-      const data = ariDataSchema.parse(d);
-      sendBack({ type: 'TASK_COMPLETE', data: data });
+      const { ari_data } = taskStreamTaskTaskIdStreamGetResponse.parse(JSON.parse(data));
+      sendBack({ type: 'TASK_COMPLETE', data: ari_data });
     } catch (e) {
+      console.log("eventSource.onmessage -> catch -> e", e)
       sendBack({ type: 'TASK_ERROR' });
     }
   };

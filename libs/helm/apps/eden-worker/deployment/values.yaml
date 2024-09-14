@@ -8,17 +8,13 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
 securityContext: {}
-resources: {}
-# We usually recommend not to specify default resources and to leave this as a conscious
-# choice for the user. This also increases chances charts run on environments with little
-# resources, such as Minikube. If you do want to specify resources, uncomment the following
-# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-# limits:
-#   cpu: 100m
-#   memory: 128Mi
-# requests:
-#   cpu: 100m
-#   memory: 128Mi
+resources:
+  requests:
+    memory: "512Mi"  # Minimum memory guaranteed
+    cpu: "500m"    # CPU guaranteed
+  limits:
+    memory: "2Gi"  # Maximum memory allowed
+    cpu: "1000m"  
 autoscaling:
   enabled: false
 # Additional volumes on the output Deployment definition.

@@ -56,7 +56,14 @@ base = [
   'redis-master',
   'tyk-operator',
   'tyk-gateway',
-  'postgresql'
+  'postgresql',
+  'flower',
+  # 'kube-prometheus-stack-kube-state-metrics',
+  # 'kube-prometheus-stack-operator',
+  # 'kube-prometheus-stack-admission-create',
+  # 'kube-prometheus-stack-admission-patch',
+  # 'kube-prometheus-stack-prometheus-node-exporter',
+  # 'kube-prometheus-stack-grafana'
 ]
 
 host = []
@@ -143,12 +150,31 @@ if not LOCAL_MODE == 'msw':
               repo_name='bitnami',
               repo_url='https://charts.bitnami.com/bitnami',
               version="15.5.29",
-              set=['auth.enabled=false']
+              set=['auth.postgresPassword=helloworld']
+  )
+
+  # helm_remote('kube-prometheus-stack',
+  #             repo_name='prometheus-community',
+  #             repo_url='https://prometheus-community.github.io/helm-charts'
+  # )
+
+
+  k8s_resource(
+    workload='redis-master',
+    labels=['data-storage'],
+  )
+
+  k8s_resource(
+    workload='postgresql',
+    labels=['data-storage'],
+    port_forwards=5300
   )
 
   include('./tilt/otel-collector/Tiltfile')
   include('./tilt/tyk/Tiltfile')
   include('./tilt/tyk-operator/Tiltfile')
+
+  include('./tilt/flower/Tiltfile')
 
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')

@@ -25,7 +25,14 @@ export const taskStreamTaskTaskIdStreamGetParams = zod.object({
   task_id: zod.string(),
 });
 
-export const taskStreamTaskTaskIdStreamGetResponse = zod.any();
+export const taskStreamTaskTaskIdStreamGetResponse = zod.object({
+  response: zod.string(),
+  ari_data: zod.object({
+    words: zod.array(zod.tuple([zod.string(), zod.string(), zod.string()])),
+    meaning: zod.string(),
+    dialogue: zod.array(zod.tuple([zod.string(), zod.string(), zod.string()])),
+  }),
+});
 
 /**
  * Liveness probe endpoint to check if the application is running.

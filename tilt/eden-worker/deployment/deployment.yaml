@@ -45,3 +45,10 @@ spec:
               value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi

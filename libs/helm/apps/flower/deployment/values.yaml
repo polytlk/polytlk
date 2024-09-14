@@ -1,0 +1,11 @@
+replicaCount: 1
+imagePullSecrets: []
+nameOverride: "flower"
+fullnameOverride: "flower"
+image:
+  repository: "mher/flower"
+service:
+  enabled: false
+autoscaling:
+  enabled: false
+

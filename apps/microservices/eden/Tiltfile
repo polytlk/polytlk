@@ -1,6 +1,10 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
 load('ext://secret', 'secret_yaml_generic')
+load('ext://dotenv', 'dotenv')
+load('ext://uibutton', 'cmd_button', 'location')
+
+dotenv()
 
 NAMESPACE='eden'
 TYK_PATH='../../../tilt/eden'
@@ -33,4 +37,13 @@ nerdctl_build('eden-svc-img', '.',
         run('cd /code && poetry install --no-interaction --no-root --without dev',
             trigger=['./poetry.lock', './pyproject.toml']),
     ]
+)
+
+cmd_button(
+  name='migrate-btn',
+  argv=['sh', '-c', 'cd apps/microservices/eden && poetry run python eden/utils/migrate.py'],
+  text='eden migrate',
+  location=location.RESOURCE,
+  resource='eden-svc',
+  icon_name='sync_alt'
 )

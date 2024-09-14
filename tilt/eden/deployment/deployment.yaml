@@ -44,6 +44,21 @@ spec:
                 secretKeyRef:
                   key: CELERY_RESULT_BACKEND
                   name: eden-svc-secret-env
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: DB_HOST
+                  name: eden-svc-secret-env
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PORT
+                  name: eden-svc-secret-env
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASS
+                  name: eden-svc-secret-env
             - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
               value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT

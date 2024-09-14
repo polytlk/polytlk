@@ -1,8 +1,4 @@
 """Init Chinese NLP factory for server."""
 from eden.app import create_app
-from eden.models.database import create_db_and_tables
 
 app = create_app()
-
-if __name__ == "__main__":
-    create_db_and_tables()

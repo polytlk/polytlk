@@ -32,7 +32,7 @@ class ChineseInterpretation(BaseModel):
     model_config = ConfigDict(regex_engine='python-re', arbitrary_types_allowed=True)
 
     words: list[tuple[str, Annotated[str, StringConstraints(pattern=pinyin_syl)], str]]
-    meaning: Field(min_length=1)
+    meaning: str = Field(min_length=1)
     dialogue: list[tuple[str, str, str]]
 
     @validator('words')

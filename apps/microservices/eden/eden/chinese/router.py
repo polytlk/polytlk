@@ -4,7 +4,7 @@ import logging
 import time
 from typing import Any, Generator
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse
 from redis import Redis
 from sqlmodel import Session, select
@@ -15,9 +15,8 @@ from eden.chinese.schemas import ChineseQuery, ChineseTask, Message
 from eden.config import settings
 from eden.models.crud import (get_or_create_link, get_or_create_meaning,
                               get_or_create_unit)
-from eden.models.database import engine
-from eden.models.processing import split_by_separators
 from eden.models.models import Dialogue, ParticipantEnum
+from eden.models.processing import split_by_separators
 from eden.models.validators import WorkerReponse
 from eden.tracing import tracer  # noqa: I001
 from eden.utils.validation import is_zh
@@ -58,17 +57,21 @@ async def chinese_endpoint(user_query: ChineseQuery) -> Any:
     )
 
 
-@router.get('/task/{task_id}/stream')
-async def task_stream(task_id: str) -> EventSourceResponse:
-    async def event_generator(tid: str) -> Generator[str, None, None]:
+@router.get('/task/{task_id}/stream', response_model=WorkerReponse)
+async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
+    async def event_generator(tid: str) -> Generator[WorkerReponse, None, None]:
         while True:
+            logger.info("pinging task id -> {0}".format(task_id))
             task_result = redis_db.get(tid)
+            logger.info("result -> {0}".format(task_result))
+
             if task_result is not None:
                 data_dict = json.loads(task_result.decode('utf-8'))
                 worker_res = WorkerReponse(**data_dict)
 
                 logger.info(worker_res.ari_data)
 
+                engine = request.app.state.engine
                 with Session(engine) as session:
                     logger.info("start db session")
 
@@ -83,8 +86,7 @@ async def task_stream(task_id: str) -> EventSourceResponse:
                         logger.info('\t  len  \t\t-> {0}'.format(len(meanings)))
 
                         for single_meaning in meanings:
-                            
-                            
+        
                             was_split = len(meanings) > 1
 
                             processed.append([(hanzi, pinyin, single_meaning), was_split])
@@ -124,7 +126,7 @@ async def task_stream(task_id: str) -> EventSourceResponse:
                         session.rollback()  # Rollback in case of any error
                         logger.info("session error")
 
-                yield json.dumps(data_dict)
+                yield worker_res.model_dump_json()
                 break
             time.sleep(1)
     return EventSourceResponse(event_generator(task_id))
