@@ -15,12 +15,12 @@ def get_or_create_unit(db: Session, unit_text: str):
     return unit
 
 
-def get_or_create_meaning(db: Session, meaning_text: str):
+def get_or_create_meaning(db: Session, meaning_text: str, was_split: bool):
     statement = select(Meaning).where(Meaning.text == meaning_text)
     meaning = db.exec(statement).first()
 
     if not meaning:
-        meaning = Meaning(text=meaning_text)
+        meaning = Meaning(text=meaning_text, was_split=was_split)
         db.add(meaning)
         db.commit()
 

@@ -60,6 +60,9 @@ class Meaning(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
 
+    # Analytics columns
+    was_split: bool
+
     # Define a many-to-many relationship with Query through QueryUnitLink
     unit_links: list[UnitMeaningLink] = Relationship(back_populates='meaning')
 

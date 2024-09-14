@@ -16,7 +16,7 @@ from eden.config import settings
 from eden.models.crud import (get_or_create_link, get_or_create_meaning,
                               get_or_create_unit)
 from eden.models.database import engine
-from eden.models.models import Meaning, Unit, UnitMeaningLink
+from eden.models.processing import split_by_separators
 from eden.models.validators import WorkerReponse
 from eden.tracing import tracer  # noqa: I001
 from eden.utils.validation import is_zh
@@ -71,18 +71,36 @@ async def task_stream(task_id: str) -> EventSourceResponse:
                 with Session(engine) as session:
                     logger.info("start db session")
 
+                    processed = []
+                    for hanzi, pinyin, meaning in worker_res.ari_data.words:
+                        logger.info("original hanzi \t-> {0}".format(hanzi))
+                        logger.info("\t  pinyin \t-> {0}".format(pinyin))
+                        logger.info("\t  meaning \t-> {0}".format(meaning))
+                        meanings = split_by_separators(meaning)
+
+                        logger.info('meanings \t\t-> {0}'.format(meanings))
+                        logger.info('\t  len  \t\t-> {0}'.format(len(meanings)))
+
+                        for single_meaning in meanings:
+                            
+                            
+                            was_split = len(meanings) > 1
+
+                            processed.append([(hanzi, pinyin, single_meaning), was_split])
+
                     logger.info("checking all the word meanings")
-                    for word_meaning in worker_res.ari_data.words:
-                        logger.info("checking word meaning -> {0}".format(word_meaning))
+                    for word_meaning, was_split in processed:
+                        logger.info("\t word meaning -> {0}".format(word_meaning))
+                        logger.info("\t was_split -> {0}\n".format(was_split))
                         unit_text = word_meaning[0]
                         sound = word_meaning[1]
                         meaning_text = word_meaning[2]
 
                         unit = get_or_create_unit(session, unit_text)
-                        meaning = get_or_create_meaning(session, meaning_text)
+                        meaning = get_or_create_meaning(session, meaning_text, was_split)
                         link = get_or_create_link(session, unit.id, meaning.id, sound)
 
-                        logger.info("the unit {0} sounds like {1} and means {2}".format(link.unit, link.sound, link.meaning))
+                        logger.info("\t the unit {0} sounds like {1} and means {2}".format(link.unit.text, link.sound, link.meaning.text))
 
 
                     try:
