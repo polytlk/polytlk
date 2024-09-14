@@ -19,24 +19,25 @@ from sqlmodel import Column, Field, Integer, Relationship, SQLModel
 ##     dialogues: List['Dialogue'] = Relationship(back_populates='query')
 ##
 ##
-## class ParticipantEnum(str, Enum):
-##     A = 'A'
-##     B = 'B'
-##
-##
-## class Dialogue(SQLModel, table=True):
-##     id: Optional[int] = Field(default=None, primary_key=True)
-##     participant: ParticipantEnum
-##     text: str
-##     sound: str
-##     order: int = Field(sa_column=Column(Integer, nullable=False))  
-##
-##     query_id: int = Field(default=None, foreign_key='query.id')
-##     query: Query = Relationship(back_populates='dialogues')
-##
-##     __table_args__ = (CheckConstraint(order.sa_column > 0),)
-##
-##
+
+
+class ParticipantEnum(str, Enum):
+    A = 'A'
+    B = 'B'
+
+
+class Dialogue(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    participant: ParticipantEnum
+    text: str
+    sound: str
+    meaning: str
+    order: int = Field(sa_column=Column(Integer, nullable=False))
+
+    # query_id: int = Field(default=None, foreign_key='query.id')
+    # query: Query = Relationship(back_populates='dialogues')
+    __table_args__ = (CheckConstraint(order.sa_column > 0),)
+
 
 class UnitMeaningLink(SQLModel, table=True):
     unit_id: int = Field(default=None, foreign_key='unit.id', primary_key=True)
@@ -55,6 +56,7 @@ class Unit(SQLModel, table=True):
     meaning_links: list[UnitMeaningLink] = Relationship(back_populates='unit')
 
     __table_args__ = (UniqueConstraint('text'),)
+
 
 class Meaning(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

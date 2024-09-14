@@ -17,6 +17,7 @@ from eden.models.crud import (get_or_create_link, get_or_create_meaning,
                               get_or_create_unit)
 from eden.models.database import engine
 from eden.models.processing import split_by_separators
+from eden.models.models import Dialogue, ParticipantEnum
 from eden.models.validators import WorkerReponse
 from eden.tracing import tracer  # noqa: I001
 from eden.utils.validation import is_zh
@@ -101,6 +102,19 @@ async def task_stream(task_id: str) -> EventSourceResponse:
                         link = get_or_create_link(session, unit.id, meaning.id, sound)
 
                         logger.info("\t the unit {0} sounds like {1} and means {2}".format(link.unit.text, link.sound, link.meaning.text))
+
+                    for index, (d_text, d_sound, translation) in enumerate(worker_res.ari_data.dialogue):
+                        if index % 2 == 0:
+                            speaker = "A"  # Even index -> Speaker A
+                        else:
+                            speaker = "B"  # Odd index -> Speaker B
+
+                        logger.info(f"Person {speaker}: {d_text} ({d_sound}) -> {translation}")
+
+                        dialogue = Dialogue(order=index+1, text=d_text, sound=d_sound, meaning=translation, participant=ParticipantEnum[speaker])
+                        session.add(dialogue)
+
+                    session.commit()
 
 
                     try:
