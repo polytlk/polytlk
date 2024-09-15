@@ -1,6 +1,7 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 load('ext://nerdctl', 'nerdctl_build')
 load('ext://secret', 'secret_yaml_generic')
+load('ext://uibutton', 'cmd_button', 'location', 'choice_input')
 
 NAMESPACE = 'heimdall'
 TILT_PATH = '../../../tilt/heimdall'
@@ -14,11 +15,11 @@ k8s_resource(
     'heimdall-svc',
     labels=["auth"],
     # UNCOMMENT to test just api locally
-    port_forwards=8000 
+    # port_forwards=8000 
     # DEFAULT expose admin page
-    # port_forwards=[
-        # port_forward(8000, 8000, name='admin', link_path='/admin'),
-    #]
+    port_forwards=[
+        port_forward(8000, 8000, name='admin', link_path='/admin'),
+    ]
 )
 
 k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TILT_PATH)), NAMESPACE))
@@ -36,4 +37,19 @@ nerdctl_build('heimdall-svc-img', '.',
         run('cd /code && poetry install --no-interaction --no-root --without dev',
             trigger=['./poetry.lock', './pyproject.toml']),
     ]
+)
+
+cmd_button(
+  name='manage-btn',
+  argv=['sh', '-c', 'cd apps/microservices/heimdall && export ENVIRONMENT=local && export ALLOWED_HOSTS=localhost && poetry install && poetry run python manage.py $command'],
+  text='heimdall manage',
+  location=location.RESOURCE,
+  inputs=[
+    choice_input('command', label='command', choices=[
+        'makemigrations',
+        'migrate',
+    ])
+  ],
+  resource='heimdall-svc',
+  icon_name='sync_alt'
 )

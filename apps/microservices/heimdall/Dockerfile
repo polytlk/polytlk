@@ -9,6 +9,9 @@ ENV \
 
 SHELL ["/bin/bash", "-c"]
 
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc
+
 # Install system packages needed for final image
 RUN pip install poetry
 
@@ -32,5 +35,8 @@ ENV PATH="/code/venv/bin:$PATH"
 COPY --from=build /code/venv /code/venv
 COPY . /code
 COPY ./scripts/entrypoint.sh /code
+
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc
 
 ENTRYPOINT ["/code/entrypoint.sh"]
