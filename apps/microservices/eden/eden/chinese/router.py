@@ -15,7 +15,7 @@ from eden.chinese.schemas import ChineseQuery, ChineseTask, Message
 from eden.config import settings
 from eden.models.crud import (get_or_create_link, get_or_create_meaning,
                               get_or_create_unit)
-from eden.models.models import Dialogue, ParticipantEnum
+from eden.models.models import Dialogue, ParticipantEnum, Query, QueryUnitMeaning
 from eden.models.processing import split_by_separators
 from eden.models.validators import WorkerReponse
 from eden.tracing import tracer  # noqa: I001
@@ -75,6 +75,10 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
                 with Session(engine) as session:
                     logger.info("start db session")
 
+                    query = Query(text=worker_res.user_input)
+                    session.add(query)
+                    session.commit()
+
                     processed = []
                     for hanzi, pinyin, meaning in worker_res.ari_data.words:
                         logger.info("original hanzi \t-> {0}".format(hanzi))
@@ -105,6 +109,10 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
 
                         logger.info("\t the unit {0} sounds like {1} and means {2}".format(link.unit.text, link.sound, link.meaning.text))
 
+                        querylink = QueryUnitMeaning(query_id=query.id, unit_id=unit.id, meaning_id=meaning.id)
+                        session.add(querylink)
+                        session.commit()
+
                     for index, (d_text, d_sound, translation) in enumerate(worker_res.ari_data.dialogue):
                         if index % 2 == 0:
                             speaker = "A"  # Even index -> Speaker A
@@ -113,7 +121,7 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
 
                         logger.info(f"Person {speaker}: {d_text} ({d_sound}) -> {translation}")
 
-                        dialogue = Dialogue(order=index+1, text=d_text, sound=d_sound, meaning=translation, participant=ParticipantEnum[speaker])
+                        dialogue = Dialogue(order=index+1, text=d_text, sound=d_sound, meaning=translation, participant=ParticipantEnum[speaker], query_id=query.id)
                         session.add(dialogue)
 
                     session.commit()

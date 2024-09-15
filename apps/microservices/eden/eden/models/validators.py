@@ -21,6 +21,7 @@ class LanguageData(BaseModel):
 
 
 class WorkerReponse(BaseModel):
+    user_input: str
     response: str
     ari_data: LanguageData
 

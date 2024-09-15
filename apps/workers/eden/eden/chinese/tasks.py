@@ -60,6 +60,8 @@ def sample_task(self, user_input: str) -> Any:
 
     # TODO: make validation work again
     if ari:
+        ari['user_input'] = user_input
+
         redis_db.set(str(self.request.id), json.dumps(ari))
         return ari
 
