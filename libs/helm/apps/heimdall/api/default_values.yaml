@@ -4,6 +4,7 @@ apiDefinitions:
   protocol: http
   active: true
   proxy:
+    preserve_host_header: true
     target_url: http://heimdall-svc.heimdall.svc:8000
     listen_path: '/api/auth/'
     strip_listen_path: true

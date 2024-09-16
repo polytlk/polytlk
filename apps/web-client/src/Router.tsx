@@ -4,6 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 
 import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import PrivateRoute from './PrivateRoute'; // import the PrivateRoute component
 import { RootContext } from './RootContext';
 
@@ -18,6 +19,12 @@ const Router: React.FC = () => {
         <PrivateRoute exact path="/home" component={Home} />
         <Route exact path="/login">
           <LoginPage />
+        </Route>
+        <Route exact path="/signup">
+          <SignupPage />
+        </Route>
+        <Route exact path="/account/provider/callback">
+          <div>we did it reddit</div>
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />

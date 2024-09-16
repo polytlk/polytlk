@@ -16,7 +16,7 @@ Examples:
         2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from heimdall.health import Liveness, Readiness
@@ -28,6 +28,8 @@ urlpatterns = [
     path('check/', OAuthCheckView().as_view()),
     path('healthz/', Liveness.as_view()),
     path('readiness/', Readiness.as_view()),
+    path('accounts/', include('allauth.urls')),
+    path("_allauth/", include("allauth.headless.urls")),
 ]
 
 urlpatterns.extend([

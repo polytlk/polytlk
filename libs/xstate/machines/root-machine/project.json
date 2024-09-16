@@ -1,5 +1,5 @@
 {
-  "name": "xstate-machines-root-machine",
+  "name": "root-machine",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/xstate/machines/root-machine/src",
   "projectType": "library",

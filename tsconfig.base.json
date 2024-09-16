@@ -23,7 +23,7 @@
       "interpret-machine": [
         "libs/xstate/machines/interpret-machine/src/index.ts"
       ],
-      "xstate/machines/root-machine": [
+      "root-machine": [
         "libs/xstate/machines/root-machine/src/index.ts"
       ]
     }

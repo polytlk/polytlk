@@ -3,6 +3,7 @@ load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
+load('ext://nerdctl', 'nerdctl_build')
 
 deploy_cert_manager(version="v1.15.3")
 
@@ -58,6 +59,9 @@ base = [
   'tyk-gateway',
   'postgresql',
   'flower',
+  'ingress-nginx-controller',
+  'ingress-nginx-admission-create',
+  'ingress-nginx-admission-patch'
   # 'kube-prometheus-stack-kube-state-metrics',
   # 'kube-prometheus-stack-operator',
   # 'kube-prometheus-stack-admission-create',
@@ -71,7 +75,7 @@ host = []
 if LOCAL_MODE == 'expose_cluster':
   host = ['ngrok-tunnel', 'verdaccio']
 else:
-  host = ['react-dev-server', 'storybook', 'verdaccio']
+  host = ['web',]
 
 final_base = base + host
 
@@ -100,40 +104,47 @@ for arg in language:
 
 config.set_enabled_resources(resources)
 
-local_resource(
-  name='verdaccio',
-  serve_cmd='pnpm nx local-registry',
-  labels=['host_machine'],
-  links=link('http://localhost:4873', 'registry')
-)
-
-cmd_button(name='publish-btn',
-          argv=['sh', '-c', 'pnpm nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
-          text='local publish',
-          location=location.NAV,
-          icon_name='waving_hand',
-          inputs=[
-              text_input('ver'),
-              text_input('tag'),
-          ]
-)
+## local_resource(
+##   name='verdaccio',
+##   serve_cmd='pnpm nx local-registry',
+##   labels=['host_machine'],
+##   links=link('http://localhost:4873', 'registry')
+## )
+## 
+## cmd_button(name='publish-btn',
+##           argv=['sh', '-c', 'pnpm nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+##           text='local publish',
+##           location=location.NAV,
+##           icon_name='waving_hand',
+##           inputs=[
+##               text_input('ver'),
+##               text_input('tag'),
+##           ]
+## )
 
 if LOCAL_MODE == 'expose_cluster':
   local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
 else:
-  local_resource(
-    name='react-dev-server',
-    serve_cmd='NX_LOCAL_MODE={0} pnpm nx run web-client:serve:development'.format(LOCAL_MODE),
-    labels=['host_machine'],
-    links=link('http://localhost:4200/', 'frontend')
-  )
 
-  local_resource(
-    name='storybook',
-    serve_cmd='pnpm nx run web-client:storybook',
-    labels=['host_machine'],
-    links=link('http://localhost:4400/', 'storybook')
-  )
+## local_resource(
+##   name='storybook',
+##   serve_cmd='pnpm nx run web-client:storybook',
+##   labels=['host_machine'],
+##   links=link('http://localhost:4400/', 'storybook')
+## )
+    k8s_yaml('serve.yaml')
+
+    k8s_resource(
+      'web',
+      labels=["web"]
+    )
+
+    nerdctl_build('web', '.',     
+      live_update=[
+        sync('./apps/web-client/', '/polytlk/apps/web-client/'),
+      ]
+    )
+
 
 
 # do not load non front end dependencies if mode is msw
@@ -151,6 +162,11 @@ if not LOCAL_MODE == 'msw':
               repo_url='https://charts.bitnami.com/bitnami',
               version="15.5.29",
               set=['auth.postgresPassword=helloworld']
+  )
+
+  helm_remote('ingress-nginx',
+              repo_name='ingress-nginx',
+              repo_url='https://kubernetes.github.io/ingress-nginx',
   )
 
   # helm_remote('kube-prometheus-stack',

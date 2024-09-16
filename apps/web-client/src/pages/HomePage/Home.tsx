@@ -1,4 +1,4 @@
-import type { UserInterpretEvents } from 'xstate/machines/root-machine';
+import type { UserInterpretEvents } from 'root-machine';
 
 import {
   IonButton,

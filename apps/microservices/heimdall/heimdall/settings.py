@@ -46,6 +46,11 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.schemas',
     'drf_spectacular',
+    'allauth',
+    'allauth.account',
+    'allauth.headless',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     'heimdall',
 )
@@ -55,10 +60,11 @@ MIDDLEWARE = (
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 )
 
 ROOT_URLCONF = 'heimdall.urls'
@@ -125,6 +131,31 @@ AUTH_PASSWORD_VALIDATORS = (
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 )
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
+
+SOCIALACCOUNT_PROVIDERS = {}
+
+HEADLESS_FRONTEND_URLS = {
+    "account_signup": "http://localhost:4200/signup",
+    # Fallback in case the state containing the `next` URL is lost and the handshake
+    # with the third-party provider fails.
+    "socialaccount_login_error": "http://localhost:4200/signup-error",
+}
+
+HEADLESS_ONLY = True
+
 
 
 # Internationalization
