@@ -14,6 +14,7 @@
     "@xstate/react": "^4.1.2",
     "capacitor-secure-storage-plugin": "^0.9.0",
     "ionicons": "^7.1.2",
+
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "5.3.3",
@@ -24,19 +25,19 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
+    "@import-meta-env/unplugin": "^0.6.0",
     "@nx/react": "19.5.0",
     "@nx/webpack": "19.5.0",
     "@nxlv/python": "^19.0.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
-    "@import-meta-env/unplugin": "^0.6.0",
+    "@types/node": "18.19.48",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@types/react-router-dom": "5.3.3",
-    "@types/node": "18.19.48",
     "msw": "^1.2.2",
     "nx": "19.5.0",
-    "typescript": "5.5.4",
-    "react-refresh": "^0.10.0"
+    "react-refresh": "^0.10.0",
+    "typescript": "5.5.4"
   },
   "msw": {
     "workerDirectory": "apps/web-client/src/assets"
@@ -49,7 +50,7 @@
   },
   "private": true,
   "optionalDependencies": {
-    "orval": "^7.1.0",
+    "@apidevtools/json-schema-ref-parser": "^11.7.0",
     "@babel/core": "^7.14.5",
     "@capacitor/android": "^5.0.3",
     "@capacitor/cli": "^5.0.3",
@@ -97,11 +98,13 @@
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
     "lint-staged": "^13.2.2",
+    "orval": "^7.1.0",
     "prettier": "^2.6.2",
     "rollup-plugin-copy": "^3.4.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "url-loader": "^4.1.1",
-    "verdaccio": "^5.0.4"
+    "verdaccio": "^5.0.4",
+    "js-yaml": "^4.1.0"
   }
 }

@@ -219,6 +219,12 @@
           ]
         }
       }
+    },
+    "make-client": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./apps/web-client/scripts/makeClients.js"
+      }
     }
   },
   "implicitDependencies": ["!echo-plugin"]
