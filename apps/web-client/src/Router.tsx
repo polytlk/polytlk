@@ -2,6 +2,7 @@ import { IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 
+import CallbackPage from './pages/CallbackPage';
 import Home from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -24,7 +25,7 @@ const Router: React.FC = () => {
           <SignupPage />
         </Route>
         <Route exact path="/account/provider/callback">
-          <div>we did it reddit</div>
+          <CallbackPage />
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />
