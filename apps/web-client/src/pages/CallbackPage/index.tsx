@@ -87,7 +87,7 @@ const AuthButtons: FC<{
   if (isAuth) {
     return (
       <IonButton color="danger" onClick={handleLogout}>
-        LOGOUT
+        LOGOUTss
         <IonIcon icon={logOutOutline} />
       </IonButton>
     );

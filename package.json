@@ -8,13 +8,11 @@
     "@capacitor/device": "^5.0.4",
     "@ionic/react": "^8.3.0",
     "@ionic/react-router": "^8.3.0",
-    "@nx/web": "19.5.0",
     "@polytlk/echo-plugin": "^0.6.0",
     "@statelyai/inspect": "^0.4.0",
     "@xstate/react": "^4.1.2",
     "capacitor-secure-storage-plugin": "^0.9.0",
     "ionicons": "^7.1.2",
-
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router-dom": "5.3.3",
@@ -25,22 +23,28 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.24.7",
     "@import-meta-env/unplugin": "^0.6.0",
-    "@nx/react": "19.5.0",
-    "@nx/webpack": "19.5.0",
     "@nxlv/python": "^19.0.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@types/node": "18.19.48",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@types/react-router-dom": "5.3.3",
-    "msw": "^1.2.2",
-    "nx": "19.5.0",
+    "ajv": "8.17.1",
+    "babel-loader": "^9.2.1",
+    "connect-history-api-fallback": "^2.0.0",
+    "css-loader": "^7.1.2",
+    "express": "^4.21.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "html-webpack-plugin": "^5.6.0",
     "react-refresh": "^0.10.0",
-    "typescript": "5.5.4"
-  },
-  "msw": {
-    "workerDirectory": "apps/web-client/src/assets"
+    "style-loader": "^4.0.0",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "5.5.4",
+    "webpack": "^5.94.0",
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-hot-middleware": "^2.26.1"
   },
   "nx": {
     "includedScripts": []
@@ -50,9 +54,6 @@
   },
   "private": true,
   "optionalDependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.7.0",
-    "@babel/core": "^7.14.5",
-    "@capacitor/android": "^5.0.3",
     "@capacitor/cli": "^5.0.3",
     "@capacitor/ios": "^5.0.3",
     "@import-meta-env/typescript": "^0.4.0",
@@ -60,7 +61,6 @@
     "@nx/devkit": "19.5.0",
     "@nx/eslint": "19.5.0",
     "@nx/eslint-plugin": "19.5.0",
-    "@nx/express": "19.5.0",
     "@nx/jest": "19.5.0",
     "@nx/js": "19.5.0",
     "@nx/node": "19.5.0",
@@ -76,11 +76,6 @@
     "@storybook/core-server": "7.6.20",
     "@storybook/react": "7.6.20",
     "@storybook/react-webpack5": "7.6.20",
-    "@svgr/webpack": "^8.0.1",
-    "@swc-node/register": "~1.9.1",
-    "@swc/cli": "~0.3.12",
-    "@swc/core": "~1.5.7",
-    "@swc/helpers": "~0.5.11",
     "@testing-library/react": "15.0.6",
     "@types/jest": "^29.4.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
@@ -97,14 +92,13 @@
     "jest": "^29.4.1",
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
+    "js-yaml": "^4.1.0",
     "lint-staged": "^13.2.2",
     "orval": "^7.1.0",
     "prettier": "^2.6.2",
     "rollup-plugin-copy": "^3.4.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "url-loader": "^4.1.1",
-    "verdaccio": "^5.0.4",
-    "js-yaml": "^4.1.0"
+    "verdaccio": "^5.0.4"
   }
 }

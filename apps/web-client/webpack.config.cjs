@@ -1,41 +1,78 @@
-const { composePlugins, withNx } = require('@nx/webpack');
-const { withReact } = require('@nx/react');
+const { join, resolve } = require("path");
+
+const wpack = require('webpack')
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { webpack } = require("@import-meta-env/unplugin")
 
-// Retrieve the target platform from environment variables
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
 const targetPlatform = process.env.TARGET_PLATFORM;
+const NX_ROOT = process.env.NX_WORKSPACE_ROOT
 
-if (!targetPlatform) {
-  throw new Error('TARGET_PLATFORM environment variable is not set.');
-}
-
-const validPlatforms = ['ios', 'web'];
-if (!validPlatforms.includes(targetPlatform)) {
-  throw new Error(`Invalid TARGET_PLATFORM value: ${targetPlatform}. Valid values are ${validPlatforms.join(', ')}.`);
-}
-
-console.log("Building for " + targetPlatform)
-
-const transformMode = process.env.NODE_ENV === "production"
-  ? (targetPlatform === "web" ? "runtime" : "compile-time")
+const transformMode = isDevelopment
+  ? (targetPlatform === "web" ? "compile-time" : "runtime")
   : "compile-time";
 
-// Nx plugins for webpack.
-module.exports = composePlugins(
-  withNx(),
-  withReact(),
-  (config, ctx) => {
-    // Note: This was added by an Nx migration. Webpack builds are required to have a corresponding Webpack config file.
-    // See: https://nx.dev/recipes/webpack/webpack-config-setup
+module.exports = {
+  entry: [
+    ...(isDevelopment ? ['webpack-hot-middleware/client'] : []),
+    join(NX_ROOT, 'apps/web-client/src/main.tsx')
+  ],
+  mode: isDevelopment ? 'development' : 'production',
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+    plugins: [new TsconfigPathsPlugin({ logLevel: "info", configFile: join(__dirname, 'tsconfig.json') })]
+  },
+  output: {
+    filename: 'bundle.[fullhash].js',
+    path: resolve(__dirname, 'dist'),
+    publicPath: "/"
+  },
+  plugins: [
+    isDevelopment && new wpack.HotModuleReplacementPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin({
+      overlay: {
+        sockIntegration: 'whm',
+      },
+    }),
+    //isDevelopment && new ForkTsCheckerWebpackPlugin({
+    //  typescript: {
+    //    diagnosticOptions: {
+    //      semantic: true,
+    //      syntactic: true,
+    //    },
+    //    mode: 'write-references',
+    //  },
+    //}),
+    new HtmlWebpackPlugin({
+      template: join(NX_ROOT, 'apps/web-client/src/index.html'),
+    }),
+    webpack({
+      example: join(NX_ROOT, 'apps/web-client/.env.example'),
+      env: join(NX_ROOT, 'apps/web-client/.env'),
+      transformMode
+    }),
 
-    config.plugins = [
-      ...config.plugins,
-      webpack({
-        example: `${ctx.options.projectRoot}/.env.example`,
-        env: `${ctx.options.projectRoot}/.env`,
-        transformMode
-      }),
-    ]
-
-    return config;
-  });
+  ].filter(Boolean),
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        include: join(NX_ROOT, 'libs'),
+        use: 'babel-loader',
+      },
+      {
+        test: /\.tsx?$/,
+        include: join(NX_ROOT, 'apps/web-client/src'),
+        use: 'babel-loader',
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+};

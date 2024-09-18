@@ -6,6 +6,7 @@
 
 # Ensure everything within the apps/web-client/src folder is not ignored
 !apps/web-client/src/**
+!apps/web-client/server/**
 !apps/web-client/project.json
 !apps/web-client/webpack.config.cjs
 !apps/web-client/.env
@@ -21,4 +22,5 @@
 !pnpm-lock.yaml
 !nx.json
 !project.json
+!babel.config.js
 !tsconfig.base.json

@@ -16,16 +16,6 @@ spec:
         image: web
         ports:
         - containerPort: 4200
-        env:
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=1024"
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 1024Mi
-          requests:
-            cpu: 500m
-            memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
