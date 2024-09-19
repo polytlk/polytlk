@@ -1,0 +1,22 @@
+---
+# Source: deployment/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      nodeSelector: 
+        role: app
+      containers:
+      - name: web
+        image: localhost:5001/web
+        ports:
+        - containerPort: 4200

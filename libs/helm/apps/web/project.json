@@ -4,6 +4,12 @@
   "projectType": "library",
   "sourceRoot": "libs/helm/apps/web/src",
   "targets": {
+    "template": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh web false"
+      }
+    },
     "template:dev": {
       "executor": "nx:run-commands",
       "options": {

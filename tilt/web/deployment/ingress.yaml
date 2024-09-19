@@ -1,40 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web
-spec:
-  selector:
-    matchLabels:
-      app: web
-  template:
-    metadata:
-      labels:
-        app: web
-    spec:
-      nodeSelector: 
-        role: app
-      containers:
-      - name: web
-        image: localhost:5001/web
-        ports:
-        - containerPort: 4200
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: web
-  labels:
-    helm.sh/chart: deployment-0.1.0
-    app: web # Updated to match the app label in the deployment
-spec:
-  type: ClusterIP
-  ports:
-    - port: 4200
-      targetPort: 4200
-      protocol: TCP
-  selector:
-    app: web # Updated to match the app label in the deployment
----
+# Source: deployment/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

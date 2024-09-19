@@ -19,11 +19,19 @@ k8s_resource(
     ]
 )
 
-k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TILT_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinition-heimdall-api.yaml'.format(TILT_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinition-heimdall-all-auth.yaml'.format(TILT_PATH)), NAMESPACE))
 
 k8s_resource(
   objects=['heimdall-api:apidefinition'],
   new_name='heimdall-api',
+  labels=['api-gateway'],
+  resource_deps=['tyk-operator']
+)
+
+k8s_resource(
+  objects=['heimdall-all-auth:apidefinition'],
+  new_name='heimdall-all-auth',
   labels=['api-gateway'],
   resource_deps=['tyk-operator']
 )

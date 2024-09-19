@@ -1,10 +1,17 @@
+load('ext://namespace', 'namespace_inject')
 load('ext://podman', 'podman_build')
 
-k8s_yaml('serve.yaml')
+NAMESPACE='web'
+TYK_PATH='../../tilt/web'
+
+k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/ingress.yaml'.format(TYK_PATH)), NAMESPACE))
 
 k8s_resource(
     'web',
-    labels=["web"]
+    labels=["web"],
+    resource_deps=['ingress-nginx-controller', 'ingress-nginx-admission-create', 'ingress-nginx-admission-patch']
 )
 
 podman_build('localhost:5001/web', '.',
@@ -13,7 +20,6 @@ podman_build('localhost:5001/web', '.',
         "Dockerfile.tilt"
     ],
     live_update=[
-        sync('./apps/web-client/', '/polytlk/apps/web-client/'),
-        sync('./libs/xstate/', '/polytlk/libs/xstate/'),
+        sync('./apps/web-client/src', '/polytlk/apps/web-client/src'),
     ]
 )

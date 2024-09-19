@@ -1,30 +1,3 @@
----
-# Source: api/templates/apidefinitions.yaml
-apiVersion: tyk.tyk.io/v1alpha1
-kind: ApiDefinition
-metadata:
-  name: heimdall-api
-spec:
-  name: heimdall-api
-  use_keyless: true
-  protocol: http
-  active: true
-  proxy:
-    preserve_host_header: true
-    target_url: http://heimdall-svc.heimdall.svc:8000
-    listen_path: /api/auth/
-    strip_listen_path: true
-  CORS:
-    enable: true
-    allowed_methods:
-      - "GET"
-      - "POST"
-      - "OPTIONS"
-    allowed_origins:
-      - "http://localhost:4200"
-    max_age: 24
-  detailed_tracing: false
----
 apiVersion: tyk.tyk.io/v1alpha1 
 kind: ApiDefinition
 metadata:

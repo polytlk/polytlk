@@ -158,6 +158,9 @@ if [ "$(podman machine inspect --format '{{.State}}'  2>/dev/null)" == '' ]; the
   podman machine start
 
   run_in_podman_vm "echo '$PODMAN_REGISTRIES_CONFIG' | sudo tee /etc/containers/registries.conf.d/kind.conf > /dev/null"
+
+  podman machine stop
+  podman machine start
 fi
 
 if [ "$(podman inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
@@ -191,5 +194,7 @@ for app_type in microservices workers; do
     echo "Directory $BASE_DIR/$app_type does not exist"
   fi
 done
+
+kubectl create namespace web 2>/dev/null || true
 
 tilt ci

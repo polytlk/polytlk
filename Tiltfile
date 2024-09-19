@@ -3,11 +3,10 @@ load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
-load('ext://namespace', 'namespace_create', 'namespace_inject')
+load('ext://namespace', 'namespace_create')
 
 deploy_cert_manager(version="v1.15.3")
 namespace_create('ingress-nginx')
-
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -116,6 +115,20 @@ helm_remote(
   namespace="ingress-nginx",
   values="./ingress-values.yaml",
 )
+
+k8s_resource(
+  workload='ingress-nginx-controller',
+  labels=['ops'],
+  resource_deps=['ingress-nginx-admission-create', 'ingress-nginx-admission-patch']
+)
+
+k8s_resource(
+  objects=['ingress-nginx-admission:validatingwebhookconfiguration'],
+  new_name='nginx-validating-webhook',
+  labels=['ops'],
+  resource_deps=['ingress-nginx-controller']
+)
+
 
 ## local_resource(
 ##   name='verdaccio',
