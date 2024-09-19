@@ -1,15 +1,15 @@
-import type { AuthEvents } from 'auth-machine';
+import type { AuthEvents } from '../../auth-machine';
 import type {
   ariData,
   errorMessages,
   InternalInterpretEvents,
   InterpretContext,
-} from 'interpret-machine';
+} from '../../interpret-machine';
 import type { UserInterpretEvents } from './types';
 import type { EnvType } from './env-schema'
 
-import { authChecker, deleteCookie, setCookie } from 'auth-machine';
-import { machine as interpretMachine } from 'interpret-machine';
+import { authChecker, deleteCookie, setCookie } from '../../auth-machine';
+import { machine as interpretMachine } from '../../interpret-machine';
 import { assign, raise, setup } from 'xstate';
 import { getConfig } from './actors';
 

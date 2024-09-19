@@ -29,7 +29,7 @@ spec:
         - name: eden-svc
           securityContext:
             {}
-          image: "eden-svc-img:latest"
+          image: "localhost:5001/eden-svc-img:latest"
           ports:
             - containerPort: 7079
               protocol: TCP

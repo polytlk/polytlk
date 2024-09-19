@@ -1,5 +1,5 @@
 import { createActorContext } from '@xstate/react';
-import { machine } from 'root-machine';
+import { machine } from './xstate/root-machine';
 
 export const RootContext = createActorContext(machine, {
   input: {

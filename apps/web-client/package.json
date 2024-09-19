@@ -1,12 +1,53 @@
 {
   "name": "web-client",
   "type": "module",
+  "packageManager": "pnpm@9.9.0",
+  "scripts": {
+    "serve": "node ./server/index.cjs"
+  },
+  "dependencies": {
+    "@capacitor/core": "^5.0.3",
+    "@capacitor/device": "^5.0.4",
+    "@ionic/react": "^8.3.0",
+    "@ionic/react-router": "^8.3.0",
+    "@polytlk/echo-plugin": "^0.6.0",
+    "@statelyai/inspect": "^0.4.0",
+    "@xstate/react": "^4.1.2",
+    "capacitor-secure-storage-plugin": "^0.9.0",
+    "ionicons": "^7.1.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "5.3.3",
+    "react-virtuoso": "^4.10.4",
+    "tslib": "^2.5.0",
+    "xstate": "^5.18.1",
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
-    "@capacitor/android": "../../node_modules/@capacitor/android",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.24.7",
     "@capacitor/cli": "^5.0.3",
-    "@capacitor/device": "../../node_modules/@capacitor/device",
-    "@capacitor/ios": "../../node_modules/@capacitor/ios",
-    "@polytlk/echo-plugin": "../../node_modules/@polytlk/echo-plugin",
-    "capacitor-secure-storage-plugin": "../../node_modules/capacitor-secure-storage-plugin"
+    "@capacitor/ios": "^5.0.3",
+    "@import-meta-env/unplugin": "^0.6.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
+    "@types/node": "18.19.48",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.0",
+    "@types/react-router-dom": "5.3.3",
+    "ajv": "8.17.1",
+    "babel-loader": "^9.2.1",
+    "connect-history-api-fallback": "^2.0.0",
+    "css-loader": "^7.1.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "html-webpack-plugin": "^5.6.0",
+    "react-refresh": "^0.10.0",
+    "style-loader": "^4.0.0",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "5.5.4",
+    "webpack": "^5.94.0",
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-hot-middleware": "^2.26.1"
   }
 }

@@ -7,19 +7,22 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { webpack } = require("@import-meta-env/unplugin")
 
+require('dotenv').config()
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const targetPlatform = process.env.TARGET_PLATFORM;
-const NX_ROOT = process.env.NX_WORKSPACE_ROOT
-
+const ROOT = process.env.NX_WORKSPACE_ROOT ? `${process.env.NX_WORKSPACE_ROOT}/apps/web-client` : __dirname
 const transformMode = isDevelopment
   ? (targetPlatform === "web" ? "compile-time" : "runtime")
   : "compile-time";
 
+console.log("transformMode", transformMode)
+console.log("process.env.TARGET_PLATFORM", process.env.TARGET_PLATFORM)
+
 module.exports = {
   entry: [
     ...(isDevelopment ? ['webpack-hot-middleware/client'] : []),
-    join(NX_ROOT, 'apps/web-client/src/main.tsx')
+    join(ROOT, 'src/main.tsx')
   ],
   mode: isDevelopment ? 'development' : 'production',
   resolve: {
@@ -48,11 +51,11 @@ module.exports = {
     //  },
     //}),
     new HtmlWebpackPlugin({
-      template: join(NX_ROOT, 'apps/web-client/src/index.html'),
+      template: join(ROOT, 'src/index.html'),
     }),
     webpack({
-      example: join(NX_ROOT, 'apps/web-client/.env.example'),
-      env: join(NX_ROOT, 'apps/web-client/.env'),
+      example: join(ROOT, '.env.example'),
+      env: join(ROOT, '.env'),
       transformMode
     }),
 
@@ -61,12 +64,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        include: join(NX_ROOT, 'libs'),
-        use: 'babel-loader',
-      },
-      {
-        test: /\.tsx?$/,
-        include: join(NX_ROOT, 'apps/web-client/src'),
+        include: join(ROOT, 'src'),
         use: 'babel-loader',
       },
       {

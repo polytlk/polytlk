@@ -1,0 +1,19 @@
+load('ext://podman', 'podman_build')
+
+k8s_yaml('serve.yaml')
+
+k8s_resource(
+    'web',
+    labels=["web"]
+)
+
+podman_build('localhost:5001/web', '.',
+    extra_flags=[
+        "--file",
+        "Dockerfile.tilt"
+    ],
+    live_update=[
+        sync('./apps/web-client/', '/polytlk/apps/web-client/'),
+        sync('./libs/xstate/', '/polytlk/libs/xstate/'),
+    ]
+)

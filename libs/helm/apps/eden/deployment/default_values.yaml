@@ -1,5 +1,5 @@
 image:
-  repository: "eden-svc-img"
+  repository: "localhost:5001/eden-svc-img"
 env:
 - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
   value: "http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces"

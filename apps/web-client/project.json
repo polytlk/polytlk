@@ -52,17 +52,14 @@
         }
       }
     },
-    "serve": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node ./apps/web-client/server/index.cjs"
-      }
-    },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/web-client/**/*.{ts,tsx,js,jsx}"],
+        "lintFilePatterns": [
+          "apps/web-client/**/*.{ts,tsx,js,jsx}",
+          "apps/web-client/package.json"
+        ],
         "hasTypeAwareRules": true
       }
     },

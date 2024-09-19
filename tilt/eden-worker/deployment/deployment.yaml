@@ -29,7 +29,7 @@ spec:
         - name: eden-worker
           securityContext:
             {}
-          image: "eden-worker-img:latest"
+          image: "localhost:5001/eden-worker-img:latest"
           env:
             - name: CELERY_BROKER_URL
               valueFrom:

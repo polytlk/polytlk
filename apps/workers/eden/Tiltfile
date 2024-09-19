@@ -1,16 +1,16 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
-load('ext://nerdctl', 'nerdctl_build')
-load('ext://secret', 'secret_yaml_generic')
+load('ext://podman', 'podman_build')
 
 NAMESPACE='eden-worker'
 TYK_PATH='../../../tilt/eden-worker'
 namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('eden-worker-secret-env', from_env_file='./.env', namespace=NAMESPACE))
+# kubectl create secret generic eden-worker-secret-env --from-env-file=./.env -n eden-worker
+# k8s_yaml(secret_yaml_generic('eden-worker-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_resource('eden-worker', labels=["chinese"], resource_deps=['redis-master'])
 
-nerdctl_build('eden-worker-img', '.',     
+podman_build('localhost:5001/eden-worker-img', '.',     
     live_update=[
         sync('.', '/code'),
         run('cd /code && poetry install --no-interaction --no-root --without dev',

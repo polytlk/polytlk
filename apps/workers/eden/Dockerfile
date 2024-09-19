@@ -7,7 +7,11 @@ ENV \
     PYTHONUNBUFFERED=1 \
     PYTHONFAULTHANDLER=1 \
     RUSTFLAGS="-A invalid_reference_casting" \
-    PATH="/root/.cargo/bin:${PATH}"
+    PATH="/root/.cargo/bin:${PATH}" \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=true \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
 SHELL ["/bin/bash", "-c"]
 
@@ -18,22 +22,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     pkg-config \
  && rm -rf /var/lib/apt/lists/* \
- && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
- && pip install poetry
+ && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y 
 
 # Copy dependency information
 COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
 
 # Install application dependencies
-RUN poetry export --with local -o requirements.txt --without-hashes \
- && python -m venv /code/venv \
- && source /code/venv/bin/activate \
- && python -m ensurepip --upgrade \
- && pip install -r /code/requirements.txt
+RUN pip3 install poetry==1.8.3 && poetry install --only main --no-root --no-directory
+
+COPY ./eden /code/eden/
+
+RUN poetry install
 
 # Download the NLP model
 COPY ./eden/model /code/eden/model
-RUN source /code/venv/bin/activate && python -m eden.model.load
+RUN poetry run python -m eden.model.load
 
 # Move the 'hanlp' model to a new location
 RUN mkdir /code/.hanlp && mv /root/.hanlp/* /code/.hanlp
@@ -51,14 +54,14 @@ RUN adduser --disabled-password --gecos '' celeryuser \
 USER celeryuser
 
 # Make sure we use the virtualenv:
-ENV PATH="/code/venv/bin:$PATH"
+ENV PATH="/code/.venv/bin:$PATH"
 # Force Hugging Face 🤗 Transformers to use cached models
 ENV TRANSFORMERS_OFFLINE=0
 # Update 'HANLP_HOME' environment variable to the new model location
 ENV HANLP_HOME=/code/.hanlp
 
 COPY --from=build /code/.hanlp /code/.hanlp
-COPY --from=build /code/venv /code/venv
+COPY --from=build /code/.venv /code/.venv
 
 # Switch back to root to change file ownership
 USER root

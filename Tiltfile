@@ -3,7 +3,7 @@ load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
-load('ext://nerdctl', 'nerdctl_build')
+load('ext://namespace', 'namespace_create', 'namespace_inject')
 
 deploy_cert_manager(version="v1.15.3")
 
@@ -49,7 +49,10 @@ print(color.yellow('------------------------------------------------------------
 #################################################################################
 
 
-base = [
+required = [
+  'ingress-nginx-controller',
+  'ingress-nginx-admission-create',
+  'ingress-nginx-admission-patch',
   'heimdall-svc',
   'heimdall-api',
   'socrates-svc',
@@ -59,9 +62,9 @@ base = [
   'tyk-gateway',
   'postgresql',
   'flower',
-  'ingress-nginx-controller',
-  'ingress-nginx-admission-create',
-  'ingress-nginx-admission-patch'
+]
+
+base = [
   # 'kube-prometheus-stack-kube-state-metrics',
   # 'kube-prometheus-stack-operator',
   # 'kube-prometheus-stack-admission-create',
@@ -77,12 +80,12 @@ if LOCAL_MODE == 'expose_cluster':
 else:
   host = ['web',]
 
-final_base = base + host
+final_base = base + host + required
 
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
+  'chinese':  ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
   'korean': ['olivia-svc'] + final_base,
 }
 
@@ -103,6 +106,13 @@ for arg in language:
     resources.append(arg)
 
 config.set_enabled_resources(resources)
+
+helm_remote(
+  'ingress-nginx',
+  repo_name='ingress-nginx',
+  repo_url='https://kubernetes.github.io/ingress-nginx',
+  values="./ingress-values.yaml",
+)
 
 ## local_resource(
 ##   name='verdaccio',
@@ -125,31 +135,6 @@ config.set_enabled_resources(resources)
 if LOCAL_MODE == 'expose_cluster':
   local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
 else:
-
-## local_resource(
-##   name='storybook',
-##   serve_cmd='pnpm nx run web-client:storybook',
-##   labels=['host_machine'],
-##   links=link('http://localhost:4400/', 'storybook')
-## )
-    k8s_yaml('serve.yaml')
-
-    k8s_resource(
-      'web',
-      labels=["web"]
-    )
-
-    nerdctl_build('web', '.',     
-      live_update=[
-        sync('./apps/web-client/', '/polytlk/apps/web-client/'),
-      ]
-    )
-
-
-
-# do not load non front end dependencies if mode is msw
-if not LOCAL_MODE == 'msw':
-  # we only need redis chart for local dev
   helm_remote('redis',
               repo_name='bitnami',
               repo_url='https://charts.bitnami.com/bitnami',
@@ -164,10 +149,6 @@ if not LOCAL_MODE == 'msw':
               set=['auth.postgresPassword=helloworld']
   )
 
-  helm_remote('ingress-nginx',
-              repo_name='ingress-nginx',
-              repo_url='https://kubernetes.github.io/ingress-nginx',
-  )
 
   # helm_remote('kube-prometheus-stack',
   #             repo_name='prometheus-community',
@@ -197,3 +178,4 @@ if not LOCAL_MODE == 'msw':
   include('./apps/microservices/olivia/Tiltfile')
   include('./apps/microservices/heimdall/Tiltfile')
   include('./apps/workers/eden/Tiltfile')
+  include('./apps/web-client/Tiltfile')

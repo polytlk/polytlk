@@ -29,7 +29,7 @@ spec:
         - name: socrates-svc
           securityContext:
             {}
-          image: "socrates-svc-img:latest"
+          image: "localhost:5001/socrates-svc-img:latest"
           ports:
             - containerPort: 8079
               protocol: TCP

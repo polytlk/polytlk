@@ -1,13 +1,13 @@
 load('ext://namespace', 'namespace_create', 'namespace_inject')
-load('ext://nerdctl', 'nerdctl_build')
-load('ext://secret', 'secret_yaml_generic')
+load('ext://podman', 'podman_build')
 load('ext://uibutton', 'cmd_button', 'location', 'choice_input')
 
 NAMESPACE = 'heimdall'
 TILT_PATH = '../../../tilt/heimdall'
 namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('heimdall-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
+# kubectl create secret generic heimdall-svc-secret-env --from-env-file=./.env -n heimdall 
+# k8s_yaml(secret_yaml_generic('heimdall-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TILT_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TILT_PATH)), NAMESPACE))
 
@@ -31,7 +31,7 @@ k8s_resource(
   resource_deps=['tyk-operator']
 )
 
-nerdctl_build('heimdall-svc-img', '.',     
+podman_build('localhost:5001/heimdall-svc-img', '.',     
     live_update=[
         sync('.', '/code'),
         run('cd /code && poetry install --no-interaction --no-root --without dev',

@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: web
+        image: localhost:5001/web
         ports:
         - containerPort: 4200
 ---
