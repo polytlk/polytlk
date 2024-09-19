@@ -1,12 +1,9 @@
-load('ext://namespace', 'namespace_create', 'namespace_inject')
+load('ext://namespace', 'namespace_inject')
 load('ext://podman', 'podman_build')
 
 NAMESPACE='socrates'
 TYK_PATH='../../../tilt/socrates'
-namespace_create(NAMESPACE)
 
-# kubectl create secret generic socrates-svc-secret-env --from-env-file=./.env -n socrates
-# k8s_yaml(secret_yaml_generic('socrates-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
 

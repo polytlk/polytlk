@@ -2,36 +2,5 @@ replicaCount: 1
 imagePullSecrets: []
 nameOverride: "eden-worker"
 fullnameOverride: "eden-worker"
-service:
-  enabled: false
-podAnnotations: {}
-podLabels: {}
-podSecurityContext: {}
-securityContext: {}
-resources:
-  requests:
-    memory: "512Mi"  # Minimum memory guaranteed
-    cpu: "500m"    # CPU guaranteed
-  limits:
-    memory: "2Gi"  # Maximum memory allowed
-    cpu: "1000m"  
-autoscaling:
-  enabled: false
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+nodeSelector: 
+  role: app

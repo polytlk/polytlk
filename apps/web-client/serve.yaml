@@ -11,6 +11,8 @@ spec:
       labels:
         app: web
     spec:
+      nodeSelector: 
+        role: app
       containers:
       - name: web
         image: localhost:5001/web

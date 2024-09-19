@@ -1,5 +1,4 @@
 replicaCount: 1
-imagePullSecrets: []
 nameOverride: "flower"
 fullnameOverride: "flower"
 image:
@@ -8,6 +7,5 @@ service:
   enabled: true
   type: ClusterIP
   port: 5555
-autoscaling:
-  enabled: false
-
+nodeSelector: 
+  role: ops
