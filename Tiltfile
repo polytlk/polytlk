@@ -6,6 +6,8 @@ load('ext://cert_manager', 'deploy_cert_manager')
 load('ext://namespace', 'namespace_create', 'namespace_inject')
 
 deploy_cert_manager(version="v1.15.3")
+namespace_create('ingress-nginx')
+
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -111,6 +113,7 @@ helm_remote(
   'ingress-nginx',
   repo_name='ingress-nginx',
   repo_url='https://kubernetes.github.io/ingress-nginx',
+  namespace="ingress-nginx",
   values="./ingress-values.yaml",
 )
 

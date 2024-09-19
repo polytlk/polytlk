@@ -38,7 +38,8 @@ kind: Ingress
 metadata:
   name: web
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
 spec:
   ingressClassName: nginx
   rules:

@@ -1,4 +1,6 @@
 controller:
+  opentelemetry:
+    enabled: true
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -9,7 +11,11 @@ controller:
   service:
     type: NodePort
   watchIngressWithoutClass: true
-
+  config:
+    enable-opentelemetry: "true"
+    opentelemetry-operation-name: "HTTP $request_method $service_name $uri"
+    otlp-collector-host: "opentelemetry-collector.otel-collector.svc"
+    otlp-collector-port: "4317"
   nodeSelector:
     ingress-ready: "true"
   tolerations:

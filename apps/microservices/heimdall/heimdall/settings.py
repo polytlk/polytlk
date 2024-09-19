@@ -132,20 +132,28 @@ AUTH_PASSWORD_VALIDATORS = (
     },
 )
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        'APP': {
-            'client_id': '123',
-            'secret': '456',
-            'key': ''
-        }
-    }
-}
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-SOCIALACCOUNT_PROVIDERS = {}
+SOCIALACCOUNT_ONLY = True
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_PROVIDERS = {
+    ##"google": {
+    ##    "APPS": [
+    ##        {
+    ##            "client_id": "123",
+    ##            "secret": "456",
+    ##            "key": ""
+    ##        },
+    ##    ],
+    ##    "SCOPE": [
+    ##        "profile",
+    ##        "email",
+    ##    ],
+    ##    "AUTH_PARAMS": {
+    ##        "access_type": "online",
+    ##    },
+    ##    }
+}
 
 HEADLESS_FRONTEND_URLS = {
     "account_signup": "http://localhost:4200/signup",
@@ -155,8 +163,7 @@ HEADLESS_FRONTEND_URLS = {
 }
 
 HEADLESS_ONLY = True
-
-
+HEADLESS_TOKEN_STRATEGY = "heimdall.session_strategy.CustomJWTTokenStrategy"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
