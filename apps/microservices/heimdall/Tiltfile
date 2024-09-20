@@ -26,14 +26,14 @@ k8s_resource(
   objects=['heimdall-api:apidefinition'],
   new_name='heimdall-api',
   labels=['api-gateway'],
-  resource_deps=['tyk-operator']
+  resource_deps=['tyk-operator-ready']
 )
 
 k8s_resource(
   objects=['heimdall-all-auth:apidefinition'],
   new_name='heimdall-all-auth',
   labels=['api-gateway'],
-  resource_deps=['tyk-operator']
+  resource_deps=['tyk-operator-ready']
 )
 
 podman_build('localhost:5001/heimdall-svc-img', '.',     

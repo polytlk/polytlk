@@ -22,7 +22,7 @@ k8s_resource(
   objects=['eden-api:apidefinition'],
   new_name='eden-api',
   labels=['api-gateway'],
-  resource_deps=['tyk-operator']
+  resource_deps=['tyk-operator-ready']
 )
 
 podman_build('localhost:5001/eden-svc-img', '.',     

@@ -34,3 +34,11 @@ k8s_resource(
   labels=['ops'],
   resource_deps=['tyk-gateway']
 )
+
+local_resource(
+  'tyk-operator-ready',
+  labels=['ops'],
+  cmd='sleep 15 && exit 0',
+  allow_parallel=True,
+  resource_deps=['tyk-operator']
+)

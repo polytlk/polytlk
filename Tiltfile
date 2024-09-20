@@ -51,16 +51,19 @@ print(color.yellow('------------------------------------------------------------
 
 
 required = [
-  'ingress-nginx-controller',
   'ingress-nginx-admission-create',
+  'ingress-nginx-controller',
   'ingress-nginx-admission-patch',
+  'ingress-nginx-admission-webhook',
   'heimdall-svc',
-  'heimdall-api',
   'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
   'tyk-operator',
   'tyk-gateway',
+  'heimdall-api',
+  'heimdall-all-auth',
+  'tyk-operator-ready',
   'postgresql',
   'flower',
 ]
@@ -117,16 +120,28 @@ helm_remote(
 )
 
 k8s_resource(
-  workload='ingress-nginx-controller',
-  labels=['ops'],
-  resource_deps=['ingress-nginx-admission-create', 'ingress-nginx-admission-patch']
+  workload="ingress-nginx-admission-create",
+  labels=['nginx-controller']
+)
+
+
+k8s_resource(
+  workload="ingress-nginx-controller",
+  labels=['nginx-controller'],
+  resource_deps=["ingress-nginx-admission-create"]
 )
 
 k8s_resource(
-  objects=['ingress-nginx-admission:validatingwebhookconfiguration'],
-  new_name='nginx-validating-webhook',
-  labels=['ops'],
-  resource_deps=['ingress-nginx-controller']
+  objects=['ingress-nginx-admission:ValidatingWebhookConfiguration:ingress-nginx'],
+  new_name="ingress-nginx-admission-webhook",
+  labels=['nginx-controller'],
+  resource_deps=["ingress-nginx-controller"]
+)
+
+k8s_resource(
+  workload="ingress-nginx-admission-patch",
+  labels=['nginx-controller'],
+  resource_deps=["ingress-nginx-admission-webhook"]
 )
 
 
