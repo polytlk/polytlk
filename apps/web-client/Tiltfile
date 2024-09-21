@@ -20,6 +20,6 @@ podman_build('localhost:5001/web', '.',
         "Dockerfile.tilt"
     ],
     live_update=[
-        sync('./apps/web-client/src', '/polytlk/apps/web-client/src'),
+        sync('./src', '/app/src'),
     ]
 )

@@ -7,28 +7,13 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
     nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
   - host: localhost
     http:
       paths:
-      - path: /accounts
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway-svc-tyk
-            port:
-              number: 8080
-          
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway-svc-tyk
-            port:
-              number: 8080
-          
       - path: /
         pathType: Prefix
         backend:

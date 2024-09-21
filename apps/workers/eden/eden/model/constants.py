@@ -19,4 +19,4 @@ List of models tried:
 """
 import hanlp
 
-HANLP_MODEL_NAME = hanlp.pretrained.tok.UD_TOK_MMINILMV2L12
+HANLP_MODEL_NAME = hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH

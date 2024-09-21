@@ -65,7 +65,7 @@ required = [
   'heimdall-all-auth',
   'tyk-operator-ready',
   'postgresql',
-  'flower',
+  # 'flower',
 ]
 
 base = [
@@ -180,6 +180,13 @@ else:
               set=['auth.postgresPassword=helloworld']
   )
 
+  local_resource(
+    'migrate-heimdall',
+    labels=['auth'],
+    cmd='pnpm nx run heimdall:migrate',
+    allow_parallel=True,
+    resource_deps=['postgresql']
+  )
 
   # helm_remote('kube-prometheus-stack',
   #             repo_name='prometheus-community',
@@ -202,7 +209,7 @@ else:
   include('./tilt/tyk/Tiltfile')
   include('./tilt/tyk-operator/Tiltfile')
 
-  include('./tilt/flower/Tiltfile')
+  # include('./tilt/flower/Tiltfile')
 
   include('./apps/microservices/socrates/Tiltfile')
   include('./apps/microservices/eden/Tiltfile')

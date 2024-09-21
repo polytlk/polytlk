@@ -153,7 +153,7 @@ fi
 
 if [ "$(podman machine inspect --format '{{.State}}'  2>/dev/null)" == '' ]; then
   echo "Creating podman machine"
-  podman machine init --cpus=4 --memory=4096
+  podman machine init --cpus=4 --memory=5020
   podman machine set --rootful
   podman machine start
 

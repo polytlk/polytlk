@@ -46,11 +46,14 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.schemas',
     'drf_spectacular',
+
     'allauth',
     'allauth.account',
     'allauth.headless',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'atlas_provider_django',
 
     'heimdall',
 )
@@ -97,8 +100,8 @@ DATABASES = types.MappingProxyType({
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'helloworld',
-        # 'HOST': 'localhost',
-        # 'PORT': 5300,
+        #'HOST': 'localhost',
+        #'PORT': 5300,
         'HOST': 'postgresql.default.svc.cluster.local',
         'PORT': 5432,
     },

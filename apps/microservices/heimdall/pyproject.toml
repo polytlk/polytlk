@@ -39,6 +39,7 @@ opentelemetry-exporter-otlp-proto-http = "1.26.0"
 opentelemetry-instrumentation-django = {version = "0.47b0", extras = ["asgi"]}
 psycopg2 = "^2.9.9"
 django-allauth = {extras = ["socialaccount"], version = "^64.2.1"}
+atlas-provider-django = "^0.2.1"
 
 [build-system]
 requires = ["poetry-core"]

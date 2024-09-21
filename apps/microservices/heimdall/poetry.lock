@@ -35,6 +35,20 @@ files = [
 tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
 
 [[package]]
+name = "atlas-provider-django"
+version = "0.2.1"
+description = ""
+optional = false
+python-versions = "<4.0,>=3.11"
+files = [
+    {file = "atlas_provider_django-0.2.1-py3-none-any.whl", hash = "sha256:09b85caa64dbab5c1e2f2248d00614883cdf4c31a5700448f7fc384b3bc66829"},
+    {file = "atlas_provider_django-0.2.1.tar.gz", hash = "sha256:b2490c3a1e63295abc8368a905491aab9a41c66520bb6fc314e5f428db720594"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+
+[[package]]
 name = "attrs"
 version = "24.2.0"
 description = "Classes Without Boilerplate"
@@ -1621,4 +1635,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<4.0"
-content-hash = "b10d336753b3aad0d422074b58995ffd1f9844ba5a66025ab0636109e09f8317"
+content-hash = "c4637d4adb5d3aa481629132620ec1e43a5520b5a19a8b6633ebcc0971c6104a"

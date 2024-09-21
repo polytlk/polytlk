@@ -14,8 +14,31 @@ global:
     gateway: 8080
 tyk-gateway:
   fullnameOverride: tyk
+  
   gateway:
     containerPort: 8080
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: localhost
+          paths:
+            - path: /accounts
+              pathType: Prefix
+              backend:
+                service:
+                  name: gateway-svc-tyk
+                  port:
+                    number: 8080
+          
+            - path: /api
+              pathType: Prefix
+              backend:
+                service:
+                  name: gateway-svc-tyk
+                  port:
+                    number: 8080
     extraEnvs:
     - name: TYK_GW_ENABLEJSVM
       value: "true"
