@@ -11,11 +11,12 @@ import {
 } from '@ionic/react';
 import { logOutOutline } from 'ionicons/icons';
 import React, { FC, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { z } from 'zod';
 
 import { getAllauthClientV1AuthSessionResponse } from '../../utils/allauth/gen/endpoints/authentication-current-session/authentication-current-session.zod';
 import { getAllauthClientV1ConfigResponse } from '../../utils/allauth/gen/endpoints/configuration/configuration.zod';
+
+const APP_TYPE = 'browser';
 
 const deleteAllauthClientV1AuthSessionResponse = z.object({
   data: z.unknown({}),
@@ -69,7 +70,7 @@ const handleProviderLogin = (provider: { id: string }) => {
   //const callback_url = 'api/auth/accounts/google/callback/'
 
   postForm(
-    'http://localhost/api/auth/_allauth/browser/v1/auth/provider/redirect',
+    `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/provider/redirect`,
     {
       provider: provider.id,
       process: 'login',
@@ -126,14 +127,13 @@ const Callback = () => {
     useState<allauthClientV1AuthSessionResponseType | null>(null);
   const [config, setConfig] =
     useState<getAllauthClientV1ConfigResponseType | null>(null);
-  const history = useHistory();
 
   useEffect(() => {
     // Fetch configuration data on mount
     const fetchAuth = async () => {
       try {
         const { data } = await CapacitorHttp.get({
-          url: 'http://localhost/api/auth/_allauth/browser/v1/auth/session',
+          url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/session`,
         });
 
         const validResponse = allAuthClientV1AuthSessionResponse.parse({
@@ -150,7 +150,7 @@ const Callback = () => {
     const fetchConfig = async () => {
       try {
         const rawResponse = await CapacitorHttp.get({
-          url: 'http://localhost/api/auth/_allauth/browser/v1/config',
+          url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/config`,
         });
 
         console.log('raw data', rawResponse.data);
@@ -172,7 +172,7 @@ const Callback = () => {
   const handleLogout = async () => {
     try {
       const rawResponse = await CapacitorHttp.delete({
-        url: 'http://localhost/api/auth/_allauth/browser/v1/auth/session',
+        url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/session`,
       });
 
       const validResponse = deleteAllauthClientV1AuthSessionResponse.parse(
@@ -198,7 +198,7 @@ const Callback = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>
-            Auth {auth.meta.is_authenticated ? 'success' : 'auth failure'}
+            Aut {auth.meta.is_authenticated ? 'success' : 'aut failure'}
           </IonTitle>
           <IonButtons slot="end">
             <AuthButtons

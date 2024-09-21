@@ -39,7 +39,7 @@ k8s_resource(
 
 podman_build('localhost:5001/heimdall-svc-img', '.',     
     live_update=[
-        sync('.', '/code'),
+        sync('./heimdall', '/code/heimdall'),
         run('cd /code && poetry install --no-interaction --no-root --without dev',
             trigger=['./poetry.lock', './pyproject.toml']),
     ]

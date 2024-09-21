@@ -18,10 +18,10 @@ const Router: React.FC = () => {
     <IonReactRouter>
       <IonRouterOutlet>
         <PrivateRoute exact path="/home" component={Home} />
-        <Route exact path="/login">
+        <Route exact path="/account/login">
           <LoginPage />
         </Route>
-        <Route exact path="/signup">
+        <Route exact path="/account/signup">
           <SignupPage />
         </Route>
         <Route exact path="/account/provider/callback">

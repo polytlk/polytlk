@@ -63,6 +63,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.m?js$/,
+        include: join(ROOT, 'node_modules/.pnpm/react-virtuoso'),
+        resolve: {
+          fullySpecified: false, // disable the behaviour
+        },
+      },
+      {
         test: /\.tsx?$/,
         include: join(ROOT, 'src'),
         use: 'babel-loader',

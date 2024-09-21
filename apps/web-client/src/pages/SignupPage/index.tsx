@@ -1,5 +1,33 @@
+import type { FC } from 'react';
+
 import { CapacitorHttp } from '@capacitor/core';
-import React, { useEffect, useState } from 'react';
+import {
+  IonButton,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonListHeader,
+  IonPage,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  useIonViewWillEnter,
+} from '@ionic/react';
+import { logoGoogle } from 'ionicons/icons';
+import React, { useState } from 'react';
+import { z } from 'zod';
+
+import { getAllauthClientV1ConfigResponse } from '../../utils/allauth/gen/endpoints/configuration/configuration.zod';
+
+type getAllauthClientV1ConfigResponseType = z.infer<
+  typeof getAllauthClientV1ConfigResponse
+>;
 
 function postForm(action: string, data: Record<string, string>) {
   const f = document.createElement('form');
@@ -19,22 +47,22 @@ function postForm(action: string, data: Record<string, string>) {
   f.submit();
 }
 
-const Signup = () => {
-  const [config, setConfig] = useState(null);
+const Signup: FC = () => {
+  const [config, setConfig] =
+    useState<getAllauthClientV1ConfigResponseType | null>(null);
   const [error, setError] = useState<string>('');
 
-  useEffect(() => {
-    // Fetch configuration data on mount
+  useIonViewWillEnter(() => {
     const fetchConfig = async () => {
       try {
-        const { data } = await CapacitorHttp.get({
+        const rawResponse = await CapacitorHttp.get({
           url: 'http://localhost/api/auth/_allauth/browser/v1/config',
         });
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        console.log('Full response:', data);
-        console.log('Response data:', data.data);
+        const validResponse = getAllauthClientV1ConfigResponse.parse(
+          rawResponse.data
+        );
 
-        setConfig(data.data); // Set the config data from the API response
+        setConfig(validResponse);
       } catch (err) {
         setError('Failed to load configuration. Please try again later.');
         console.error('Error fetching config:', err);
@@ -42,7 +70,7 @@ const Signup = () => {
     };
 
     fetchConfig(); // Call the function to fetch config
-  }, []);
+  });
 
   // Example function to handle provider login (adjust as needed for real login flow)
   const handleProviderLogin = (provider: { id: string }) => {
@@ -61,25 +89,75 @@ const Signup = () => {
 
   // If there's an error, show an error message
   if (error !== '') {
-    return <div className="error">{error}</div>;
+    console.log('error', error);
+    return (
+      <IonPage>
+        <div className="error">{error}</div>;
+      </IonPage>
+    );
   }
 
   // If config is not yet loaded, show a loading message
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!config) {
-    return <div>Loading...</div>;
+  if (config === null) {
+    console.log('no config');
+    return (
+      <IonPage>
+        <div>Loading...</div>;
+      </IonPage>
+    );
   }
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      {/** @ts-expect-error adsdasds */}
-      {config.socialaccount.providers.map((provider) => (
-        <button key={provider.id} onClick={() => handleProviderLogin(provider)}>
-          Sign up with {provider.name}
-        </button>
-      ))}
-    </div>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle> Sign Up </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+        <IonGrid>
+          <IonRow>
+            <IonCol />
+            <IonCol size="4">
+              <IonButton
+                fill="clear"
+                routerLink="/account/login"
+                routerDirection="forward"
+              >
+                <IonLabel>already have an account? login here</IonLabel>
+              </IonButton>
+            </IonCol>
+            <IonCol />
+          </IonRow>
+          {config.data.socialaccount !== undefined && (
+            <IonRow>
+              <IonCol />
+              <IonCol size="4">
+                <IonList inset={true}>
+                  <IonListHeader>
+                    <IonLabel> Third Party </IonLabel>
+                  </IonListHeader>
+
+                  {config.data.socialaccount.providers.map((provider) => (
+                    <IonButton
+                      color="primary"
+                      fill="outline"
+                      key={provider.id}
+                      onClick={() => handleProviderLogin(provider)}
+                    >
+                      <IonIcon icon={logoGoogle} slot="start" />
+                      <IonLabel>Sign up with {provider.name}</IonLabel>
+                    </IonButton>
+                  ))}
+                </IonList>
+              </IonCol>
+              <IonCol />
+            </IonRow>
+          )}
+        </IonGrid>
+      </IonContent>
+    </IonPage>
   );
 };
 
