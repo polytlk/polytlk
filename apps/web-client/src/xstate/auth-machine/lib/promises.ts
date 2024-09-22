@@ -1,6 +1,7 @@
-import { CapacitorHttp } from '@capacitor/core';
 import { SecureStoragePlugin } from 'capacitor-secure-storage-plugin';
 import { fromPromise } from 'xstate';
+
+import { CapacitorHttp } from '@capacitor/core';
 
 export const KEY = 'authToken';
 

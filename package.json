@@ -57,6 +57,7 @@
   },
   "private": true,
   "optionalDependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.7.0",
     "@capacitor/cli": "^5.0.3",
     "@capacitor/ios": "^5.0.3",
     "@import-meta-env/typescript": "^0.4.0",

@@ -1,5 +1,6 @@
-import { CapacitorHttp } from '@capacitor/core';
 import { fromPromise } from 'xstate';
+
+import { CapacitorHttp } from '@capacitor/core';
 
 import { chineseEndpointInterpretationPostResponse } from '../gen/zod';
 

@@ -1,6 +1,7 @@
-import parser from '@apidevtools/json-schema-ref-parser';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
+
+import parser from '@apidevtools/json-schema-ref-parser';
 
 import { download, runCommand } from './utils.js';
 

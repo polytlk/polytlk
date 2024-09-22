@@ -31,6 +31,11 @@ module.exports = {
             mode: 'tags-split',
             target: './apps/web-client/src/utils/allauth/gen/endpoints',
             fileExtension: '.zod.ts',
+            override: {
+                zod: {
+                  generateEachHttpStatus: true,
+                },
+            },
         },
         input: {
             target: './apps/web-client/src/utils/allauth/openapi.json',

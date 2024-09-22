@@ -3,7 +3,9 @@ import { z } from 'zod';
 
 import { taskStreamTaskTaskIdStreamGetResponse } from '../gen/zod';
 
-export type ariData = z.infer<typeof taskStreamTaskTaskIdStreamGetResponse.shape.ari_data>;
+export type ariData = z.infer<
+  typeof taskStreamTaskTaskIdStreamGetResponse.shape.ari_data
+>;
 
 export const interpretation$ = fromCallback<
   EventObject,
@@ -16,10 +18,12 @@ export const interpretation$ = fromCallback<
   // Handle incoming messages
   eventSource.onmessage = ({ data }) => {
     try {
-      const { ari_data } = taskStreamTaskTaskIdStreamGetResponse.parse(JSON.parse(data));
+      const { ari_data } = taskStreamTaskTaskIdStreamGetResponse.parse(
+        JSON.parse(data)
+      );
       sendBack({ type: 'TASK_COMPLETE', data: ari_data });
     } catch (e) {
-      console.log("eventSource.onmessage -> catch -> e", e)
+      console.log('eventSource.onmessage -> catch -> e', e);
       sendBack({ type: 'TASK_ERROR' });
     }
   };

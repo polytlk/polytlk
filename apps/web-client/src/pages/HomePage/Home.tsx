@@ -1,4 +1,7 @@
-import type { UserInterpretEvents } from 'root-machine';
+import type { UserInterpretEvents } from '#rootmachine/index';
+
+import { useSelector } from '#rootmachine/index';
+import { logOutOutline } from 'ionicons/icons';
 
 import {
   IonButton,
@@ -18,12 +21,8 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { logOutOutline } from 'ionicons/icons';
 
 import { LanguageDataList } from '../../components/LanguageDataList';
-import { RootContext } from '../../RootContext';
-
-const { useSelector } = RootContext;
 
 type HomeProps = {
   inputError: string;

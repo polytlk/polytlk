@@ -1,3 +1,4 @@
+import type { AllAuthEvents } from '../../allauth-machine';
 import type { AuthEvents } from '../../auth-machine';
 import type {
   ariData,
@@ -5,40 +6,62 @@ import type {
   InternalInterpretEvents,
   InterpretContext,
 } from '../../interpret-machine';
+import type { EnvType } from './env-schema';
 import type { UserInterpretEvents } from './types';
-import type { EnvType } from './env-schema'
 
+import { getBaseAuthUrl } from '#allauth/urls';
+import {
+  ConfigResponseType,
+  SessionResponseType,
+} from 'src/xstate/allauth-machine/lib/schema';
+import { assign, setup } from 'xstate';
+
+import { allAuthChecker } from '../../allauth-machine';
+import { deleteSession } from '../../allauth-machine/lib/promises';
 import { authChecker, deleteCookie, setCookie } from '../../auth-machine';
 import { machine as interpretMachine } from '../../interpret-machine';
-import { assign, raise, setup } from 'xstate';
 import { getConfig } from './actors';
 
 export const machine = setup({
   types: {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     context: {} as {
       env: unknown;
-      config:  EnvType;
-      platform: "ios" | "web" | "android";
+      config: EnvType;
+      platform: 'ios' | 'web' | 'android';
       isVirtual: boolean;
       hashedToken: string;
       token: string;
       loading: boolean;
       checked: boolean;
+      allauth: {
+        auth: SessionResponseType | undefined;
+        config: ConfigResponseType | undefined;
+      };
       interpret: Omit<InterpretContext, 'token' | 'baseUrl' | 'inputError'> & {
         inputError: errorMessages | '';
-      }
+      };
     },
-    events: {} as AuthEvents | UserInterpretEvents | InternalInterpretEvents,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    events: {} as
+      | AuthEvents
+      | UserInterpretEvents
+      | InternalInterpretEvents
+      | AllAuthEvents,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     children: {} as {
       machineInterpreter: 'interpretMachine';
       checkAuth: 'authChecker';
       cookieDeleter: 'deleteCookie';
       cookieSetter: 'setCookie';
       configGetter: 'getConfig';
+      checkAllAuth: 'allAuthChecker';
+      sessionDelete: 'deleteSession';
     },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     input: {} as {
-      env: unknown
-      platform?: "web" | "ios" | "android"
+      env: unknown;
+      platform?: 'web' | 'ios' | 'android';
       taskIds?: string[];
       results?: Record<string, ariData>;
     },
@@ -57,84 +80,134 @@ export const machine = setup({
   actors: {
     interpretMachine,
     authChecker,
+    allAuthChecker,
     deleteCookie,
     setCookie,
-    getConfig
+    getConfig,
+    deleteSession,
   },
 }).createMachine({
   context: ({ input }) => ({
     env: input.env,
     config: {
-      TARGET_ENV: "local",
-      BASE_URL: "http://localhost:8080",
-      CLIENT_ID_WEB: "540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com",
+      TARGET_ENV: 'local',
+      BASE_URL: 'http://localhost',
+      CLIENT_ID_WEB:
+        '540933041586-61juofou98dd54ktk134ktfec2c84gd3.apps.googleusercontent.com',
     },
-    platform: input.platform || "web",
+    platform: input.platform !== undefined ? input.platform : 'web',
     isVirtual: false,
     hashedToken: '',
     token: '',
     loading: false,
     checked: false,
+    allauth: {
+      auth: undefined,
+      config: undefined,
+    },
     interpret: {
       text: '',
       language: 'zh',
       taskId: '',
-      taskIds: input.taskIds || [],
+      taskIds: input.taskIds !== undefined ? input.taskIds : [],
       inputError: '',
       inputColor: 'light',
       loading: false,
-      results: input.results || {},
+      results: input.results !== undefined ? input.results : {},
     },
   }),
   id: 'root',
   initial: 'loading',
   states: {
-    'loading': {
+    loading: {
       invoke: {
         id: 'configGetter',
         src: 'getConfig',
-        input: ({context}) => ({env: context.env}),
+        input: ({ context }) => ({ env: context.env }),
         onDone: {
           target: 'logged-out',
-          actions: assign({config: ({event}) => event.output.config, platform: ({event}) => event.output.platform, isVirtual: ({event}) => event.output.isVirtual})
+          actions: assign({
+            config: ({ event }) => event.output.config,
+            platform: ({ event }) => event.output.platform,
+            isVirtual: ({ event }) => event.output.isVirtual,
+          }),
         },
         onError: {
-          actions: ({event}) => {
-            console.log("event", event)
-            console.log("fatal config error occured")
-          }
-        }
-      }
+          actions: ({ event }) => {
+            console.log('event', event);
+            console.log('fatal config error occured');
+          },
+        },
+      },
     },
     'logged-out': {
-      initial: 'checking-cookie',
+      // initial: 'checking-cookie',
+      initial: 'checking-allauth',
       states: {
-        'checking-cookie': {
+        //'checking-cookie': {
+        //  invoke: {
+        //    id: 'checkAuth',
+        //    src: 'authChecker',
+        //    input: ({ context }) => ({
+        //      baseUrl: context.config.BASE_URL,
+        //    }),
+        //    onError: {
+        //      actions: [raise({ type: 'COOKIE_INVALID' })],
+        //    },
+        //  },
+        //  on: {
+        //    COOKIE_VALID: {
+        //      target: 'done',
+        //      actions: [
+        //        assign({
+        //          hashedToken: ({ event }) => event.payload.hashedToken,
+        //          token: ({ event }) => event.payload.token,
+        //        }),
+        //        'stopLoading',
+        //        'checked',
+        //      ],
+        //    },
+        //    COOKIE_INVALID: {
+        //      target: 'idle',
+        //      actions: ['stopLoading', 'checked'],
+        //    },
+        //  },
+        //},
+        'checking-allauth': {
           invoke: {
-            id: 'checkAuth',
-            src: 'authChecker',
-            input: ({ context }) => ({
-              baseUrl: context.config.BASE_URL,
-            }),
-            onError: {
-              actions: [raise({ type: 'COOKIE_INVALID' })],
+            id: 'checkAllAuth',
+            src: 'allAuthChecker',
+            input: ({ context }) => {
+              const { config, platform } = context;
+
+              return getBaseAuthUrl({ baseUrl: config.BASE_URL, platform });
             },
+            // onError: {
+            //   actions: [raise(() => {})],
+            // },
           },
           on: {
-            COOKIE_VALID: {
+            ALLAUTH_AUTHENTICATED: {
               target: 'done',
               actions: [
                 assign({
-                  hashedToken: ({ event }) => event.payload.hashedToken,
-                  token: ({ event }) => event.payload.token,
+                  allauth: ({ event }) => ({
+                    auth: event.payload.auth,
+                    config: event.payload.config,
+                  }),
                 }),
-                'stopLoading',
-                'checked',
               ],
             },
-            COOKIE_INVALID: {
+            ALLAUTH_UNAUTHENTICATED: {
               target: 'idle',
-              actions: ['stopLoading', 'checked'],
+              actions: [
+                assign({
+                  allauth: ({ event }) => ({
+                    auth: event.payload.auth,
+                    config: event.payload.config,
+                  }),
+                }),
+              ],
             },
           },
         },
@@ -262,13 +335,24 @@ export const machine = setup({
         },
         'logging-out': {
           invoke: {
-            id: 'cookieDeleter',
-            src: 'deleteCookie',
+            //id: 'cookieDeleter',
+            //src: 'deleteCookie',
+            id: 'sessionDelete',
+            src: 'deleteSession',
+            input: ({ context }) => {
+              const { config, platform } = context;
+
+              return getBaseAuthUrl({ baseUrl: config.BASE_URL, platform });
+            },
             onDone: {
               target: 'done',
               actions: assign({
                 token: '',
                 hashedToken: '',
+                allauth: {
+                  auth: undefined,
+                  config: undefined,
+                },
               }),
             },
             onError: {
@@ -276,6 +360,10 @@ export const machine = setup({
               actions: assign({
                 token: '',
                 hashedToken: '',
+                allauth: {
+                  auth: undefined,
+                  config: undefined,
+                },
               }),
             },
           },

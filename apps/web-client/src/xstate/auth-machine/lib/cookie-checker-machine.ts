@@ -9,21 +9,25 @@ import {
 
 export const authChecker = setup({
   types: {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     context: {} as {
       hashedToken: string;
       token: string;
       baseUrl: string;
       success: boolean;
     },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     children: {} as {
       cookieFetcher: 'fetchCookie';
       cookieValidator: 'validateCookie';
       cookieSetter: 'setCookie';
       cookieDeleter: 'deleteCookie';
     },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     input: {} as {
       baseUrl: string;
     },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     output: {} as
       | { success: false }
       | { success: true; hashedToken: string; token: string },

@@ -1,219 +1,49 @@
-import { CapacitorHttp } from '@capacitor/core';
+import { useSelector } from '#rootmachine/index';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+
 import {
   IonButton,
-  IonButtons,
   IonContent,
   IonHeader,
-  IonIcon,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
+  useIonViewWillEnter,
 } from '@ionic/react';
-import { logOutOutline } from 'ionicons/icons';
-import React, { FC, useEffect, useState } from 'react';
-import { z } from 'zod';
-
-import { getAllauthClientV1AuthSessionResponse } from '../../utils/allauth/gen/endpoints/authentication-current-session/authentication-current-session.zod';
-import { getAllauthClientV1ConfigResponse } from '../../utils/allauth/gen/endpoints/configuration/configuration.zod';
-
-const APP_TYPE = 'browser';
-
-const deleteAllauthClientV1AuthSessionResponse = z.object({
-  data: z.unknown({}),
-  meta: z.object({
-    is_authenticated: z.literal(false),
-  }),
-});
-
-const allAuthClientV1AuthSessionResponse = z.discriminatedUnion(
-  'is_authenticated',
-  [
-    deleteAllauthClientV1AuthSessionResponse.extend({
-      is_authenticated: z.literal(false),
-    }),
-    getAllauthClientV1AuthSessionResponse.extend({
-      is_authenticated: z.literal(true),
-    }),
-  ]
-);
-
-type allauthClientV1AuthSessionResponseType = z.infer<
-  typeof allAuthClientV1AuthSessionResponse
->;
-type getAllauthClientV1ConfigResponseType = z.infer<
-  typeof getAllauthClientV1ConfigResponse
->;
-
-function postForm(action: string, data: Record<string, string>) {
-  const f = document.createElement('form');
-  f.method = 'POST';
-  f.action = action;
-
-  for (const key in data) {
-    console.log('key', key);
-    console.log('value', data[key]);
-    const d = document.createElement('input');
-    d.type = 'hidden';
-    d.name = key;
-    d.value = data[key] || '';
-    f.appendChild(d);
-  }
-  document.body.appendChild(f);
-  f.submit();
-}
-
-const handleProviderLogin = (provider: { id: string }) => {
-  // In a real application, this could be a redirect or an API call to initiate provider login
-
-  const callback_url = '/account/provider/callback';
-  //const callback_url = '';
-  //const callback_url = 'api/auth/accounts/google/callback/'
-
-  postForm(
-    `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/provider/redirect`,
-    {
-      provider: provider.id,
-      process: 'login',
-      callback_url,
-      // csrfmiddlewaretoken: cook,
-    }
-  );
-};
-
-const AuthButtons: FC<{
-  isAuth: boolean;
-  handleLogout: () => void;
-  config: getAllauthClientV1ConfigResponseType;
-}> = ({ isAuth, handleLogout, config }) => {
-  if (isAuth) {
-    return (
-      <IonButton color="danger" onClick={handleLogout}>
-        LOGOUTss
-        <IonIcon icon={logOutOutline} />
-      </IonButton>
-    );
-  }
-
-  return (
-    <>
-      <IonButton
-        color="primary"
-        onClick={() => {
-          console.log('login');
-        }}
-      >
-        Login
-        <IonIcon icon={logOutOutline} />
-      </IonButton>
-      {config.data.socialaccount?.providers != null &&
-        config.data.socialaccount.providers.map(({ id, name }) => {
-          return (
-            <IonButton
-              key={id}
-              color="primary"
-              onClick={() => handleProviderLogin({ id })}
-            >
-              {name}
-              <IonIcon icon={logOutOutline} />
-            </IonButton>
-          );
-        })}
-    </>
-  );
-};
 
 const Callback = () => {
-  const [auth, setAuth] =
-    useState<allauthClientV1AuthSessionResponseType | null>(null);
-  const [config, setConfig] =
-    useState<getAllauthClientV1ConfigResponseType | null>(null);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const error = params.get('error');
+  const auth = useSelector(({ context }) => context.allauth.auth);
+  const router = useIonRouter();
 
-  useEffect(() => {
-    // Fetch configuration data on mount
-    const fetchAuth = async () => {
-      try {
-        const { data } = await CapacitorHttp.get({
-          url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/session`,
-        });
-
-        const validResponse = allAuthClientV1AuthSessionResponse.parse({
-          ...data,
-          is_authenticated: data.meta.is_authenticated,
-        });
-
-        setAuth(validResponse); // Set the config data from the API response
-      } catch (err) {
-        console.error('Error fetching config:', err);
-      }
-    };
-
-    const fetchConfig = async () => {
-      try {
-        const rawResponse = await CapacitorHttp.get({
-          url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/config`,
-        });
-
-        console.log('raw data', rawResponse.data);
-
-        const validResponse = getAllauthClientV1ConfigResponse.parse(
-          rawResponse.data
-        );
-
-        setConfig(validResponse); // Set the config data from the API response
-      } catch (err) {
-        console.error('Error fetching config:', err);
-      }
-    };
-
-    fetchAuth();
-    fetchConfig();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      const rawResponse = await CapacitorHttp.delete({
-        url: `http://localhost/api/auth/_allauth/${APP_TYPE}/v1/auth/session`,
-      });
-
-      const validResponse = deleteAllauthClientV1AuthSessionResponse.parse(
-        rawResponse.data
-      );
-
-      setAuth({ ...validResponse, is_authenticated: false }); // Set the config data from the API response
-    } catch (err) {
-      console.error('Error fetching config:', err);
+  useIonViewWillEnter(() => {
+    if (error === null) {
+      router.push('/home', 'forward', 'push', { unmount: true });
     }
-  };
+  });
 
-  if (auth == null || config == null) {
-    return (
-      <IonPage>
-        <div>loading</div>
-      </IonPage>
-    );
-  }
+  if (auth === undefined) return null;
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>
-            Aut {auth.meta.is_authenticated ? 'success' : 'aut failure'}
-          </IonTitle>
-          <IonButtons slot="end">
-            <AuthButtons
-              isAuth={auth.meta.is_authenticated}
-              handleLogout={handleLogout}
-              config={config}
-            />
-          </IonButtons>
+          <IonTitle>Third Party Failure</IonTitle>
         </IonToolbar>
         <IonContent>
-          {auth.meta.is_authenticated ? (
-            <div>youre in</div>
-          ) : (
-            <div> you are not authenticated </div>
-          )}
+          <IonText> Something went wrong </IonText>
+          <IonButton
+            onClick={() => {
+              router.push('/account/login');
+            }}
+          >
+            Continue{' '}
+          </IonButton>
         </IonContent>
       </IonHeader>
     </IonPage>

@@ -57,7 +57,7 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "apps/web-client/**/*.{ts,tsx,js,jsx}",
+          "apps/web-client/src/**/*.{ts,tsx,js,jsx}",
           "apps/web-client/package.json"
         ],
         "hasTypeAwareRules": true
