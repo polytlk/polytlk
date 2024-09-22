@@ -140,33 +140,23 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_ONLY = True
 SOCIALACCOUNT_STORE_TOKENS = True
 SOCIALACCOUNT_PROVIDERS = {
-    ##"google": {
-    ##    "APPS": [
-    ##        {
-    ##            "client_id": "123",
-    ##            "secret": "456",
-    ##            "key": ""
-    ##        },
-    ##    ],
-    ##    "SCOPE": [
-    ##        "profile",
-    ##        "email",
-    ##    ],
-    ##    "AUTH_PARAMS": {
-    ##        "access_type": "online",
-    ##    },
-    ##    }
-}
+    "google": {
+        "APPS": [
+            {
 
-HEADLESS_FRONTEND_URLS = {
-    "account_signup": "http://localhost:4200/signup",
-    # Fallback in case the state containing the `next` URL is lost and the handshake
-    # with the third-party provider fails.
-    "socialaccount_login_error": "http://localhost:4200/signup-error",
+            },
+        ]
+    }
 }
 
 HEADLESS_ONLY = True
-HEADLESS_TOKEN_STRATEGY = "heimdall.session_strategy.CustomJWTTokenStrategy"
+HEADLESS_FRONTEND_URLS = {
+    "account_signup": "/account/signup",
+    # Fallback in case the state containing the `next` URL is lost and the handshake
+    # with the third-party provider fails.
+    "socialaccount_login_error": "/account/provider/callback",
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
