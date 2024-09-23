@@ -61,10 +61,10 @@ export const LoginPage: FC = () => {
               <IonCol size="4">
                 <IonButton
                   fill="clear"
-                  routerLink="/account/login"
+                  routerLink="/account/signup"
                   routerDirection="forward"
                 >
-                  <IonLabel>already have an account? login here</IonLabel>
+                  <IonLabel>Don't have an account? signup here</IonLabel>
                 </IonButton>
               </IonCol>
               <IonCol />
