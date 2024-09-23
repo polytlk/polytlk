@@ -21,6 +21,15 @@ export const fetchSession = fromPromise(
       throw Error('unknown status for session');
     }
 
+    if (status === 200) {
+      const testUrl = 'http://localhost/api/auth/testz/' as const;
+      const testResponse = await CapacitorHttp.get({
+        url: testUrl,
+      });
+
+      console.log('fetchSession -> testResponse', testResponse);
+    }
+
     return getSessionResponse(status, data);
   }
 );
