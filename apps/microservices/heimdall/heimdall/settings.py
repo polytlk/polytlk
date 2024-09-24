@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import logging
 import types
 from pathlib import Path
 
@@ -99,11 +98,9 @@ DATABASES = types.MappingProxyType({
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'helloworld',
-        #'HOST': 'localhost',
-        #'PORT': 5300,
-        'HOST': 'postgresql.default.svc.cluster.local',
-        'PORT': 5432,
+        'PASSWORD': settings.db_pass,
+        'HOST': settings.db_host,
+        'PORT': settings.db_port,
     },
 })
 
@@ -143,8 +140,8 @@ SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APPS": [
             {
-                "client_id": "",
-                "secret": ""
+                "client_id": settings.google_client_id,
+                "secret": settings.google_secret
             },
         ]
     }

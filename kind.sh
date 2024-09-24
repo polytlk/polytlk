@@ -302,4 +302,4 @@ fi
 
 create_namespace_and_secret_for_addons
 
-# tilt ci
+tilt ci
