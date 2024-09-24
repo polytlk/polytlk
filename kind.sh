@@ -1,6 +1,37 @@
 #!/bin/sh
 set -o errexit
 
+
+
+binaries=("podman" "tilt" "kind" "kubectl" "helm" "doppler")
+missing_binaries=()
+
+for binary in "${binaries[@]}"; do
+    if ! which "$binary" > /dev/null 2>&1; then
+        missing_binaries+=("$binary")
+    fi
+done
+
+if [ ${#missing_binaries[@]} -ne 0 ]; then
+    echo "The following binaries are missing:\n"
+    for missing in "${missing_binaries[@]}"; do
+        echo "\t- $missing"
+    done
+    echo "\nPlease install them and try again."
+    exit 1
+fi
+
+echo "All required binaries are installed."
+
+if doppler me > /dev/null 2>&1; then
+    echo "You are logged into Doppler."
+else
+    echo "You are not logged into Doppler."
+    echo "Please log in with the following command:"
+    echo "doppler login"
+    exit 1
+fi
+
 # List of apps that should skip secret creation
 BLACKLIST=("olivia")
 BASE_DIR="apps"
@@ -18,6 +49,8 @@ EOF
 run_in_podman_vm() {
   podman machine ssh "$@"
 }
+
+ROOT_DIR=$(pwd)
 
 create_namespace_and_secret() {
   local app_type="$1"    # Either microservices or workers
@@ -52,7 +85,54 @@ create_namespace_and_secret() {
     fi
   else
     echo "No .env file found for $app_name in $env_file"
+    echo "Setting up doppler"
+    cd "$BASE_DIR/$app_type/$app_name"
+    doppler setup -p $app_name -c local
+    pwd
+    doppler secrets download --format=env-no-quotes --no-file > .env
+    cd "$ROOT_DIR"
   fi
+}
+
+create_namespace_and_secret_for_addons() {
+    # Directory to loop through
+    ADDONS_DIR="tilt/addons"
+
+    ADDON_BLACKLIST=("ingress-nginx" "tyk") 
+
+    # Loop through each subdirectory in the addons directory
+    for dir in "$ADDONS_DIR"/*; do
+        # Check if it's a directory
+        if [ -d "$dir" ]; then
+            addon_name=$(basename "$dir")
+            
+            kubectl create namespace "$addon_name" 2>/dev/null || true
+
+            # Check if the addon is in the blacklist, and skip secret logic if so
+            if [[ " ${ADDON_BLACKLIST[@]} " =~ " ${addon_name} " ]]; then
+                echo "Skipping secret logic for $addon_name as it does not need it"
+                continue
+            fi
+
+            env_file="$dir/.env"
+            secret_name="$addon_name-secret-env"
+            # Check if the .env file exists in this directory
+            if [ -f "$dir/.env" ]; then
+              if ! kubectl get secret "$secret_name" -n "$addon_name" &> /dev/null; then
+                kubectl create secret generic "$secret_name" --from-env-file="$env_file" -n "$addon_name"
+                echo "Secret '$secret_name' created in namespace '$addon_name'"
+              fi
+            else
+              echo "No .env file found for $addon_name in $env_file"
+              echo "Setting up doppler"
+              cd "$ADDONS_DIR/$addon_name"
+              doppler setup -p $addon_name -c local
+              pwd
+              doppler secrets download --format=env-no-quotes --no-file > .env
+              cd "$ROOT_DIR"
+            fi
+        fi
+    done
 }
 
 check_cluster_exists() {
@@ -153,7 +233,7 @@ fi
 
 if [ "$(podman machine inspect --format '{{.State}}'  2>/dev/null)" == '' ]; then
   echo "Creating podman machine"
-  podman machine init --cpus=4 --memory=5020
+  podman machine init --cpus=4 --memory=8192
   podman machine set --rootful
   podman machine start
 
@@ -197,4 +277,29 @@ done
 
 kubectl create namespace web 2>/dev/null || true
 
-tilt ci
+# Check if .npmrc already exists, and skip the steps if it does
+if [ -f "apps/web-client/.npmrc" ]; then
+    echo ".npmrc already exists in apps/web-client, skipping token setup."
+else
+    echo ".npmrc does not exist, setting up Doppler and creating .npmrc file."
+
+    # Change to the apps/web-client directory
+    cd apps/web-client
+
+    # Set up Doppler for the web-client project
+    doppler setup -p web -c local
+
+    # Download secrets and format the .npmrc file
+    doppler secrets download --format=env-no-quotes --no-file | grep NPM_TOKEN | \
+    sed 's/NPM_TOKEN=//g' | \
+    awk '{print "//registry.npmjs.org/:_authToken="$1"\nregistry=https://registry.npmjs.org/"}' > .npmrc
+
+    echo ".npmrc file created with NPM_TOKEN."
+
+    # Return to the original directory
+    cd "$ROOT_DIR"
+fi
+
+create_namespace_and_secret_for_addons
+
+# tilt ci

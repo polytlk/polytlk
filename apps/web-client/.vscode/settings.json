@@ -1,5 +1,5 @@
 {
-    "terminal.integrated.cwd": "../../..",
+    "terminal.integrated.cwd": "../..",
     "python.terminal.activateEnvironment": false,
     "python.linting.enabled": false,
     "python.linting.flake8Enabled": false,

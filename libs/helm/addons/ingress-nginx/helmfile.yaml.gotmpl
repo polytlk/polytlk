@@ -1,0 +1,48 @@
+environments:
+  development: {}
+  default: {}
+---
+repositories:
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
+
+releases:
+- name: ingress-nginx
+  namespace: ingress-nginx
+  chart: ingress-nginx/ingress-nginx
+  version: 4.11.2
+  installed: {{ eq .Environment.Name "development" | not | toYaml }}
+  labels:
+    type: remote
+  values:
+    - controller:
+        opentelemetry:
+            enabled: true
+        updateStrategy:
+            type: RollingUpdate
+            rollingUpdate:
+            maxUnavailable: 1
+        hostPort:
+            enabled: true
+        terminationGracePeriodSeconds: 0
+        service:
+            type: NodePort
+        watchIngressWithoutClass: true
+        config:
+            enable-opentelemetry: "true"
+            opentelemetry-operation-name: "HTTP $request_method $service_name $uri"
+            otlp-collector-host: "opentelemetry-collector.otel-collector.svc"
+            otlp-collector-port: "4317"
+        nodeSelector:
+            ingress-ready: "true"
+        tolerations:
+          - key: "node-role.kubernetes.io/master"
+            operator: "Equal"
+            effect: "NoSchedule"
+          - key: "node-role.kubernetes.io/control-plane"
+            operator: "Equal"
+            effect: "NoSchedule"
+        publishService:
+            enabled: false
+        extraArgs:
+            publish-status-address: localhost

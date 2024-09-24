@@ -36,6 +36,8 @@ extraEnvs:
       key: HONEYCOMB_API_KEY
       name: otel-collector-secret-env
 mode: deployment
+nodeSelector:
+  role: ops
 ports:
   jaeger-compact:
     enabled: false

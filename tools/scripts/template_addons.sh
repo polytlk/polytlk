@@ -1,7 +1,25 @@
-#!/bin/bash
+#!/bin/sh
+
+binaries=("helmfile" "helm")
+missing_binaries=()
+
+for binary in "${binaries[@]}"; do
+    if ! which "$binary" > /dev/null 2>&1; then
+        missing_binaries+=("$binary")
+    fi
+done
+
+if [ ${#missing_binaries[@]} -ne 0 ]; then
+    echo "The following binaries are missing:\n"
+    for missing in "${missing_binaries[@]}"; do
+        echo "\t- $missing"
+    done
+    echo "\nPlease install them and try again."
+    exit 1
+fi
 
 # Define valid targets and environments
-VALID_TARGETS=("cert-manager" "nginx-ingress" "external-secrets" "otel-collector" "tyk-operator" "tyk")
+VALID_TARGETS=("cert-manager" "nginx-ingress" "external-secrets" "otel-collector" "tyk-operator" "tyk" "ingress-nginx")
 VALID_ENVIRONMENTS=("default" "development" "production")
 
 # Check if TARGET and ENVIRONMENT are provided as arguments
@@ -31,7 +49,7 @@ fi
 
 # Determine TARGET_FOLDER based on ENVIRONMENT
 if [ "$ENVIRONMENT" == "default" ]; then
-  TARGET_FOLDER="tilt/$TARGET"
+  TARGET_FOLDER="tilt/addons/$TARGET"
 else
   TARGET_FOLDER="../polytlk-cd/$ENVIRONMENT/addons/$TARGET"
 fi

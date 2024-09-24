@@ -8,6 +8,14 @@ TILT_PATH = '../../../tilt/heimdall'
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TILT_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TILT_PATH)), NAMESPACE))
 
+local_resource(
+  'migrate-heimdall',
+  labels=['auth'],
+  cmd='pnpm nx run heimdall:migrate',
+  allow_parallel=True,
+  resource_deps=['postgresql']
+)
+
 k8s_resource(
     'heimdall-svc',
     labels=["auth"],

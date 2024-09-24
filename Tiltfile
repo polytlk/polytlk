@@ -3,10 +3,8 @@ load('ext://dotenv', 'dotenv')
 load('ext://color', 'color')
 load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
-load('ext://namespace', 'namespace_create')
 
 deploy_cert_manager(version="v1.15.3")
-namespace_create('ingress-nginx')
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -111,38 +109,6 @@ for arg in language:
 
 config.set_enabled_resources(resources)
 
-helm_remote(
-  'ingress-nginx',
-  repo_name='ingress-nginx',
-  repo_url='https://kubernetes.github.io/ingress-nginx',
-  namespace="ingress-nginx",
-  values="./ingress-values.yaml",
-)
-
-k8s_resource(
-  workload="ingress-nginx-admission-create",
-  labels=['nginx-controller']
-)
-
-
-k8s_resource(
-  workload="ingress-nginx-controller",
-  labels=['nginx-controller'],
-  resource_deps=["ingress-nginx-admission-create"]
-)
-
-k8s_resource(
-  objects=['ingress-nginx-admission:ValidatingWebhookConfiguration:ingress-nginx'],
-  new_name="ingress-nginx-admission-webhook",
-  labels=['nginx-controller'],
-  resource_deps=["ingress-nginx-controller"]
-)
-
-k8s_resource(
-  workload="ingress-nginx-admission-patch",
-  labels=['nginx-controller'],
-  resource_deps=["ingress-nginx-admission-webhook"]
-)
 
 
 ## local_resource(
@@ -180,14 +146,6 @@ else:
               set=['auth.postgresPassword=helloworld']
   )
 
-  local_resource(
-    'migrate-heimdall',
-    labels=['auth'],
-    cmd='pnpm nx run heimdall:migrate',
-    allow_parallel=True,
-    resource_deps=['postgresql']
-  )
-
   # helm_remote('kube-prometheus-stack',
   #             repo_name='prometheus-community',
   #             repo_url='https://prometheus-community.github.io/helm-charts'
@@ -205,9 +163,10 @@ else:
     port_forwards=5300
   )
 
-  include('./tilt/otel-collector/Tiltfile')
-  include('./tilt/tyk/Tiltfile')
-  include('./tilt/tyk-operator/Tiltfile')
+  include('./tilt/addons/otel-collector/Tiltfile')
+  include('./tilt/addons/ingress-nginx/Tiltfile')
+  include('./tilt/addons/tyk/Tiltfile')
+  include('./tilt/addons/tyk-operator/Tiltfile')
 
   # include('./tilt/flower/Tiltfile')
 

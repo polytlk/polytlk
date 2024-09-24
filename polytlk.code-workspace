@@ -59,7 +59,7 @@
 			"imageBuildTool": "Docker"
 		},
 		"files.associations": {
-			"*.gotmpl": "helm"
+			"*.gotmpl": "goyaml"
 		}
 	}
 }
