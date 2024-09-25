@@ -1,16 +1,20 @@
 import type { BaseAuthUrl } from '#allauth/urls';
+import type { BaseUrlType } from '#rootmachine/lib/env-schema';
+
 
 import { assign, sendParent, setup } from 'xstate';
 
 import { fetchConfig, fetchSession } from './promises';
+import { fetchToken } from './custom-promises';
 import { ConfigResponseType, SessionResponseType } from './schema';
 
 export const allAuthChecker = setup({
   types: {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     context: {} as {
-      baseUrl: BaseAuthUrl;
-      sessionValid: boolean;
+      baseUrl: BaseUrlType;
+      baseAuthUrl: BaseAuthUrl;
+      token: string;
       auth: SessionResponseType | undefined;
       config: ConfigResponseType | undefined;
     },
@@ -18,21 +22,27 @@ export const allAuthChecker = setup({
     children: {} as {
       sessionFetcher: 'fetchSession';
       configFetcher: 'fetchConfig';
+      tokenFetcher: 'fetchToken';
     },
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    input: '' as BaseAuthUrl,
+    input: {} as {
+      baseAuthUrl: BaseAuthUrl;
+      baseUrl: BaseUrlType;
+    },
   },
   actions: {},
   actors: {
     fetchSession,
     fetchConfig,
+    fetchToken
   },
 }).createMachine({
   context: ({ input }) => ({
-    baseUrl: input,
+    baseUrl: input.baseUrl,
+    baseAuthUrl: input.baseAuthUrl,
     auth: undefined,
     config: undefined,
-    sessionValid: false,
+    token: ''
   }),
   id: 'allauth-checker',
   initial: 'checking-session',
@@ -41,7 +51,7 @@ export const allAuthChecker = setup({
       invoke: {
         id: 'sessionFetcher',
         src: 'fetchSession',
-        input: ({ context }) => context.baseUrl,
+        input: ({ context }) => context.baseAuthUrl,
         onDone: {
           target: 'checking-config',
           actions: assign({ auth: ({ event }) => event.output }),
@@ -55,10 +65,24 @@ export const allAuthChecker = setup({
       invoke: {
         id: 'configFetcher',
         src: 'fetchConfig',
+        input: ({ context }) => context.baseAuthUrl,
+        onDone: {
+          target: 'checking-token',
+          actions: assign({ config: ({ event }) => event.output }),
+        },
+        onError: {
+          target: 'checking-token',
+        },
+      },
+    },
+    'checking-token': {
+      invoke: {
+        id: 'tokenFetcher',
+        src: 'fetchToken',
         input: ({ context }) => context.baseUrl,
         onDone: {
           target: 'checking-complete',
-          actions: assign({ config: ({ event }) => event.output }),
+          actions: assign({ token: ({ event }) => event.output }),
         },
         onError: {
           target: 'checking-complete',
@@ -69,16 +93,16 @@ export const allAuthChecker = setup({
       entry: [
         sendParent(({ context }) => {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          const type = context.auth?.meta.is_authenticated
-            ? 'ALLAUTH_AUTHENTICATED'
-            : 'ALLAUTH_UNAUTHENTICATED';
+          const isAuth = context.auth?.meta.is_authenticated && context.token !== ''
+          const basePayload = {auth: context.auth, config: context.config};
+
+          const type = isAuth ? 'ALLAUTH_AUTHENTICATED' : 'ALLAUTH_UNAUTHENTICATED';
+
+          const payload = isAuth ? {...basePayload, token: context.token } : basePayload;
 
           return {
             type,
-            payload: {
-              auth: context.auth,
-              config: context.config,
-            },
+            payload
           };
         }),
       ],

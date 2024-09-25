@@ -8,6 +8,7 @@ export type AllAuthEvents =
       payload: {
         auth: SessionResponseType;
         config: ConfigResponseType;
+        token: string;
       };
     }
   | {

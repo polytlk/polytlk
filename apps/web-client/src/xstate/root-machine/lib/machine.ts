@@ -180,7 +180,9 @@ export const machine = setup({
             input: ({ context }) => {
               const { config, platform } = context;
 
-              return getBaseAuthUrl({ baseUrl: config.BASE_URL, platform });
+              const baseAuthUrl = getBaseAuthUrl({ baseUrl: config.BASE_URL, platform });
+
+              return { baseAuthUrl, baseUrl: context.config.BASE_URL }
             },
             // onError: {
             //   actions: [raise(() => {})],
@@ -195,6 +197,7 @@ export const machine = setup({
                     auth: event.payload.auth,
                     config: event.payload.config,
                   }),
+                  token: ({ event }) => event.payload.token
                 }),
               ],
             },

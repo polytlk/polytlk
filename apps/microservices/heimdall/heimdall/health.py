@@ -10,14 +10,10 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 import requests
 
-
 from heimdall.tyk.request_builder import TykRequestBuilder
 from heimdall.config import settings
 
-
 logger = logging.getLogger(__name__)
-
-
 
 def get_session_expiry_info(request):
     """Get session expiry info from the request."""
@@ -62,6 +58,7 @@ class Test(APIView):
 
             return Response({
                 'status': 'success',
+                'token': tyk_key,
                 'message': 'Valid tyk key found in session',
 
             })
@@ -108,7 +105,7 @@ class Test(APIView):
                 request.session['tyk_key_exp'] = exp
 
                 # Return the response
-                return Response('ok')
+                return Response({'token': key_info['key']})
 
             except ValueError as e:
                 return Response({'error': str(e)}, status=400)
