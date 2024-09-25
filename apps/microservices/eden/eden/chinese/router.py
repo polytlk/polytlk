@@ -2,7 +2,7 @@
 import json
 import logging
 import time
-from typing import Any, Generator
+from typing import Any, AsyncGenerator
 
 from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse
@@ -59,7 +59,7 @@ async def chinese_endpoint(user_query: ChineseQuery) -> Any:
 
 @router.get('/task/{task_id}/stream', response_model=WorkerReponse)
 async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
-    async def event_generator(tid: str) -> Generator[WorkerReponse, None, None]:
+    async def event_generator(tid: str) -> AsyncGenerator[WorkerReponse, None]:
         while True:
             logger.info("pinging task id -> {0}".format(task_id))
             task_result = redis_db.get(tid)
@@ -137,4 +137,4 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
                 yield worker_res.model_dump_json()
                 break
             time.sleep(1)
-    return EventSourceResponse(event_generator(task_id), send_timeout=5)
+    return EventSourceResponse(event_generator(task_id))

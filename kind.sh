@@ -169,7 +169,7 @@ nodes:
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
-        system-reserved: "memory=6914Mi,cpu=2"
+        system-reserved: "memory=5914Mi,cpu=2"
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -186,7 +186,7 @@ nodes:
     kind: JoinConfiguration
     nodeRegistration:
       kubeletExtraArgs:
-        system-reserved: "memory=6914Mi,cpu=3"
+        system-reserved: "memory=5914Mi,cpu=3"
 - role: worker
   image: kindest/node:v1.31.0
   labels:
@@ -236,9 +236,16 @@ data:
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF
 
+  # 6. annotate the nodes so tilt automatically knows where to push builds
   kubectl annotate node kind-control-plane tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
   kubectl annotate node kind-worker tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
   kubectl annotate node kind-worker2 tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
+
+  # 7. add metrics server
+  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.7.2/components.yaml
+  kubectl patch -n kube-system deployment metrics-server --type=json \                                       
+  -p '[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+
 }
 
 
