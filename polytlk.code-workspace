@@ -49,7 +49,6 @@
 			"**/*.mypy_cache": true,
 			"**/*.pytest_cache": true
 		},
-		"eslint.enable": false,
 		"yaml.schemas": {},
 		"vs-kubernetes": {
 			"vs-kubernetes.kubectl-path": "$HOME/.rd/bin/kubectl",

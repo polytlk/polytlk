@@ -137,4 +137,4 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
                 yield worker_res.model_dump_json()
                 break
             time.sleep(1)
-    return EventSourceResponse(event_generator(task_id))
+    return EventSourceResponse(event_generator(task_id), send_timeout=5)
