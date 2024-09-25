@@ -31,7 +31,7 @@ podman_build('eden-svc-img', '.',
         'development'
     ],    
     live_update=[
-        sync('./eden', '/code/eden')
+        sync('./eden', '/app/eden')
     ]
 )
 

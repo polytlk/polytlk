@@ -50,6 +50,6 @@ podman_build('heimdall-svc-img', '.',
         'development'
     ],    
     live_update=[
-        sync('./heimdall', '/code/heimdall')
+        sync('./heimdall', '/app/heimdall')
     ]
 )

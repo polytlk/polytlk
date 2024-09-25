@@ -13,6 +13,6 @@ podman_build('eden-worker-img', '.',
         'Dockerfile.dev'
     ],    
     live_update=[
-        sync('./eden', '/code/eden')
+        sync('./eden', '/app/eden')
     ]
 )
