@@ -26,7 +26,8 @@ ENV PYTHONUNBUFFERED=1 \
     # paths
     # this is where our requirements + virtual environment will live
     PYSETUP_PATH="/opt/pysetup" \
-    VENV_PATH="/opt/pysetup/.venv"
+    VENV_PATH="/opt/pysetup/.venv" \
+    HANLP_HOME="/opt/.hanlp"
 
 # prepend poetry and venv to path
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
@@ -42,16 +43,26 @@ RUN curl -sSL https://install.python-poetry.org/ | python
 WORKDIR $PYSETUP_PATH
 COPY poetry.lock pyproject.toml ./
 
-RUN poetry install --only main --no-root --no-directory && rm -rf $POETRY_CACHE_DIR
+RUN poetry install --with local --no-directory && rm -rf $POETRY_CACHE_DIR
+
+WORKDIR /app
+
+COPY poetry.lock pyproject.toml ./
+COPY ./eden/model /app/eden/model
+
+RUN python -m eden.model.load
 
 FROM python-base AS final
 WORKDIR $PYSETUP_PATH
+ENV TRANSFORMERS_OFFLINE=0
 # copy in our built poetry + venv
+COPY --from=builder-base $HANLP_HOME $HANLP_HOME
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
 COPY ./eden /app/eden
+COPY ./scripts/entrypoint.sh /app/
 
 # will become mountpoint of our code
 WORKDIR /app
 
-CMD ["celery", "-A", "eden.main.celery worker", "--concurrency", "1", "--loglevel=info"]
+ENTRYPOINT ["/app/entrypoint.sh"]

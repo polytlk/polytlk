@@ -19,12 +19,8 @@ class Test(APIView):
     schema = AutoSchema()
 
     def get(self, request, format=None):
-        logger.info('TEST -> session key -> {0}'.format(request.session.session_key))
+        logger.info('user id -> {0} '.format(request.session["_auth_user_id"]))
 
-        for key, value in request.session.items():
-            logger.info('TEST -> {} => {}'.format(key, value))
-
-        logger.info('TEST -> NEW session key -> {0}'.format('123456'))
         res = Response('ok')
         return res
 

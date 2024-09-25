@@ -24,12 +24,12 @@ spec:
         app.kubernetes.io/managed-by: Helm
     spec:
       securityContext:
-        {}
+        null
       containers:
         - name: eden-worker
           securityContext:
-            {}
-          image: "localhost:5001/eden-worker-img:latest"
+            null
+          image: "eden-worker-img:latest"
           env:
             - name: CELERY_BROKER_URL
               valueFrom:
@@ -45,10 +45,5 @@ spec:
               value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 2Gi
-            requests:
-              cpu: 500m
-              memory: 512Mi
+      nodeSelector:
+        role: app

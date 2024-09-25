@@ -24,12 +24,12 @@ spec:
         app.kubernetes.io/managed-by: Helm
     spec:
       securityContext:
-        {}
+        null
       containers:
         - name: eden-svc
           securityContext:
-            {}
-          image: "localhost:5001/eden-svc-img:latest"
+            null
+          image: "eden-svc-img:latest"
           ports:
             - containerPort: 7079
               protocol: TCP
@@ -63,3 +63,5 @@ spec:
               value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local
+      nodeSelector:
+        role: app

@@ -7,10 +7,12 @@ TYK_PATH='../../../tilt/eden-worker'
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_resource('eden-worker', labels=["chinese"], resource_deps=['redis-master'])
 
-podman_build('localhost:5001/eden-worker-img', '.',     
+podman_build('eden-worker-img', '.',
+    extra_flags=[
+        '--file',
+        'Dockerfile.dev'
+    ],    
     live_update=[
-        sync('.', '/code'),
-        run('cd /code && poetry install --no-interaction --no-root --without dev',
-            trigger=['./poetry.lock', './pyproject.toml']),
+        sync('./eden', '/code/eden')
     ]
 )

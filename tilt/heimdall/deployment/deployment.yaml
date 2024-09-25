@@ -29,7 +29,7 @@ spec:
         - name: heimdall-svc
           securityContext:
             null
-          image: "localhost:5001/heimdall-svc-img:latest"
+          image: "heimdall-svc-img:latest"
           ports:
             - containerPort: 8000
               protocol: TCP

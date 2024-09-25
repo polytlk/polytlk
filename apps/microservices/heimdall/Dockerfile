@@ -1,46 +1,79 @@
-FROM python:3.11-slim-bullseye AS build
+# `python-base` sets up all our shared environment variables
+FROM python:3.12.0-slim AS python-base
 
-WORKDIR /code
-
-ENV \
+    # python
+ENV PYTHONUNBUFFERED=1 \
+    # prevents python creating .pyc files
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1 \
+    \
+    # pip
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    \
+    # poetry
+    # https://python-poetry.org/docs/configuration/#using-environment-variables
+    POETRY_VERSION=1.8.3 \
+    # make poetry install to this location
+    POETRY_HOME="/opt/poetry" \
+    # make poetry create the virtual environment in the project's root
+    # it gets named `.venv`
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    # do not ask any interactive question
     POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=true \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+    POETRY_CACHE_DIR=/tmp/poetry_cache \
+    \
+    # paths
+    # this is where our requirements + virtual environment will live
+    PYSETUP_PATH="/opt/pysetup" \
+    VENV_PATH="/opt/pysetup/.venv"
 
-SHELL ["/bin/bash", "-c"]
+# prepend poetry and venv to path
+ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
+FROM python-base AS builder-base
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc
+    && apt-get install -y \
+        # deps for installing poetry
+        curl \
+        libpq-dev \
+        gcc
 
-# Install system packages needed for final image
-RUN pip install poetry
+RUN curl -sSL https://install.python-poetry.org/ | python
 
-# Copy dependency information
-COPY ./pyproject.toml ./poetry.lock* ./poetry.toml /code/
+WORKDIR $PYSETUP_PATH
+COPY poetry.lock pyproject.toml ./
 
-# Install application dependencies
-RUN pip3 install poetry==1.8.3 && poetry install --only main --no-root --no-directory
+RUN poetry install --only main --no-root --no-directory && rm -rf $POETRY_CACHE_DIR
 
-COPY ./heimdall /code/heimdall/
+FROM python-base AS development
+WORKDIR $PYSETUP_PATH
+# copy in our built poetry + venv
+COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
-RUN poetry install
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    libpq-dev \
+&& apt remove apt --autoremove -y --allow-remove-essential
 
-FROM python:3.11-slim-bullseye AS final
+COPY ./heimdall /app/heimdall
 
-WORKDIR /code
+# will become mountpoint of our code
+WORKDIR /app
 
-# Make sure we use the virtualenv:
-ENV PATH="/code/.venv/bin:$PATH"
+CMD ["uvicorn", "heimdall.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
-COPY --from=build /code/.venv /code/.venv
-COPY . /code
-COPY ./scripts/entrypoint.sh /code
+FROM python-base AS production
+WORKDIR $PYSETUP_PATH
+# copy in our built poetry + venv
+COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
-RUN apt-get update \
-    && apt-get -y install libpq-dev gcc
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    libpq-dev \
+&& apt remove apt --autoremove -y --allow-remove-essential
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+COPY ./heimdall /app/heimdall
+
+# will become mountpoint of our code
+WORKDIR /app
+
+CMD ["uvicorn", "heimdall.asgi:application", "--host", "0.0.0.0", "--port", "8000"]

@@ -29,3 +29,6 @@ controller:
     rollingUpdate: null
     type: RollingUpdate
   watchIngressWithoutClass: true
+patch:
+  nodeSelector:
+    role: ops

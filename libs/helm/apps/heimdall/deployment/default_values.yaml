@@ -1,2 +1,2 @@
 image:
-  repository: "localhost:5001/heimdall-svc-img"
+  repository: "heimdall-svc-img"

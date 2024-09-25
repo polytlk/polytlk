@@ -1,6 +1,5 @@
 load('ext://namespace', 'namespace_inject')
 load('ext://podman', 'podman_build')
-load('ext://uibutton', 'cmd_button', 'location', 'choice_input')
 
 NAMESPACE = 'heimdall'
 TILT_PATH = '../../../tilt/heimdall'
@@ -45,25 +44,12 @@ k8s_resource(
   resource_deps=['tyk-operator-ready']
 )
 
-podman_build('localhost:5001/heimdall-svc-img', '.',     
+podman_build('heimdall-svc-img', '.',
+    extra_flags=[
+        '--target',
+        'development'
+    ],    
     live_update=[
-        sync('./heimdall', '/code/heimdall'),
-        run('cd /code && poetry install --no-interaction --no-root --without dev',
-            trigger=['./poetry.lock', './pyproject.toml']),
+        sync('./heimdall', '/code/heimdall')
     ]
-)
-
-cmd_button(
-  name='manage-btn',
-  argv=['sh', '-c', 'cd apps/microservices/heimdall && export ENVIRONMENT=local && export ALLOWED_HOSTS=localhost && poetry install && poetry run python manage.py $command'],
-  text='heimdall manage',
-  location=location.RESOURCE,
-  inputs=[
-    choice_input('command', label='command', choices=[
-        'makemigrations',
-        'migrate',
-    ])
-  ],
-  resource='heimdall-svc',
-  icon_name='sync_alt'
 )

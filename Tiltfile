@@ -5,6 +5,7 @@ load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
 
 deploy_cert_manager(version="v1.15.3")
+docker_prune_settings(disable=True)
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -53,17 +54,18 @@ required = [
   'ingress-nginx-controller',
   'ingress-nginx-admission-patch',
   'ingress-nginx-admission-webhook',
-  'heimdall-svc',
-  'socrates-svc',
   'opentelemetry-collector',
   'redis-master',
+  'postgresql',
   'tyk-operator',
   'tyk-gateway',
+  'flower',
+  'migrate-heimdall',
+  'tyk-operator-ready',
+  'socrates-svc',
+  'heimdall-svc',
   'heimdall-api',
   'heimdall-all-auth',
-  'tyk-operator-ready',
-  'postgresql',
-  # 'flower',
 ]
 
 base = [
@@ -75,28 +77,19 @@ base = [
   # 'kube-prometheus-stack-grafana'
 ]
 
-host = []
+host = ['web']
 
-if LOCAL_MODE == 'expose_cluster':
-  host = ['ngrok-tunnel', 'verdaccio']
-else:
-  host = ['web',]
 
 final_base = base + host + required
 
 # run a group like
 # tilt up -- chinese
 groups = {
+  # 
   'chinese':  ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
-  'korean': ['olivia-svc'] + final_base,
+  #'korean': ['olivia-svc'] + final_base,
 }
 
-# if msw is enabled overwrite and only run FE stuff
-if LOCAL_MODE == 'msw':
-  groups = {
-    'chinese': host,
-    'korean': host,
-  }
 
 resources = []
 
@@ -128,23 +121,19 @@ config.set_enabled_resources(resources)
 ##               text_input('tag'),
 ##           ]
 ## )
+helm_remote('redis',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="18.0.0",
+            set=['auth.enabled=false', 'architecture=standalone', 'master.nodeSelector.role=ops']
+)
 
-if LOCAL_MODE == 'expose_cluster':
-  local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
-else:
-  helm_remote('redis',
-              repo_name='bitnami',
-              repo_url='https://charts.bitnami.com/bitnami',
-              version="18.0.0",
-              set=['auth.enabled=false']
-  )
-
-  helm_remote('postgresql',
-              repo_name='bitnami',
-              repo_url='https://charts.bitnami.com/bitnami',
-              version="15.5.29",
-              set=['auth.postgresPassword=helloworld']
-  )
+helm_remote('postgresql',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="15.5.29",
+            set=['auth.postgresPassword=helloworld', 'primary.nodeSelector.role=ops']
+)
 
   # helm_remote('kube-prometheus-stack',
   #             repo_name='prometheus-community',
@@ -152,27 +141,27 @@ else:
   # )
 
 
-  k8s_resource(
-    workload='redis-master',
-    labels=['data-storage'],
-  )
+k8s_resource(
+  workload='redis-master',
+  labels=['data-storage'],
+)
 
-  k8s_resource(
-    workload='postgresql',
-    labels=['data-storage'],
-    port_forwards=5300
-  )
+k8s_resource(
+  workload='postgresql',
+  labels=['data-storage'],
+  port_forwards=5300
+)
 
-  include('./tilt/addons/otel-collector/Tiltfile')
-  include('./tilt/addons/ingress-nginx/Tiltfile')
-  include('./tilt/addons/tyk/Tiltfile')
-  include('./tilt/addons/tyk-operator/Tiltfile')
+include('./tilt/addons/otel-collector/Tiltfile')
+include('./tilt/addons/ingress-nginx/Tiltfile')
+include('./tilt/addons/tyk/Tiltfile')
+include('./tilt/addons/tyk-operator/Tiltfile')
 
-  # include('./tilt/flower/Tiltfile')
+include('./tilt/flower/Tiltfile')
 
-  include('./apps/microservices/socrates/Tiltfile')
-  include('./apps/microservices/eden/Tiltfile')
-  include('./apps/microservices/olivia/Tiltfile')
-  include('./apps/microservices/heimdall/Tiltfile')
-  include('./apps/workers/eden/Tiltfile')
-  include('./apps/web-client/Tiltfile')
+include('./apps/microservices/socrates/Tiltfile')
+include('./apps/microservices/eden/Tiltfile')
+include('./apps/microservices/olivia/Tiltfile')
+include('./apps/microservices/heimdall/Tiltfile')
+include('./apps/workers/eden/Tiltfile')
+include('./apps/web-client/Tiltfile')

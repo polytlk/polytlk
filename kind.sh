@@ -1,8 +1,6 @@
 #!/bin/sh
 set -o errexit
 
-
-
 binaries=("podman" "tilt" "kind" "kubectl" "helm" "doppler")
 missing_binaries=()
 
@@ -164,12 +162,14 @@ containerdConfigPatches:
     config_path = "/etc/containerd/certs.d"
 nodes:
 - role: control-plane
+  image: kindest/node:v1.31.0
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
+        system-reserved: "memory=6914Mi,cpu=2"
   extraPortMappings:
   - containerPort: 80
     hostPort: 80
@@ -178,11 +178,25 @@ nodes:
     hostPort: 443
     protocol: TCP
 - role: worker
+  image: kindest/node:v1.31.0
   labels:
     role: app
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        system-reserved: "memory=6914Mi,cpu=3"
 - role: worker
+  image: kindest/node:v1.31.0
   labels:
     role: ops
+  kubeadmConfigPatches:
+  - |
+    kind: JoinConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        system-reserved: "memory=6914Mi,cpu=3"
 EOF
 
   # 3. Add the registry config to the nodes
@@ -221,6 +235,10 @@ data:
     host: "localhost:${reg_port}"
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF
+
+  kubectl annotate node kind-control-plane tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
+  kubectl annotate node kind-worker tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
+  kubectl annotate node kind-worker2 tilt.dev/registry-from-cluster=localhost:5001 tilt.dev/registry=localhost:5001
 }
 
 
@@ -255,6 +273,8 @@ if check_cluster_exists; then
 else
   echo "No cluster found. You can proceed with cluster creation."
   create_kind_cluster_with_registry
+
+  echo "Cluster is ready!"
 fi
 
 
@@ -300,6 +320,27 @@ else
     cd "$ROOT_DIR"
 fi
 
+kubectl create namespace flower 2>/dev/null || true
+
+# Check if .npmrc already exists, and skip the steps if it does
+if [ -f "tilt/flower/.env" ]; then
+  if ! kubectl get secret flower-secret-env -n flower &> /dev/null; then
+    kubectl create secret generic flower-secret-env --from-env-file=tilt/flower/.env -n flower
+    echo "Secretflower-secret-env created in namespace flower"
+  fi
+    echo ".env already exists in tilt/flower, skipping secret setup."
+else
+    echo ".env does not exist, setting up Doppler and creating .env file."
+
+    cd tilt/flower
+    doppler setup -p flower -c local
+    doppler secrets download --format=env-no-quotes --no-file > .env
+    echo ".env created"
+
+    # Return to the original directory
+    cd "$ROOT_DIR"
+fi
+
 create_namespace_and_secret_for_addons
 
-tilt ci
+# tilt ci
