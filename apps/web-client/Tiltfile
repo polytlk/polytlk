@@ -14,10 +14,10 @@ k8s_resource(
     resource_deps=['ingress-nginx-controller', 'ingress-nginx-admission-create', 'ingress-nginx-admission-patch']
 )
 
-podman_build('localhost:5001/web', '.',
+podman_build('localhost:5001/web', '../..',
     extra_flags=[
         "--file",
-        "Dockerfile.tilt"
+        "../../Dockerfile"
     ],
     live_update=[
         sync('./src', '/app/src'),

@@ -244,6 +244,9 @@ importers:
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.13))(esbuild@0.18.20))
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       express:
         specifier: ^4.21.0
         version: 4.21.0
@@ -10424,22 +10427,6 @@ snapshots:
       - verdaccio
     optional: true
 
-  '@nrwl/js@19.2.3(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.4.5)(verdaccio@5.32.2(typanion@3.14.0))':
-    dependencies:
-      '@nx/js': 19.2.3(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.4.5)(verdaccio@5.32.2(typanion@3.14.0))
-    transitivePeerDependencies:
-      - '@babel/traverse'
-      - '@swc-node/register'
-      - '@swc/core'
-      - '@swc/wasm'
-      - '@types/node'
-      - debug
-      - nx
-      - supports-color
-      - typescript
-      - verdaccio
-    optional: true
-
   '@nrwl/js@19.5.0(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.4.5)(verdaccio@5.32.2(typanion@3.14.0))':
     dependencies:
       '@nx/js': 19.5.0(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.4.5)(verdaccio@5.32.2(typanion@3.14.0))
@@ -11004,7 +10991,7 @@ snapshots:
       '@babel/preset-env': 7.25.4(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
       '@babel/runtime': 7.25.6
-      '@nrwl/js': 19.2.3(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.4.5)(verdaccio@5.32.2(typanion@3.14.0))
+      '@nrwl/js': 19.2.3(@babel/traverse@7.25.6)(@swc/core@1.7.26(@swc/helpers@0.5.13))(@types/node@18.19.48)(nx@19.2.3(@swc/core@1.7.26(@swc/helpers@0.5.13)))(typescript@5.5.4)(verdaccio@5.32.2(typanion@3.14.0))
       '@nx/devkit': 19.2.3(nx@19.5.0(@swc/core@1.7.26(@swc/helpers@0.5.13)))
       '@nx/workspace': 19.2.3(@swc/core@1.7.26(@swc/helpers@0.5.13))
       babel-plugin-const-enum: 1.2.0(@babel/core@7.25.2)
