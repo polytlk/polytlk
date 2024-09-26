@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from eden.models.models import Meaning, Unit, UnitMeaningLink
+from eden.models.models import Meaning, Unit, UnitMeaningLink, QueryUnitMeaning
 
 
 def get_or_create_unit(db: Session, unit_text: str):
@@ -40,3 +40,17 @@ def get_or_create_link(db: Session, u_id: int, m_id: int, sound: str):
         db.commit()
 
     return link
+
+def get_or_create_query_unit_meaning(db: Session, q_id: int, u_id: int, m_id: int):
+    statement = select(QueryUnitMeaning).where(
+        QueryUnitMeaning.query_id == q_id, QueryUnitMeaning.unit_id == u_id, QueryUnitMeaning.meaning_id == m_id
+    )
+
+    qum = db.exec(statement).first()
+
+    if not qum:
+        qum = QueryUnitMeaning(query_id=q_id, unit_id=u_id, meaning_id=m_id)
+        db.add(qum)
+        db.commit()
+
+    return qum

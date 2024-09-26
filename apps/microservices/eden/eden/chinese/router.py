@@ -7,15 +7,15 @@ from typing import Any, AsyncGenerator
 from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse
 from redis import Redis
-from sqlmodel import Session, select
+from sqlmodel import Session
 from sse_starlette.sse import EventSourceResponse
 
 from eden.celery_utils import create_celery
 from eden.chinese.schemas import ChineseQuery, ChineseTask, Message
 from eden.config import settings
 from eden.models.crud import (get_or_create_link, get_or_create_meaning,
-                              get_or_create_unit)
-from eden.models.models import Dialogue, ParticipantEnum, Query, QueryUnitMeaning
+                              get_or_create_unit, get_or_create_query_unit_meaning)
+from eden.models.models import Dialogue, ParticipantEnum, Query
 from eden.models.processing import split_by_separators
 from eden.models.validators import WorkerReponse
 from eden.tracing import tracer  # noqa: I001
@@ -106,12 +106,12 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
                         unit = get_or_create_unit(session, unit_text)
                         meaning = get_or_create_meaning(session, meaning_text, was_split)
                         link = get_or_create_link(session, unit.id, meaning.id, sound)
+                        
 
                         logger.info("\t the unit {0} sounds like {1} and means {2}".format(link.unit.text, link.sound, link.meaning.text))
 
-                        querylink = QueryUnitMeaning(query_id=query.id, unit_id=unit.id, meaning_id=meaning.id)
-                        session.add(querylink)
-                        session.commit()
+                        qum = get_or_create_query_unit_meaning(session, query.id, unit.id, meaning.id)
+                        logger.info("\t FROM qum -> the unit {0} sounds like {1} and means {2}".format(qum.unit_meaning.unit.text, qum.unit_meaning.sound, qum.unit_meaning.meaning.text))
 
                     for index, (d_text, d_sound, translation) in enumerate(worker_res.ari_data.dialogue):
                         if index % 2 == 0:
