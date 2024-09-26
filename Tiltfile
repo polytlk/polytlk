@@ -57,10 +57,12 @@ required = [
   'opentelemetry-collector',
   'redis-master',
   'postgresql',
+  'postgresql-ha',
   'tyk-operator',
   'tyk-gateway',
   'flower',
   'migrate-heimdall',
+  'migrate-eden',
   'tyk-operator-ready',
   'socrates-svc',
   'heimdall-svc',
@@ -135,6 +137,15 @@ helm_remote('postgresql',
             set=['auth.postgresPassword=helloworld', 'primary.nodeSelector.role=ops']
 )
 
+helm_remote(chart='postgresql',
+            release_name='postgresql-ha',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="15.5.29",
+            set=['auth.postgresPassword=helloworld', 'primary.nodeSelector.role=ops']
+)
+
+
   # helm_remote('kube-prometheus-stack',
   #             repo_name='prometheus-community',
   #             repo_url='https://prometheus-community.github.io/helm-charts'
@@ -150,6 +161,12 @@ k8s_resource(
   workload='postgresql',
   labels=['data-storage'],
   port_forwards=5300
+)
+
+k8s_resource(
+  workload='postgresql-ha',
+  labels=['data-storage'],
+  port_forwards=5322
 )
 
 include('./tilt/addons/otel-collector/Tiltfile')

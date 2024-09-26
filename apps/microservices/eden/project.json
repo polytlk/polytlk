@@ -81,6 +81,20 @@
         "args": ""
       }
     },
+    "make-migrations": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "atlas migrate diff --env sqlalchemy",
+        "cwd": "apps/microservices/eden"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "atlas migrate apply --env local",
+        "cwd": "apps/microservices/eden"
+      }
+    },
     "container": {
       "executor": "@nx-tools/nx-container:build",
       "options": {

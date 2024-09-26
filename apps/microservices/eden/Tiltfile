@@ -1,19 +1,29 @@
 load('ext://namespace', 'namespace_inject')
 load('ext://podman', 'podman_build')
-load('ext://uibutton', 'cmd_button', 'location')
 
 NAMESPACE='eden'
 TYK_PATH='../../../tilt/eden'
 
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
+
+local_resource(
+  'migrate-eden',
+  labels=['chinese'],
+  cmd='pnpm nx run eden:migrate',
+  allow_parallel=True,
+  resource_deps=['postgresql-ha']
+)
+
+
 k8s_resource(
   'eden-svc',
   labels=["chinese"],
   # expose openapi
   port_forwards=[
     port_forward(7079, 7079, name='openapi', link_path='/openapi.json'),
-  ]
+  ],
+  resource_deps=['migrate-eden']
 )
 
 k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TYK_PATH)), NAMESPACE))
@@ -33,13 +43,4 @@ podman_build('eden-svc-img', '.',
     live_update=[
         sync('./eden', '/app/eden')
     ]
-)
-
-cmd_button(
-  name='migrate-btn',
-  argv=['sh', '-c', 'cd apps/microservices/eden && poetry run python eden/utils/migrate.py'],
-  text='eden migrate',
-  location=location.RESOURCE,
-  resource='eden-svc',
-  icon_name='sync_alt'
 )

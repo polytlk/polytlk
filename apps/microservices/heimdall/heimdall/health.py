@@ -28,8 +28,6 @@ class Test(APIView):
         current_time = time.time()
 
         if tyk_key and tyk_key_exp and current_time < tyk_key_exp:
-            time_left = tyk_key_exp - current_time
-            logger.info(f"Tyk key {tyk_key} is valid. Time left: {time_left} seconds.")
 
             return Response({
                 'status': 'success',
