@@ -111,7 +111,7 @@ const Home: React.FC<HomeProps> = ({
                   <IonInput
                     value={text}
                     placeholder="Enter Text"
-                    onIonChange={(e: { detail: { value: string } }) => {
+                    onIonChange={(e: { detail: { value?: string | null | undefined } }) => {
                       send({
                         type: 'UPDATE_TEXT',
                         text: e.detail.value + '',

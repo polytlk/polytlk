@@ -3,7 +3,7 @@
   "type": "module",
   "devDependencies": {
     "@capacitor/android": "../../node_modules/@capacitor/android",
-    "@capacitor/cli": "^5.0.3",
+    "@capacitor/cli": "5.7.8",
     "@capacitor/device": "../../node_modules/@capacitor/device",
     "@capacitor/ios": "../../node_modules/@capacitor/ios",
     "@polytlk/echo-plugin": "../../node_modules/@polytlk/echo-plugin",

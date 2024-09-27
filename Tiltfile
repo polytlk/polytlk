@@ -29,7 +29,7 @@ print(color.yellow('------------------------------------------------------------
 print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
 
 LOCAL_MODE = os.environ.get('LOCAL_MODE', 'default').lower()
-if LOCAL_MODE not in ['msw', 'expose_cluster']:
+if LOCAL_MODE not in ['ios']:
   LOCAL_MODE = 'default'
 
 if language[0].lower() not in ['chinese', 'korean']:
@@ -39,10 +39,8 @@ print(color.blue('LANGUAGE: ') + '\t' + language[0].upper())
 print(color.blue('LOCAL MODE: ') + '\t' + LOCAL_MODE.upper())
 print('')
 
-if LOCAL_MODE == 'msw':
-  print(color.blue('DESCRIPTION: ') + '\t' + 'optimized for frontend development. use frontend and mocks only. LANGUAGE param is inert')
-elif LOCAL_MODE == 'expose_cluster':
-  print(color.blue('DESCRIPTION: ') + '\t' + 'for testing changes on a real iOS device locally. use ngrok to expose cluster to public internet for your iOS device.')
+if LOCAL_MODE == 'ios':
+  print(color.blue('DESCRIPTION: ') + '\t' + 'used for iOS development. spins up just the cluster without a webpack server')
 else:
   print(color.blue('DESCRIPTION: ') + '\t' + 'default way of working. spins up requested backend services based on LANGUAGE, webpack dev server, and a verdaccio server.')
 print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
@@ -79,8 +77,12 @@ base = [
   # 'kube-prometheus-stack-grafana'
 ]
 
-host = ['web']
+host = []
 
+if LOCAL_MODE == 'ios':
+  host = []
+else:
+  host = ['web']
 
 final_base = base + host + required
 

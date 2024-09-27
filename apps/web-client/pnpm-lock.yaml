@@ -12,7 +12,7 @@ importers:
         specifier: ../../node_modules/@capacitor/android
         version: link:../../node_modules/@capacitor/android
       '@capacitor/cli':
-        specifier: ^5.0.3
+        specifier: 5.7.8
         version: 5.7.8
       '@capacitor/device':
         specifier: ../../node_modules/@capacitor/device

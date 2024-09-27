@@ -33,13 +33,19 @@ Tools used for polytlk that are not used for day to day development
 ## Add postgres dependencies
 - > brew install libpq && brew link --force libpq
 
+## Add ruby dependencies
+- > brew install libyaml
+
 
 ## Add asdf plugins for runtimes/tools
 - > asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+- > asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
 - > asdf plugin-add python
 - > asdf plugin-add kubectl
 - > asdf plugin-add helm https://github.com/Antiarchitect/asdf-helm.git
 - > asdf plugin-add poetry https://github.com/asdf-community/asdf-poetry.git
+- > asdf plugin-add bundler git@github.com:jonathanmorley/asdf-bundler.git
+- > asdf plugin add cocoapods https://github.com/ronnnnn/asdf-cocoapods.git
 
 ## Install the local versions
 go to the root directory and run install
