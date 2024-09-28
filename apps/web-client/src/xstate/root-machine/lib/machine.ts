@@ -20,6 +20,7 @@ import { allAuthChecker } from '../../allauth-machine';
 import { deleteSession } from '../../allauth-machine/lib/promises';
 import { authChecker, deleteCookie, setCookie } from '../../auth-machine';
 import { machine as interpretMachine } from '../../interpret-machine';
+import { queriesFetcher } from '../../interpret-machine/lib/actors/promises';
 import { getConfig } from './actors';
 
 export const machine = setup({
@@ -57,6 +58,7 @@ export const machine = setup({
       configGetter: 'getConfig';
       checkAllAuth: 'allAuthChecker';
       sessionDelete: 'deleteSession';
+      fetchQueries: 'queriesFetcher';
     },
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     input: {} as {
@@ -85,6 +87,7 @@ export const machine = setup({
     setCookie,
     getConfig,
     deleteSession,
+    queriesFetcher
   },
 }).createMachine({
   context: ({ input }) => ({
@@ -248,8 +251,43 @@ export const machine = setup({
       },
     },
     'logged-in': {
-      initial: 'ready',
+      initial: 'loading',
       states: {
+        loading: {
+          invoke: {
+            id: "fetchQueries",
+            src: "queriesFetcher",
+            input: ({ context }) => {
+              return {
+                token: context.token,
+                baseUrl: context.config.BASE_URL
+              };
+            },
+            onDone: {
+              target: 'ready',
+              actions: [
+                assign({
+                  interpret: ({ context, event }) => {
+                    const base = {
+                      ...context.interpret,
+                      results: {
+                        ...context.interpret.results,
+                      },
+                      taskIds: [...context.interpret.taskIds],
+                    }
+
+                    for (const key in event.output){
+                      base.results[key] = event.output[key]
+                      base.taskIds = [...base.taskIds, key]
+                    }
+
+                    return base
+                  },
+                }),
+              ],
+            }
+          }
+        },
         ready: {
           on: {
             LOGOUT: {
@@ -338,8 +376,6 @@ export const machine = setup({
         },
         'logging-out': {
           invoke: {
-            //id: 'cookieDeleter',
-            //src: 'deleteCookie',
             id: 'sessionDelete',
             src: 'deleteSession',
             input: ({ context }) => {
