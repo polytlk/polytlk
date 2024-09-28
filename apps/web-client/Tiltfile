@@ -1,0 +1,25 @@
+load('ext://namespace', 'namespace_inject')
+load('ext://podman', 'podman_build')
+
+NAMESPACE='web'
+TYK_PATH='../../tilt/web'
+
+k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/deployment/ingress.yaml'.format(TYK_PATH)), NAMESPACE))
+
+k8s_resource(
+    'web',
+    labels=["web"],
+    resource_deps=['ingress-nginx-controller', 'ingress-nginx-admission-create', 'ingress-nginx-admission-patch']
+)
+
+podman_build('localhost:5001/web', '../..',
+    extra_flags=[
+        "--file",
+        "../../Dockerfile"
+    ],
+    live_update=[
+        sync('./src', '/app/src'),
+    ]
+)

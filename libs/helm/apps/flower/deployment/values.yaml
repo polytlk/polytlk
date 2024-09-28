@@ -1,0 +1,11 @@
+replicaCount: 1
+nameOverride: "flower"
+fullnameOverride: "flower"
+image:
+  repository: "mher/flower"
+service:
+  enabled: true
+  type: ClusterIP
+  port: 5555
+nodeSelector: 
+  role: ops

@@ -26,6 +26,8 @@ tyk-gateway:
         repository: busybox
         tag: 1.32
     containerPort: 8080
+    nodeSelector: 
+      role: app
     opentelemetry:
       enabled: true
       exporter: http

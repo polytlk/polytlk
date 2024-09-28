@@ -1,12 +1,9 @@
-load('ext://namespace', 'namespace_create', 'namespace_inject')
-load('ext://nerdctl', 'nerdctl_build')
-load('ext://secret', 'secret_yaml_generic')
+load('ext://namespace', 'namespace_inject')
+load('ext://podman', 'podman_build')
 
 NAMESPACE='socrates'
 TYK_PATH='../../../tilt/socrates'
-namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('socrates-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
 
@@ -17,11 +14,13 @@ k8s_resource(
     # port_forwards=8079
 )
 
-nerdctl_build('socrates-svc-img', '.',     
+podman_build('socrates-svc-img', '.',
+    extra_flags=[
+        '--target',
+        'development'
+    ],
     live_update=[
-        sync('.', '/code'),
-        run('cd /code && poetry install --no-interaction --no-root --without dev',
-            trigger=['./poetry.lock', './pyproject.toml']),
+        sync('./socrates', '/app/socrates')
     ]
 )
 

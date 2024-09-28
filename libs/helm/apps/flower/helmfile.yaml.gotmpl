@@ -1,0 +1,24 @@
+environments:
+  default: {}
+  development: {}
+---
+releases:
+- name: flower-secrets
+  namespace: flower
+  chart: ../../charts/secret
+  installed: {{ eq .Environment.Name "default" | not | toYaml }}
+  labels:
+    type: secret
+  values: 
+  - secret/{{ .Environment.Name }}_values.yaml
+  - secret/values.yaml
+  - secret/secrets.yaml
+
+- name: flower-deployment
+  namespace: flower
+  chart: ../../charts/deployment
+  installed: true
+  values:
+  - deployment/values.yaml
+  - secret/{{ .Environment.Name }}_values.yaml
+  - secret/secrets.yaml

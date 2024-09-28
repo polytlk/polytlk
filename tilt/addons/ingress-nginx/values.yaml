@@ -1,0 +1,34 @@
+controller:
+  config:
+    enable-opentelemetry: "true"
+    opentelemetry-operation-name: HTTP $request_method $service_name $uri
+    otlp-collector-host: opentelemetry-collector.otel-collector.svc
+    otlp-collector-port: "4317"
+  extraArgs:
+    publish-status-address: localhost
+  hostPort:
+    enabled: true
+  nodeSelector:
+    ingress-ready: "true"
+  opentelemetry:
+    enabled: true
+  publishService:
+    enabled: false
+  service:
+    type: NodePort
+  terminationGracePeriodSeconds: 0
+  tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Equal
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
+    operator: Equal
+  updateStrategy:
+    maxUnavailable: 1
+    rollingUpdate: null
+    type: RollingUpdate
+  watchIngressWithoutClass: true
+patch:
+  nodeSelector:
+    role: ops

@@ -1,0 +1,37 @@
+apiVersion: tyk.tyk.io/v1alpha1 
+kind: ApiDefinition
+metadata:
+  name: heimdall-all-auth
+spec:
+  name: heimdall-all-auth
+  use_keyless: true
+  protocol: http
+  active: true
+  proxy:
+    preserve_host_header: true
+    target_url: http://heimdall-svc.heimdall.svc:8000
+    listen_path: /accounts/google/login/
+    strip_listen_path: true
+  version_data:
+   default_version: Default
+   not_versioned: true
+   versions:
+     Default:
+       name: Default
+       use_extended_paths: true
+       extended_paths:
+          url_rewrites:
+            - path: /callback/{id}
+              match_pattern: "/callback/(.*)"
+              method: "GET"
+              rewrite_to: /accounts/google/login/accounts/google/login/callback/$1
+  CORS:
+    enable: true
+    allowed_methods:
+      - "GET"
+      - "POST"
+      - "OPTIONS"
+    allowed_origins:
+      - "http://localhost:4200"
+    max_age: 24
+  detailed_tracing: false

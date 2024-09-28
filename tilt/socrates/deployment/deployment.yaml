@@ -24,11 +24,11 @@ spec:
         app.kubernetes.io/managed-by: Helm
     spec:
       securityContext:
-        {}
+        null
       containers:
         - name: socrates-svc
           securityContext:
-            {}
+            null
           image: "socrates-svc-img:latest"
           ports:
             - containerPort: 8079
@@ -43,3 +43,5 @@ spec:
               value: http://opentelemetry-collector.otel-collector.svc.cluster.local/v1/traces
             - name: ENVIRONMENT
               value: local
+      nodeSelector:
+        role: app

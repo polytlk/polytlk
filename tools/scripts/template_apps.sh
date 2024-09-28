@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define valid targets
-VALID_TARGETS=("eden" "heimdall" "eden-worker" "socrates" "web")
+VALID_TARGETS=("eden" "heimdall" "eden-worker" "socrates" "web" "flower")
 VALID_ENABLE_OPTIONS=("true" "false")
 VALID_ENVIRONMENTS=("default" "development")
 

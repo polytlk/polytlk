@@ -1,21 +1,29 @@
-load('ext://namespace', 'namespace_create', 'namespace_inject')
-load('ext://nerdctl', 'nerdctl_build')
-load('ext://secret', 'secret_yaml_generic')
+load('ext://namespace', 'namespace_inject')
+load('ext://podman', 'podman_build')
 
 NAMESPACE='eden'
 TYK_PATH='../../../tilt/eden'
-namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('eden-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TYK_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TYK_PATH)), NAMESPACE))
+
+local_resource(
+  'migrate-eden',
+  labels=['chinese'],
+  cmd='pnpm nx run eden:migrate',
+  allow_parallel=True,
+  resource_deps=['postgresql-ha']
+)
+
+
 k8s_resource(
   'eden-svc',
   labels=["chinese"],
   # expose openapi
   port_forwards=[
     port_forward(7079, 7079, name='openapi', link_path='/openapi.json'),
-  ]
+  ],
+  resource_deps=['migrate-eden']
 )
 
 k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TYK_PATH)), NAMESPACE))
@@ -24,13 +32,15 @@ k8s_resource(
   objects=['eden-api:apidefinition'],
   new_name='eden-api',
   labels=['api-gateway'],
-  resource_deps=['tyk-operator']
+  resource_deps=['tyk-operator-ready']
 )
 
-nerdctl_build('eden-svc-img', '.',     
+podman_build('eden-svc-img', '.',
+    extra_flags=[
+        '--target',
+        'development'
+    ],    
     live_update=[
-        sync('.', '/code'),
-        run('cd /code && poetry install --no-interaction --no-root --without dev',
-            trigger=['./poetry.lock', './pyproject.toml']),
+        sync('./eden', '/app/eden')
     ]
 )

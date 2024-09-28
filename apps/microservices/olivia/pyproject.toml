@@ -28,7 +28,6 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 esupar = "^1.6.2"
-fastapi = "^0.95.2"
 python = ">=3.11,<4.0"
 
 [tool.poetry.dependencies.uvicorn]

@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "#allauth/*": ["src/utils/allauth/*"],
+      "#rootmachine/*": ["src/xstate/root-machine/*"]
+    }
   },
   "files": [],
   "include": [],
@@ -20,5 +27,4 @@
       "path": "./tsconfig.storybook.json"
     }
   ],
-  "extends": "../../tsconfig.base.json"
 }

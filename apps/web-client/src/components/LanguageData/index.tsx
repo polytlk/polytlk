@@ -1,5 +1,8 @@
 import type { FC } from 'react';
 
+import { useSelector } from '#rootmachine/index';
+import React, { useState } from 'react';
+
 import {
   IonItem,
   IonItemDivider,
@@ -11,15 +14,10 @@ import {
   IonRow,
   IonText,
 } from '@ionic/react';
-import React, { useState } from 'react';
-
-import { RootContext } from '../../RootContext';
 
 export type LanguageDataProps = {
   id: string;
 };
-
-const { useSelector } = RootContext;
 
 export const LanguageData: FC<LanguageDataProps> = ({ id }) => {
   const results = useSelector(({ context }) => context.interpret.results);

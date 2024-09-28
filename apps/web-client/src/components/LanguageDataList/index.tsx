@@ -1,11 +1,10 @@
-import { IonCol, IonImg } from '@ionic/react';
+import { useSelector } from '#rootmachine/index';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-import { RootContext } from '../../RootContext';
-import { LanguageData } from '../LanguageData';
+import { IonCol, IonImg } from '@ionic/react';
 
-const { useSelector } = RootContext;
+import { LanguageData } from '../LanguageData';
 
 export const LanguageDataList = () => {
   const resultIds = useSelector(({ context }) => context.interpret.taskIds);

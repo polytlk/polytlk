@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import logging
 import types
 from pathlib import Path
 
@@ -47,6 +46,14 @@ INSTALLED_APPS = (
     'rest_framework.schemas',
     'drf_spectacular',
 
+    'allauth',
+    'allauth.account',
+    'allauth.headless',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+    'atlas_provider_django',
+
     'heimdall',
 )
 
@@ -55,10 +62,11 @@ MIDDLEWARE = (
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 )
 
 ROOT_URLCONF = 'heimdall.urls'
@@ -87,8 +95,12 @@ WSGI_APPLICATION = 'heimdall.wsgi.application'
 
 DATABASES = types.MappingProxyType({
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': settings.db_pass,
+        'HOST': settings.db_host,
+        'PORT': settings.db_port,
     },
 })
 
@@ -120,6 +132,34 @@ AUTH_PASSWORD_VALIDATORS = (
     },
 )
 
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_ONLY = True
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APPS": [
+            #{
+            #    "provider_id": "google-ios",
+            #    "client_id": "540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com",
+            #},
+            {   
+                #"provider_id": "google-web",
+                "client_id": settings.google_client_id,
+                "secret": settings.google_secret
+            },
+        ]
+    }
+}
+
+HEADLESS_ONLY = True
+HEADLESS_FRONTEND_URLS = {
+    "account_signup": "/account/signup",
+    # Fallback in case the state containing the `next` URL is lost and the handshake
+    # with the third-party provider fails.
+    "socialaccount_login_error": "/account/provider/callback",
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -146,8 +186,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 if DEBUG:
-    # will output to your console
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s %(levelname)s %(message)s',  # noqa: WPS323
-    )
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
+            }
+        },
+        'loggers': {
+            'heimdall': {  # Replace 'myapp' with your app name to log your own app's messages
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+        }
+    }

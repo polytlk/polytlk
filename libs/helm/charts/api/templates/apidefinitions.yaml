@@ -15,6 +15,7 @@ spec:
   protocol: {{ .protocol }}
   active: {{ .active }}
   proxy:
+    preserve_host_header: {{ .proxy.preserve_host_header }}
     target_url: {{ .proxy.target_url }}
     listen_path: {{ .proxy.listen_path }}
     strip_listen_path: {{ .proxy.strip_listen_path }}

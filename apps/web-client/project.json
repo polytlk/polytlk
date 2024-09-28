@@ -19,7 +19,6 @@
         "assets": [
           "apps/web-client/src/assets",
           "apps/web-client/src/manifest.json",
-          "apps/web-client/src/mockServiceWorker.js",
           {
             "glob": "**/*.svg",
             "input": "node_modules/ionicons/dist/ionicons/svg",
@@ -33,7 +32,7 @@
           }
         ],
         "scripts": [],
-        "webpackConfig": "apps/web-client/webpack.config.cjs"
+        "webpackConfig": "apps/web-client/webpack.nx.config.cjs"
       },
       "configurations": {
         "development": {
@@ -52,29 +51,14 @@
         }
       }
     },
-    "serve": {
-      "executor": "@nx/webpack:dev-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "web-client:build",
-        "hmr": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "web-client:build:development",
-          "allowedHosts": "polytlk.ngrok.io"
-        },
-        "production": {
-          "buildTarget": "web-client:build:production",
-          "hmr": false
-        }
-      }
-    },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/web-client/**/*.{ts,tsx,js,jsx}"],
+        "lintFilePatterns": [
+          "apps/web-client/src/**/*.{ts,tsx,js,jsx}",
+          "apps/web-client/package.json"
+        ],
         "hasTypeAwareRules": true
       }
     },
@@ -216,6 +200,12 @@
             "type=sha,prefix=sha-"
           ]
         }
+      }
+    },
+    "make-client": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./apps/web-client/scripts/makeClients.js"
       }
     }
   },

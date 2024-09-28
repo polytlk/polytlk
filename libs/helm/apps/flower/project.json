@@ -1,0 +1,20 @@
+{
+  "name": "flower-chart",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/helm/apps/flower/src",
+  "targets": {
+    "template": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh flower false"
+      }
+    },
+    "template:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./tools/scripts/template_apps.sh flower false development"
+      }
+    }
+  }
+}

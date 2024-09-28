@@ -5,6 +5,7 @@ load('ext://helm_remote', 'helm_remote')
 load('ext://cert_manager', 'deploy_cert_manager')
 
 deploy_cert_manager(version="v1.15.3")
+docker_prune_settings(disable=True)
 
 # start Tilt with no enabled resources
 config.clear_enabled_resources()
@@ -28,7 +29,7 @@ print(color.yellow('------------------------------------------------------------
 print(color.blue('TYK MODE: ') + '\t' + 'Community Edition'.upper())
 
 LOCAL_MODE = os.environ.get('LOCAL_MODE', 'default').lower()
-if LOCAL_MODE not in ['msw', 'expose_cluster']:
+if LOCAL_MODE not in ['ios']:
   LOCAL_MODE = 'default'
 
 if language[0].lower() not in ['chinese', 'korean']:
@@ -38,48 +39,61 @@ print(color.blue('LANGUAGE: ') + '\t' + language[0].upper())
 print(color.blue('LOCAL MODE: ') + '\t' + LOCAL_MODE.upper())
 print('')
 
-if LOCAL_MODE == 'msw':
-  print(color.blue('DESCRIPTION: ') + '\t' + 'optimized for frontend development. use frontend and mocks only. LANGUAGE param is inert')
-elif LOCAL_MODE == 'expose_cluster':
-  print(color.blue('DESCRIPTION: ') + '\t' + 'for testing changes on a real iOS device locally. use ngrok to expose cluster to public internet for your iOS device.')
+if LOCAL_MODE == 'ios':
+  print(color.blue('DESCRIPTION: ') + '\t' + 'used for iOS development. spins up just the cluster without a webpack server')
 else:
   print(color.blue('DESCRIPTION: ') + '\t' + 'default way of working. spins up requested backend services based on LANGUAGE, webpack dev server, and a verdaccio server.')
 print(color.yellow('----------------------------------------------------------------------------------------------------------------------------------------------'))
 #################################################################################
 
 
-base = [
-  'heimdall-svc',
-  'heimdall-api',
-  'socrates-svc',
+required = [
+  'ingress-nginx-admission-create',
+  'ingress-nginx-controller',
+  'ingress-nginx-admission-patch',
+  'ingress-nginx-admission-webhook',
   'opentelemetry-collector',
   'redis-master',
+  'postgresql',
+  'postgresql-ha',
   'tyk-operator',
   'tyk-gateway',
+  'flower',
+  'migrate-heimdall',
+  'migrate-eden',
+  'tyk-operator-ready',
+  'socrates-svc',
+  'heimdall-svc',
+  'heimdall-api',
+  'heimdall-all-auth',
+]
+
+base = [
+  # 'kube-prometheus-stack-kube-state-metrics',
+  # 'kube-prometheus-stack-operator',
+  # 'kube-prometheus-stack-admission-create',
+  # 'kube-prometheus-stack-admission-patch',
+  # 'kube-prometheus-stack-prometheus-node-exporter',
+  # 'kube-prometheus-stack-grafana'
 ]
 
 host = []
 
-if LOCAL_MODE == 'expose_cluster':
-  host = ['ngrok-tunnel', 'verdaccio']
+if LOCAL_MODE == 'ios':
+  host = []
 else:
-  host = ['react-dev-server', 'storybook', 'verdaccio']
+  host = ['web']
 
-final_base = base + host
+final_base = base + host + required
 
 # run a group like
 # tilt up -- chinese
 groups = {
-  'chinese': ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
-  'korean': ['olivia-svc'] + final_base,
+  # 
+  'chinese':  ['eden-svc', 'eden-worker', 'eden-api'] + final_base,
+  #'korean': ['olivia-svc'] + final_base,
 }
 
-# if msw is enabled overwrite and only run FE stuff
-if LOCAL_MODE == 'msw':
-  groups = {
-    'chinese': host,
-    'korean': host,
-  }
 
 resources = []
 
@@ -92,58 +106,81 @@ for arg in language:
 
 config.set_enabled_resources(resources)
 
-local_resource(
-  name='verdaccio',
-  serve_cmd='pnpm nx local-registry',
-  labels=['host_machine'],
-  links=link('http://localhost:4873', 'registry')
+
+
+## local_resource(
+##   name='verdaccio',
+##   serve_cmd='pnpm nx local-registry',
+##   labels=['host_machine'],
+##   links=link('http://localhost:4873', 'registry')
+## )
+## 
+## cmd_button(name='publish-btn',
+##           argv=['sh', '-c', 'pnpm nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
+##           text='local publish',
+##           location=location.NAV,
+##           icon_name='waving_hand',
+##           inputs=[
+##               text_input('ver'),
+##               text_input('tag'),
+##           ]
+## )
+helm_remote('redis',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="18.0.0",
+            set=['auth.enabled=false', 'architecture=standalone', 'master.nodeSelector.role=ops']
 )
 
-cmd_button(name='publish-btn',
-          argv=['sh', '-c', 'pnpm nx run echo-plugin:publish -- --ver=$ver --tag=$tag'],
-          text='local publish',
-          location=location.NAV,
-          icon_name='waving_hand',
-          inputs=[
-              text_input('ver'),
-              text_input('tag'),
-          ]
+helm_remote('postgresql',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="15.5.29",
+            set=['auth.postgresPassword=helloworld', 'primary.nodeSelector.role=ops']
 )
 
-if LOCAL_MODE == 'expose_cluster':
-  local_resource(name='ngrok-tunnel', serve_cmd='ngrok tunnel --region us --label edge=edghts_2RlZGb3gklIVXTQzHrY2GFYtjRu http://localhost:8080', labels=['host_machine'])
-else:
-  local_resource(
-    name='react-dev-server',
-    serve_cmd='NX_LOCAL_MODE={0} pnpm nx run web-client:serve:development'.format(LOCAL_MODE),
-    labels=['host_machine'],
-    links=link('http://localhost:4200/', 'frontend')
-  )
-
-  local_resource(
-    name='storybook',
-    serve_cmd='pnpm nx run web-client:storybook',
-    labels=['host_machine'],
-    links=link('http://localhost:4400/', 'storybook')
-  )
+helm_remote(chart='postgresql',
+            release_name='postgresql-ha',
+            repo_name='bitnami',
+            repo_url='https://charts.bitnami.com/bitnami',
+            version="15.5.29",
+            set=['auth.postgresPassword=helloworld', 'primary.nodeSelector.role=ops']
+)
 
 
-# do not load non front end dependencies if mode is msw
-if not LOCAL_MODE == 'msw':
-  # we only need redis chart for local dev
-  helm_remote('redis',
-              repo_name='bitnami',
-              repo_url='https://charts.bitnami.com/bitnami',
-              version="18.0.0",
-              set=['auth.enabled=false']
-  )
+  # helm_remote('kube-prometheus-stack',
+  #             repo_name='prometheus-community',
+  #             repo_url='https://prometheus-community.github.io/helm-charts'
+  # )
 
-  include('./tilt/otel-collector/Tiltfile')
-  include('./tilt/tyk/Tiltfile')
-  include('./tilt/tyk-operator/Tiltfile')
 
-  include('./apps/microservices/socrates/Tiltfile')
-  include('./apps/microservices/eden/Tiltfile')
-  include('./apps/microservices/olivia/Tiltfile')
-  include('./apps/microservices/heimdall/Tiltfile')
-  include('./apps/workers/eden/Tiltfile')
+k8s_resource(
+  workload='redis-master',
+  labels=['data-storage'],
+)
+
+k8s_resource(
+  workload='postgresql',
+  labels=['data-storage'],
+  port_forwards=5300
+)
+
+k8s_resource(
+  workload='postgresql-ha',
+  labels=['data-storage'],
+  port_forwards=5322
+)
+
+include('./tilt/addons/otel-collector/Tiltfile')
+include('./tilt/addons/ingress-nginx/Tiltfile')
+include('./tilt/addons/tyk/Tiltfile')
+include('./tilt/addons/tyk-operator/Tiltfile')
+
+include('./tilt/flower/Tiltfile')
+
+include('./apps/microservices/socrates/Tiltfile')
+include('./apps/microservices/eden/Tiltfile')
+include('./apps/microservices/olivia/Tiltfile')
+include('./apps/microservices/heimdall/Tiltfile')
+include('./apps/workers/eden/Tiltfile')
+include('./apps/web-client/Tiltfile')

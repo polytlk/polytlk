@@ -1,0 +1,10 @@
+load('ext://helm_remote', 'helm_remote')
+
+helm_remote(
+    chart='opentelemetry-collector',
+    repo_name='open-telemetry',
+    repo_url='https://open-telemetry.github.io/opentelemetry-helm-charts',
+    namespace='otel-collector',
+    version="0.78.2",
+    values="./values.yaml"
+)

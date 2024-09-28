@@ -1,3 +1,7 @@
+autoscaling:
+  enabled: false
+service:
+  enabled: false
 ingress:
   enabled: false
 externalSecrets:

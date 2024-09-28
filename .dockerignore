@@ -1,2 +1,15 @@
-node_modules
-apps/polytlk/.next
+*
+
+!apps/web-client/src
+!apps/web-client/server
+
+!apps/web-client/webpack.config.cjs
+!apps/web-client/babel.config.cjs
+!apps/web-client/tsconfig.json
+!apps/web-client/tsconfig.app.json
+!apps/web-client/.env
+!apps/web-client/.env.example
+
+!package.json
+!pnpm-lock.yaml
+!.npmrc

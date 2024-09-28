@@ -36,7 +36,8 @@ ingress:
 resources: {}
 autoscaling:
   enabled: false
-nodeSelector: {}
+nodeSelector:
+  role: app
 tolerations: []
 affinity: {}
 volumeMounts:

@@ -1,27 +1,34 @@
-import type { ComponentType, FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import type { RouteProps } from 'react-router-dom';
 
-import { Redirect, Route } from 'react-router-dom';
+import { useSelector } from '#rootmachine/index';
+import { Route } from 'react-router-dom';
 
-import { RootContext } from './RootContext';
+import { IonPage, useIonRouter, useIonViewWillEnter } from '@ionic/react';
 
-type PrivateRouteProps = {
-  component: ComponentType;
+type PrivateRouteProps = Omit<RouteProps, 'component'> & {
+  component: FunctionComponent;
 };
 
-const PrivateRoute: FunctionComponent<
-  PrivateRouteProps & Record<string, unknown>
-> = ({ component: Component, ...rest }) => {
-  const token = RootContext.useSelector(({ context }) => context.token);
-  const checked = RootContext.useSelector(({ context }) => context.checked);
+const ProtectedPage = () => {
+  const router = useIonRouter();
 
-  if (!token && !checked) {
-    return null;
-  }
+  useIonViewWillEnter(() => {
+    router.push('/account/login', 'forward', 'replace', { unmount: true });
+  }, [router]);
 
+  return <IonPage></IonPage>;
+};
+
+const PrivateRoute: FunctionComponent<PrivateRouteProps> = ({
+  component: Component,
+  ...rest
+}) => {
+  const isAuthenticated = useSelector(({ context }) =>
+    Boolean(context.allauth.auth?.meta.is_authenticated)
+  );
   return (
-    <Route {...rest}>
-      {token !== '' ? <Component /> : <Redirect to="/login" />}
-    </Route>
+    <Route {...rest} component={isAuthenticated ? Component : ProtectedPage} />
   );
 };
 

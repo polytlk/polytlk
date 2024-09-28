@@ -1,0 +1,17 @@
+---
+# Source: deployment/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    helm.sh/chart: deployment-0.1.0
+    app: web # Updated to match the app label in the deployment
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4200
+      targetPort: 4200
+      protocol: TCP
+  selector:
+    app: web # Updated to match the app label in the deployment

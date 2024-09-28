@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { FC } from 'react';
 
-import { RootContext } from '../../RootContext';
-import Home from './Home';
+import { useActorRef, useSelector } from '#rootmachine/index';
 
-const { useActorRef, useSelector } = RootContext;
+import Home from './Home';
 
 const HomeContainer: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -1,39 +1,55 @@
-load('ext://namespace', 'namespace_create', 'namespace_inject')
-load('ext://nerdctl', 'nerdctl_build')
-load('ext://secret', 'secret_yaml_generic')
+load('ext://namespace', 'namespace_inject')
+load('ext://podman', 'podman_build')
 
 NAMESPACE = 'heimdall'
 TILT_PATH = '../../../tilt/heimdall'
-namespace_create(NAMESPACE)
 
-k8s_yaml(secret_yaml_generic('heimdall-svc-secret-env', from_env_file='./.env', namespace=NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/deployment.yaml'.format(TILT_PATH)), NAMESPACE))
 k8s_yaml(namespace_inject(read_file('{0}/deployment/service.yaml'.format(TILT_PATH)), NAMESPACE))
+
+local_resource(
+  'migrate-heimdall',
+  labels=['auth'],
+  cmd='pnpm nx run heimdall:migrate',
+  allow_parallel=True,
+  resource_deps=['postgresql']
+)
 
 k8s_resource(
     'heimdall-svc',
     labels=["auth"],
     # UNCOMMENT to test just api locally
-    port_forwards=8000 
+    # port_forwards=8000 
     # DEFAULT expose admin page
-    # port_forwards=[
-        # port_forward(8000, 8000, name='admin', link_path='/admin'),
-    #]
+    port_forwards=[
+        port_forward(8000, 8000, name='admin', link_path='/admin'),
+    ],
+    resource_deps=['migrate-heimdall']
 )
 
-k8s_yaml(namespace_inject(read_file('{0}/api/apidefinitions.yaml'.format(TILT_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinition-heimdall-api.yaml'.format(TILT_PATH)), NAMESPACE))
+k8s_yaml(namespace_inject(read_file('{0}/api/apidefinition-heimdall-all-auth.yaml'.format(TILT_PATH)), NAMESPACE))
 
 k8s_resource(
   objects=['heimdall-api:apidefinition'],
   new_name='heimdall-api',
   labels=['api-gateway'],
-  resource_deps=['tyk-operator']
+  resource_deps=['tyk-operator-ready']
 )
 
-nerdctl_build('heimdall-svc-img', '.',     
+k8s_resource(
+  objects=['heimdall-all-auth:apidefinition'],
+  new_name='heimdall-all-auth',
+  labels=['api-gateway'],
+  resource_deps=['tyk-operator-ready']
+)
+
+podman_build('heimdall-svc-img', '.',
+    extra_flags=[
+        '--target',
+        'development'
+    ],    
     live_update=[
-        sync('.', '/code'),
-        run('cd /code && poetry install --no-interaction --no-root --without dev',
-            trigger=['./poetry.lock', './pyproject.toml']),
+        sync('./heimdall', '/app/heimdall')
     ]
 )

@@ -43,3 +43,5 @@ extraEnvs:
       secretKeyRef:
         key: HONEYCOMB_API_KEY
         name: otel-collector-secret-env
+nodeSelector: 
+  role: ops

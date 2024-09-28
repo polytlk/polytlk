@@ -3,10 +3,13 @@ from fastapi import FastAPI
 from opentelemetry.instrumentation.celery import CeleryInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
+from eden.lifespan import lifespan
+
 
 def create_app() -> FastAPI:
     """Make fastAPI app for testing purposes."""
     app = FastAPI(
+        lifespan=lifespan,
         servers=[
             {'url': 'http://eden-svc:7079', 'description': 'local environment'},
         ],

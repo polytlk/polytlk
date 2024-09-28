@@ -67,10 +67,17 @@
         "cwd": "apps/microservices/heimdall"
       }
     },
+    "make-migrations": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ENVIRONMENT=local ALLOWED_HOSTS='hi,bye' atlas migrate diff --env django",
+        "cwd": "apps/microservices/heimdall"
+      }
+    },
     "migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "poetry run python manage.py migrate",
+        "command": "ENVIRONMENT=local ALLOWED_HOSTS='hi,bye' atlas migrate apply --env local",
         "cwd": "apps/microservices/heimdall"
       }
     },

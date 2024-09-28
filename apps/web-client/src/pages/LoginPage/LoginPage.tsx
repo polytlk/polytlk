@@ -1,28 +1,102 @@
-import type { FC, RefObject } from 'react';
+import type { FC } from 'react';
+
+import { AUTH_URLS } from '#allauth/constants';
+import { postForm } from '#allauth/handlers';
+import { getBaseAuthUrl } from '#allauth/urls';
+import { useSelector } from '#rootmachine/index';
+import { logoGoogle } from 'ionicons/icons';
 
 import {
+  IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonIcon,
+  IonLabel,
+  IonList,
+  IonListHeader,
   IonMenuButton,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
 
-type LoginPageProps = {
-  buttonRef: RefObject<HTMLButtonElement>; // Add a prop type for the ref
-};
+export const LoginPage: FC = () => {
+  const platform = useSelector(({ context }) => context.platform);
+  const baseUrl = useSelector(({ context }) => context.config.BASE_URL);
+  const config = useSelector(({ context }) => context.allauth.config);
+  const baseAuthUrl = getBaseAuthUrl({ baseUrl, platform });
 
-export const LoginPage: FC<LoginPageProps> = ({ buttonRef }) => (
-  <IonPage>
-    <IonHeader>
-      <IonToolbar>
-        <IonTitle>Login</IonTitle>
-        <IonMenuButton slot="end" />
-      </IonToolbar>
-    </IonHeader>
-    <IonContent className="ion-padding">
-      <button ref={buttonRef} />
-    </IonContent>
-  </IonPage>
-);
+  // Example function to handle provider login (adjust as needed for real login flow)
+  const handleProviderLogin = (providerId: string) => {
+    const url = `${baseAuthUrl}${AUTH_URLS.REDIRECT_TO_PROVIDER}` as const;
+
+    postForm(url, {
+      provider: providerId,
+      process: 'login',
+      callback_url: AUTH_URLS.REDIRECT_CALLBACK,
+      // csrfmiddlewaretoken: cook,
+    });
+  };
+
+  if (config === undefined) return null;
+  const { data } = config;
+
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Login</IonTitle>
+          <IonMenuButton slot="end" />
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <IonContent>
+          <IonGrid>
+            <IonRow>
+              <IonCol />
+              <IonCol size="4">
+                <IonButton
+                  fill="clear"
+                  routerLink="/account/signup"
+                  routerDirection="forward"
+                >
+                  <IonLabel>Don't have an account? signup here</IonLabel>
+                </IonButton>
+              </IonCol>
+              <IonCol />
+            </IonRow>
+            {data.socialaccount !== undefined && (
+              <IonRow>
+                <IonCol />
+                <IonCol size="4">
+                  <IonList inset={true}>
+                    <IonListHeader>
+                      <IonLabel> Third Party </IonLabel>
+                    </IonListHeader>
+
+                    {data.socialaccount.providers.map((provider) => (
+                      <IonButton
+                        color="primary"
+                        fill="outline"
+                        key={provider.id}
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                        onClick={() => handleProviderLogin(provider.id)}
+                      >
+                        <IonIcon icon={logoGoogle} slot="start" />
+                        <IonLabel>Login with {provider.name}</IonLabel>
+                      </IonButton>
+                    ))}
+                  </IonList>
+                </IonCol>
+                <IonCol />
+              </IonRow>
+            )}
+          </IonGrid>
+        </IonContent>
+      </IonContent>
+    </IonPage>
+  );
+};
