@@ -7,6 +7,8 @@ from sqlmodel import Column, Field, Integer, Relationship, SQLModel
 class Query(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
+    meaning: str
+    user_id: int = Field(index=True)
 
     unit_meanings: List["QueryUnitMeaning"] = Relationship(back_populates="query")
     dialogues: List["Dialogue"] = Relationship(back_populates="query")
@@ -54,9 +56,6 @@ class Unit(SQLModel, table=True):
 class Meaning(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     text: str
-
-    # Analytics columns
-    was_split: bool
 
     # Define a many-to-many relationship with Query through QueryUnitLink
     unit_links: list[UnitMeaningLink] = Relationship(back_populates='meaning')

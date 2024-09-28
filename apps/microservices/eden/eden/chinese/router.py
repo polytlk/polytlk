@@ -3,12 +3,12 @@ import json
 import logging
 import time
 import jwt
-from typing import Any, AsyncGenerator
+from typing import Any, AsyncGenerator, Annotated, Dict
 
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, Header
 from fastapi.responses import JSONResponse
 from redis import Redis
-from sqlmodel import Session
+from sqlmodel import Session, select
 from sse_starlette.sse import EventSourceResponse
 
 from eden.celery_utils import create_celery
@@ -16,9 +16,8 @@ from eden.chinese.schemas import ChineseQuery, ChineseTask, Message
 from eden.config import settings
 from eden.models.crud import (get_or_create_link, get_or_create_meaning,
                               get_or_create_unit, get_or_create_query_unit_meaning)
-from eden.models.models import Dialogue, ParticipantEnum, Query
-from eden.models.processing import split_by_separators
-from eden.models.validators import WorkerReponse
+from eden.models.models import Dialogue, ParticipantEnum, Query, QueryUnitMeaning
+from eden.models.validators import WorkerReponse, LanguageData
 from eden.tracing import tracer  # noqa: I001
 from eden.utils.validation import is_zh
 
@@ -30,6 +29,43 @@ router = APIRouter()
 
 celery_app = create_celery()
 redis_db = Redis.from_url(url=settings.celery_broker_url)
+
+@router.get('/queries')
+async def chinese_endpoint(Authorization: Annotated[str | None, Header()], request: Request) -> Any:
+    token = Authorization.split()[1]
+    decoded_token = jwt.decode(token, options={"verify_signature": False})
+    user_id = decoded_token["sub"]
+
+    queries_dict: Dict[int, LanguageData] = {}
+
+    engine = request.app.state.engine
+    with Session(engine) as session:
+        statement = select(Query).where(Query.user_id == user_id)
+        results = session.exec(statement).all()
+
+        for query in results:
+            q_statement = select(QueryUnitMeaning).where(QueryUnitMeaning.query_id == query.id)
+            qum_results = session.exec(q_statement).all()
+
+            words = [
+                (qum.unit_meaning.unit.text, qum.unit_meaning.sound, qum.unit_meaning.meaning.text)
+                for qum in qum_results
+            ]
+
+            dialogue = [(dialogue.text, dialogue.sound, dialogue.meaning) for dialogue in query.dialogues]
+
+            language_data = LanguageData(
+                words=words,
+                meaning=query.meaning,
+                dialogue=dialogue
+            )
+
+            queries_dict[query.id] = language_data.model_dump()
+
+    return JSONResponse(
+        content=queries_dict
+    )
+
 
 
 @router.post('/interpretation', response_model=ChineseTask, responses={422: {'model': Message}})
@@ -67,9 +103,7 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
 
     async def event_generator(tid: str) -> AsyncGenerator[WorkerReponse, None]:
         while True:
-            logger.info("pinging task id -> {0}".format(task_id))
             task_result = redis_db.get(tid)
-            logger.info("result -> {0}".format(task_result))
 
             if task_result is not None:
                 data_dict = json.loads(task_result.decode('utf-8'))
@@ -81,36 +115,18 @@ async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
                 with Session(engine) as session:
                     logger.info("start db session")
 
-                    query = Query(text=worker_res.user_input)
+                    query = Query(text=worker_res.user_input, user_id=user_id, meaning=worker_res.ari_data.meaning)
                     session.add(query)
                     session.commit()
 
-                    processed = []
-                    for hanzi, pinyin, meaning in worker_res.ari_data.words:
-                        logger.info("original hanzi \t-> {0}".format(hanzi))
-                        logger.info("\t  pinyin \t-> {0}".format(pinyin))
-                        logger.info("\t  meaning \t-> {0}".format(meaning))
-                        meanings = split_by_separators(meaning)
-
-                        logger.info('meanings \t\t-> {0}'.format(meanings))
-                        logger.info('\t  len  \t\t-> {0}'.format(len(meanings)))
-
-                        for single_meaning in meanings:
-        
-                            was_split = len(meanings) > 1
-
-                            processed.append([(hanzi, pinyin, single_meaning), was_split])
-
-                    logger.info("checking all the word meanings")
-                    for word_meaning, was_split in processed:
+                    for word_meaning in worker_res.ari_data.words:
                         logger.info("\t word meaning -> {0}".format(word_meaning))
-                        logger.info("\t was_split -> {0}\n".format(was_split))
                         unit_text = word_meaning[0]
                         sound = word_meaning[1]
                         meaning_text = word_meaning[2]
 
                         unit = get_or_create_unit(session, unit_text)
-                        meaning = get_or_create_meaning(session, meaning_text, was_split)
+                        meaning = get_or_create_meaning(session, meaning_text)
                         link = get_or_create_link(session, unit.id, meaning.id, sound)
                         
 
