@@ -19,7 +19,6 @@
         "assets": [
           "apps/web-client/src/assets",
           "apps/web-client/src/manifest.json",
-          "apps/web-client/src/mockServiceWorker.js",
           {
             "glob": "**/*.svg",
             "input": "node_modules/ionicons/dist/ionicons/svg",
@@ -33,7 +32,7 @@
           }
         ],
         "scripts": [],
-        "webpackConfig": "apps/web-client/webpack.config.cjs"
+        "webpackConfig": "apps/web-client/webpack.nx.config.cjs"
       },
       "configurations": {
         "development": {
