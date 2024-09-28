@@ -2,6 +2,7 @@
 import json
 import logging
 import time
+import jwt
 from typing import Any, AsyncGenerator
 
 from fastapi import APIRouter, Request, status
@@ -59,6 +60,11 @@ async def chinese_endpoint(user_query: ChineseQuery) -> Any:
 
 @router.get('/task/{task_id}/stream', response_model=WorkerReponse)
 async def task_stream(task_id: str, request: Request) -> EventSourceResponse:
+    bearer_token = request.headers["authorization"]
+    token = bearer_token.split()[1]
+    decoded_token = jwt.decode(token, options={"verify_signature": False})
+    user_id = decoded_token["sub"]
+
     async def event_generator(tid: str) -> AsyncGenerator[WorkerReponse, None]:
         while True:
             logger.info("pinging task id -> {0}".format(task_id))

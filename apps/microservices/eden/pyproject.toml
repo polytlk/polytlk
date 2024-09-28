@@ -43,6 +43,7 @@ zhon = "^1.1.5"
 sqlmodel = "^0.0.22"
 psycopg2 = "^2.9.9"
 atlas-provider-sqlalchemy = "^0.2.2"
+pyjwt = "^2.9.0"
 
 [tool.poetry.dependencies.uvicorn]
 extras = ["standard"]

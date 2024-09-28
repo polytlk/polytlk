@@ -139,7 +139,12 @@ SOCIALACCOUNT_STORE_TOKENS = True
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APPS": [
-            {
+            #{
+            #    "provider_id": "google-ios",
+            #    "client_id": "540933041586-83lavib8c5hu16r0v6g63200jdruif77.apps.googleusercontent.com",
+            #},
+            {   
+                #"provider_id": "google-web",
                 "client_id": settings.google_client_id,
                 "secret": settings.google_secret
             },

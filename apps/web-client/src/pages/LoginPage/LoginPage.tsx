@@ -27,7 +27,6 @@ export const LoginPage: FC = () => {
   const platform = useSelector(({ context }) => context.platform);
   const baseUrl = useSelector(({ context }) => context.config.BASE_URL);
   const config = useSelector(({ context }) => context.allauth.config);
-
   const baseAuthUrl = getBaseAuthUrl({ baseUrl, platform });
 
   // Example function to handle provider login (adjust as needed for real login flow)
